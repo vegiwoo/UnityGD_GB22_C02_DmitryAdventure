@@ -35,8 +35,12 @@
 [Основное](#Content)
 <a name="Locations"></a>
 # Локации 
-[Общая дневная карта Ривергардена](/Docs/Resources/RiverGarden_Day.png)
-[Общая ночная карта Ривергардена](/Docs/Resources/RiverGarden_Night.png)
+- <a href="/Docs/Resources/RiverGarden_Day.png" target="_blank">Общая дневная карта Ривергардена</a></br>
+
+
+
+- [Общая дневная карта Ривергардена](/Docs/Resources/RiverGarden_Day.png)</br>
+- [Общая ночная карта Ривергардена](/Docs/Resources/RiverGarden_Night.png)</br>
 
 [Основное](#Content)
 <a name="AdditionalMechanics"></a>
