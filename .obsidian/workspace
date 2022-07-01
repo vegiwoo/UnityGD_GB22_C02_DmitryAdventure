@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "README.md",
+            "file": "Docs/Concept.md",
             "mode": "preview"
           }
         }
@@ -68,7 +68,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Docs/Concept.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -88,7 +88,8 @@
   },
   "active": "98a72ce49252e66a",
   "lastOpenFiles": [
-    "README.md",
-    "Docs/Concept.md"
+    "Docs/Concept.md",
+    "Docs/Resources/RiverGarden_Day.png",
+    "README.md"
   ]
 }

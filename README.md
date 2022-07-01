@@ -5,8 +5,6 @@
 
 1. [Концепт-документ](Docs/Concept.md)
 
-
-
 # Связь с автором 
-Telegram: `@vegioo`
+Telegram: `@vegiwoo`
 

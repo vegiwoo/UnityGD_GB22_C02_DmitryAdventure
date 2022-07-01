@@ -23,6 +23,8 @@
 <a name="DescriptionWorld"></a>
 # Сюжетная завязка и описание мира 
 
+Ривергарден
+
 [Основное](#Content)
 <a name="GameProcess"></a>
 # Игровой процесс 
@@ -33,6 +35,8 @@
 [Основное](#Content)
 <a name="Locations"></a>
 # Локации 
+[Общая дневная карта Ривергардена](/Docs/Resources/RiverGarden_Day.png)
+[Общая ночная карта Ривергардена](/Docs/Resources/RiverGarden_Night.png)
 
 [Основное](#Content)
 <a name="AdditionalMechanics"></a>
