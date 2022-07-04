@@ -10,7 +10,7 @@
           "type": "markdown",
           "state": {
             "file": "Docs/Concept.md",
-            "mode": "source"
+            "mode": "preview"
           }
         }
       }
@@ -39,7 +39,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "сохране",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -52,7 +52,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 180
+    "width": 305
   },
   "right": {
     "id": "5acdba4a54bf9c75",
@@ -89,6 +89,9 @@
   "active": "a9e390f580fe0a11",
   "lastOpenFiles": [
     "Docs/Concept.md",
+    "Docs/Resources/Rivergarden_map.jpg",
+    "Docs/Resources/Rivergarden.jpg",
+    "Docs/Resources/RiverGarden_Night.png",
     "Docs/Resources/GB2223_C02_Concept_01.png",
     "README.md",
     "Docs/Resources/RiverGarden_Day.png"
