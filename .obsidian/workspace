@@ -4,13 +4,13 @@
     "type": "split",
     "children": [
       {
-        "id": "98a72ce49252e66a",
+        "id": "a9e390f580fe0a11",
         "type": "leaf",
         "state": {
           "type": "markdown",
           "state": {
             "file": "Docs/Concept.md",
-            "mode": "preview"
+            "mode": "source"
           }
         }
       }
@@ -86,10 +86,11 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "98a72ce49252e66a",
+  "active": "a9e390f580fe0a11",
   "lastOpenFiles": [
     "Docs/Concept.md",
-    "Docs/Resources/RiverGarden_Day.png",
-    "README.md"
+    "Docs/Resources/GB2223_C02_Concept_01.png",
+    "README.md",
+    "Docs/Resources/RiverGarden_Day.png"
   ]
 }
