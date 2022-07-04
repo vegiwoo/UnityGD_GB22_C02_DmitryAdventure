@@ -10,7 +10,7 @@
           "type": "markdown",
           "state": {
             "file": "Docs/Concept.md",
-            "mode": "source"
+            "mode": "preview"
           }
         }
       }
@@ -52,7 +52,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 305
+    "width": 305,
+    "collapsed": true
   },
   "right": {
     "id": "5acdba4a54bf9c75",
