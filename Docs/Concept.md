@@ -273,9 +273,8 @@
 - селяне, некоторые из которые знают про беглого орка;
 - оружие, игровые ценности, загадки, ловушки.
 
-![[Rivergarden_map.jpg]]
-[Скачать карту уровеней](Docs/Resources/Rivergarden_map.jpg)
-
+![Карта уровеней](/Docs/Resources/Rivergarden_map.jpg)</br>
+[Скачать карту уровеней](/Docs/Resources/Rivergarden_map.jpg)
 
 [Содержание](#Content)
 <a name="AdditionalMechanics"></a>
