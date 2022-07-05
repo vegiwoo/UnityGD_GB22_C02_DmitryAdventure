@@ -52,8 +52,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 305,
-    "collapsed": true
+    "width": 177.00556182861328
   },
   "right": {
     "id": "5acdba4a54bf9c75",
@@ -90,11 +89,11 @@
   "active": "a9e390f580fe0a11",
   "lastOpenFiles": [
     "Docs/Concept.md",
+    "README.md",
     "Docs/Resources/Rivergarden_map.jpg",
     "Docs/Resources/Rivergarden.jpg",
     "Docs/Resources/RiverGarden_Night.png",
     "Docs/Resources/GB2223_C02_Concept_01.png",
-    "README.md",
     "Docs/Resources/RiverGarden_Day.png"
   ]
 }
