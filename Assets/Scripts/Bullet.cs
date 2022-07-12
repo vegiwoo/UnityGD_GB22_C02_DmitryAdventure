@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace DmitryAdventure
@@ -30,7 +29,7 @@ namespace DmitryAdventure
             if (Vector3.Distance(PointOfShoot, transform.position) > MissDistance)
                 Destroy(gameObject);
             else
-                rb.AddForce(transform.up * bulletSpeed, ForceMode.VelocityChange);
+                rb.AddForce(transform.forward * bulletSpeed, ForceMode.VelocityChange);
         }
 
         private void OnCollisionEnter(Collision collision)
