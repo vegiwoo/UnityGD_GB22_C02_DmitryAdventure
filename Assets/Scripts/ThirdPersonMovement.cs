@@ -27,7 +27,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
         playerRigidbody = GetComponent<Rigidbody>();
         playerRigidbody.mass = 2;
-
     }
 
     private void FixedUpdate()

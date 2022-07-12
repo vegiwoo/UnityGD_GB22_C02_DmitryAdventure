@@ -29,8 +29,6 @@ namespace DmitryAdventure
         
         private void Update()
         {
-            Debug.Log(_aimPointer.transform.position);
-            
             var direction = _aimPointer.PointerCurrentPosition - transform.position;
             var rotation = Vector3.RotateTowards(transform.forward, direction, 10f * Time.deltaTime, 0f);
             transform.rotation = Quaternion.LookRotation(rotation);
@@ -42,10 +40,6 @@ namespace DmitryAdventure
             
             if (shotDelayTimer > 0)
                 shotDelayTimer -= Time.deltaTime;
-            
-            
-            
-            
         }
         
         /// <summary>

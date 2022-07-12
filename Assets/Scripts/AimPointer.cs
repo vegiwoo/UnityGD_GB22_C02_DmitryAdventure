@@ -17,8 +17,6 @@ namespace DmitryAdventure
             var ray = gameCamera.ScreenPointToRay (Input.mousePosition);
             if (!Physics.Raycast(ray, out var hit, 30)) return;
             PointerCurrentPosition = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
-            
-            
             aim.position = PointerCurrentPosition;
         }
     }

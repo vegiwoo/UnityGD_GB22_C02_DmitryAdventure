@@ -61,12 +61,14 @@ namespace DmitryAdventure
                 for (var j = 0; j < enemiesOnRoute.Count(); j++)
                 {
                     var currentEnemy = enemiesOnRoute[j];
+                    if (currentEnemy.State != EnemyState.Patrol) continue;
+                    
                     var currentEnemyTransform = enemiesOnRoute[j].transform;
                     
                     if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.TargetPoint) > 0.5f)
                     {
                         currentEnemy.transform.position = Vector3.MoveTowards(currentEnemy.transform.position,
-                              currentEnemy.TargetPoint, 0.05f);
+                            currentEnemy.TargetPoint, 0.05f);
 
                         var rotateDir = currentEnemy.TargetPoint - currentEnemyTransform.position;
                         var rotation = Vector3.RotateTowards(currentEnemyTransform.forward, new Vector3(rotateDir.x, 0, rotateDir.z),
