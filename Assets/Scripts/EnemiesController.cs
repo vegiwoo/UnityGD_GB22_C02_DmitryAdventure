@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace DmitryAdventure
 {
+    /// <summary>
+    /// Контроллер, предоставлющий функционал работы с врагами.
+    /// </summary>
     [CreateAssetMenu]
     public class EnemiesController : ScriptableObject
     {

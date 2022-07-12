@@ -23,6 +23,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // TODO: Вынести в InputController
         var horizontal = Input.GetAxisRaw("Horizontal");
         var vertical = Input.GetAxisRaw("Vertical");
         var direction = new Vector3(horizontal, 0f, vertical).normalized;
