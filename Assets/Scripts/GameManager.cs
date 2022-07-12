@@ -66,7 +66,7 @@ namespace DmitryAdventure
                     if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.TargetPoint) > 0.5f)
                     {
                         currentEnemy.transform.position = Vector3.MoveTowards(currentEnemy.transform.position,
-                              currentEnemy.TargetPoint, currentEnemy.MovingSpeed / 12);
+                              currentEnemy.TargetPoint, 0.05f);
 
                         var rotateDir = currentEnemy.TargetPoint - currentEnemyTransform.position;
                         var rotation = Vector3.RotateTowards(currentEnemyTransform.forward, new Vector3(rotateDir.x, 0, rotateDir.z),

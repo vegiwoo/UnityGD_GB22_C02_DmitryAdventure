@@ -34,5 +34,10 @@ namespace DmitryAdventure
             rb = transform.GetComponent<Rigidbody>();
             rb.mass = 30;
         }
+
+        public void OnHit()
+        {
+            Debug.Log("OnHit!");
+        }
     }
 }
