@@ -17,9 +17,8 @@ namespace DmitryAdventure
         /// <summary>
         /// Расстояние промаха пули от точки выстрела.
         /// </summary>
-        private float MissDistance { get; set; } = 20f;
-
-
+        private float MissDistance { get; set; } = 50f;
+        
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -29,10 +28,9 @@ namespace DmitryAdventure
         private void FixedUpdate()
         {
             if (Vector3.Distance(PointOfShoot, transform.position) > MissDistance)
-                Destroy(this);
+                Destroy(gameObject);
             else
                 rb.AddForce(transform.up * bulletSpeed, ForceMode.VelocityChange);
-            
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -40,9 +38,12 @@ namespace DmitryAdventure
             Instantiate(effectPrefab, transform.position, Quaternion.identity);
             
             var enemy = collision.gameObject.GetComponent<Enemy>();
-            if (enemy != null) enemy.OnHit();
+            if (enemy != null)
+            {
+                enemy.OnHit();
+            }
             
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 }
