@@ -27,7 +27,10 @@ namespace DmitryAdventure
         private void Update()
         {
             CheckEnemies();
-            walkingEnemiesCoroutine = StartCoroutine(WalkingEnemiesCourutine());
+            if (enemiesController.routes.Length <= 0)
+            {
+                walkingEnemiesCoroutine = StartCoroutine(WalkingEnemiesCourutine());
+            }
         }
         
         /// <summary>
@@ -46,11 +49,15 @@ namespace DmitryAdventure
                 var newEnemy = Instantiate(enemiesController.enemyPrefab, spawnPoint, Quaternion.identity);
                 newEnemy.Set(i);
                 newEnemy.Set(targetPoint);
-                newEnemy.transform.LookAt(targetPoint);
+                newEnemy.Set(true);
                 enemies.Add(newEnemy);
             }
         }
 
+        /// <summary>
+        /// Организует перемещние врагов по марштурам.
+        /// </summary>
+        /// <returns>Стандарный тип корутины.</returns>
         private IEnumerator WalkingEnemiesCourutine()
         {
             if (enemiesController.routes.Length <= 0)
@@ -62,57 +69,46 @@ namespace DmitryAdventure
             for (var i = 0; i < enemiesController.routes.Length; i++)
             {
                 var currentRoute = enemiesController.routes[i];
+                if (currentRoute.wayPoints.Length < 2) continue;
+                
                 var enemiesOnRoute = enemies.Where(en => en.RouteNumber == i).ToList();
                 
-                if(enemiesOnRoute.Count == 0) continue;
+                if (enemiesOnRoute.Count == 0) continue;
 
                 for (var j = 0; j < enemiesOnRoute.Count(); j++)
                 {
                     var currentEnemy = enemiesOnRoute[j];
                     var currentEnemyTransform = enemiesOnRoute[j].transform;
                     
-                    if (!currentEnemy.IsReachedTargetPoint)
+                    if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.TargetPoint) > 0.5f)
                     {
                         currentEnemy.transform.position = Vector3.MoveTowards(currentEnemy.transform.position,
                               currentEnemy.TargetPoint, currentEnemy.MovingSpeed / 12);
-       
-                        currentEnemy.transform.LookAt(currentEnemy.TargetPoint);
 
-                        // var targetDirection = currentEnemyTransform.position - currentEnemy.TargetPoint;
-                        // var newDirection = Vector3.RotateTowards(currentEnemyTransform.forward, targetDirection, 1 * Time.deltaTime, 0.0f);
-                        // currentEnemyTransform.rotation = Quaternion.LookRotation(newDirection);
+                        var rotateDir = currentEnemy.TargetPoint - currentEnemyTransform.position;
+                        var rotation = Vector3.RotateTowards(currentEnemyTransform.forward, new Vector3(rotateDir.x, 0, rotateDir.z),
+                            10f * Time.deltaTime, 0f);
+                        currentEnemyTransform.rotation = Quaternion.LookRotation(rotation);
                     }
                     else
                     {
-                        Debug.Log("Yep!");
                         currentEnemyTransform.position = currentEnemy.TargetPoint;
-
-                        // Индекс текущей позиции в массиве точек маршрута
                         var indexOfTargetPoint = Array.IndexOf(currentRoute.wayPoints, currentEnemy.TargetPoint);
 
                         switch (currentEnemy.IsMovingForward)
                         {
-                            // Движение по маршруту вперед  
                             case true:
-                                // Если враг не на последней точке маршрута
-                                if (currentEnemyTransform.position != currentRoute.wayPoints.Last())
-                                {
+                                if (currentEnemyTransform.position != currentRoute.wayPoints.Last()) 
                                     currentEnemy.Set(currentRoute.wayPoints[indexOfTargetPoint + 1]);
-                                }
                                 else
                                 {
                                     currentEnemy.Set(false);
                                     currentEnemy.Set(currentRoute.wayPoints[currentRoute.wayPoints.Length - 1]);
-                                    
                                 }
                                 break;
-                            // Движение по маршруту назад  
                             case false:
-                                // Если враг не на первой точке маршрута
                                 if (currentEnemyTransform.position != currentRoute.wayPoints.First())
-                                {
                                     currentEnemy.Set(currentRoute.wayPoints[indexOfTargetPoint - 1]);
-                                }
                                 else
                                 {
                                     currentEnemy.Set(true);
@@ -123,24 +119,7 @@ namespace DmitryAdventure
                     }
                 }
             }
-            
             yield return null;
         }
     }
 }
-
-
-
-// Перебираем все маршруты + 
-// Находим всех врагов на маршруте + 
-// Проходим по всем врагам на маршруте + 
-//   Если враг не на своей целевой точке +
-//      Двигаем его к целевой точке +
-//   Или если враг на целевой точке +
-//      Присваиваем целевую точку его позиции +
-//      Если двигается вперед + 
-//         Если он не на последней точке маршршрута, присваиваем целевой точкой следующую точку маршрута + 
-//         Или если он на последней точке маршрута, меняем его направление и  присваиваем целевой точкой предудущую точку маршрута
-//      Или если он двигается назад
-//         Если он не на первой точке маршрута, присваиваем целевой точкой предыдушую точку маршрута
-//         Или если он на первой точке маршрута, меняем его направление и присваиваем целевой точкой следующую маршрута

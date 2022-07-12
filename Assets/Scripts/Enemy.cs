@@ -18,11 +18,6 @@ namespace DmitryAdventure
 
         public bool IsMovingForward { get; private set; }
 
-        /// <summary>
-        /// Находится ли враг на целеой точке. 
-        /// </summary>
-        public bool IsReachedTargetPoint => transform.position == TargetPoint;
-        
         private Rigidbody rb;
         
         private void Awake()
@@ -49,18 +44,7 @@ namespace DmitryAdventure
         {
             IsMovingForward = isMovingForward;
         }
-        
-        
-        public void FollowTargetWithRotation()
-        {
-            if (!(Vector3.Distance(transform.position, TargetPoint) > 0.5f)) return;
-            
-            transform.LookAt(TargetPoint);
-            rb.AddRelativeForce(Vector3.forward * MovingSpeed, ForceMode.VelocityChange);
-        }
-        
-        
-
+ 
         // hp = 100;
         // поле зрения 
     }
