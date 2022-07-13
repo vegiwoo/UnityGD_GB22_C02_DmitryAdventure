@@ -76,7 +76,7 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            var hero = other.gameObject.GetComponent<ThirdPersonMovement>().gameObject;
+            var hero = other.gameObject.GetComponent<PlayerController>().gameObject;
             if (hero != null)
             {
                 State = EnemyState.Attack;

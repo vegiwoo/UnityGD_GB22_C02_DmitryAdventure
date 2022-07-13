@@ -16,18 +16,16 @@ namespace DmitryAdventure
         [SerializeField, Tooltip("Игровая камера")]
         private Camera gameCamera;
         
-        
         [SerializeField, Tooltip("Скорость персонажа")]
-        private float playerSpeed = 2.0f;
+        private float playerSpeed;
         
         [SerializeField, Tooltip("Скорость вращения"), Range(1f,5f)]
-        private float rotationSpeed = 3f;
+        private float rotationSpeed;
         
         [SerializeField, Tooltip("Высота прыжка персонажа")]
-        private float jumpHeight = 1.0f;
-        
-        [SerializeField, Tooltip("Заначение гравитации")]
-        private float gravityValue = -9.81f;
+        private float jumpHeight;
+
+        private const float GravityValue = -9.81f;
 
         private CharacterController controller;
         private PlayerInput playerInput;
@@ -43,6 +41,10 @@ namespace DmitryAdventure
             playerInput = GetComponent<PlayerInput>();
             moveAction = playerInput.actions["Move"];
             jumpAction = playerInput.actions["Jump"];
+
+            playerSpeed = 2f;
+            jumpHeight = 0.7f;
+            rotationSpeed = 4f;
         }
 
         private void Update()
@@ -62,10 +64,10 @@ namespace DmitryAdventure
             
             if (jumpAction.triggered && groundedPlayer)
             {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * GravityValue);
             }
 
-            playerVelocity.y += gravityValue * Time.deltaTime;
+            playerVelocity.y += GravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
             
             // Rotate towards camera direction 
