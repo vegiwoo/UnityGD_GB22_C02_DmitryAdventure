@@ -20,6 +20,5 @@ namespace DmitryAdventure
             aim.position = PointerCurrentPosition;
         }
     }
-
 }
 

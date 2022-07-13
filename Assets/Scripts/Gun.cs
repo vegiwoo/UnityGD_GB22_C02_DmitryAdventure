@@ -33,7 +33,6 @@ namespace DmitryAdventure
             var rotation = Vector3.RotateTowards(transform.forward, direction, 10f * Time.deltaTime, 0f);
             transform.rotation = Quaternion.LookRotation(rotation);
             
-            
             // TODO: Вынести в InputController ?
             if (Input.GetMouseButton(0) && shotDelayTimer <= 0f)
                 Fire();

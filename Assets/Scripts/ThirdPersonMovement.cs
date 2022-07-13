@@ -19,6 +19,8 @@ public class ThirdPersonMovement : MonoBehaviour
     
     private Rigidbody playerRigidbody;
     
+    private AimPointer _aimPointer;
+    
     private void Awake()
     {
         moveSpeed = 25;
@@ -27,6 +29,8 @@ public class ThirdPersonMovement : MonoBehaviour
 
         playerRigidbody = GetComponent<Rigidbody>();
         playerRigidbody.mass = 2;
+        
+        _aimPointer = GetComponentInChildren<AimPointer>();
     }
 
     private void FixedUpdate()
@@ -41,7 +45,7 @@ public class ThirdPersonMovement : MonoBehaviour
             var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
+            
             if (playerRigidbody.velocity.magnitude < maxVelocity)
             {
                 var moveDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
