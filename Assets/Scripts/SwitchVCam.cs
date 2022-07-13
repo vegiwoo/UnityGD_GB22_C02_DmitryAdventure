@@ -8,6 +8,8 @@ namespace DmitryAdventure
     {
         [SerializeField] private PlayerInput playerInput;
         [SerializeField] private int priorityBoostAmount = 10;
+        [SerializeField] private Canvas thirdPersonCanvas;
+        [SerializeField] private Canvas aimCanvas;
         
         private InputAction _aimAction;
         private CinemachineVirtualCamera _virtualCamera;
@@ -33,11 +35,15 @@ namespace DmitryAdventure
         private  void StartAim(InputAction.CallbackContext context)
         {
             _virtualCamera.Priority += priorityBoostAmount;
+            aimCanvas.enabled = true;
+            thirdPersonCanvas.enabled = false;
         }
         
         private  void CancelAim(InputAction.CallbackContext context)
         {
             _virtualCamera.Priority -= priorityBoostAmount;
+            aimCanvas.enabled = false;
+            thirdPersonCanvas.enabled = true;
         }
     }
 }

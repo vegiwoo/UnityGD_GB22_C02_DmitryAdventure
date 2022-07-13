@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DmitryAdventure
@@ -5,31 +6,52 @@ namespace DmitryAdventure
     public class Bullet : MonoBehaviour
     {
         [SerializeField] private GameObject effectPrefab;
-        private Rigidbody rb;
-        private float bulletSpeed = 20f;
+        private Rigidbody _bulletRigidbody;
+
+        /// <summary>
+        /// Скорость пули.
+        /// </summary>
+        public float BulletVelocity { get; set; }
 
         /// <summary>
         /// Точка выстрела
         /// </summary>
-        private Vector3 PointOfShoot { get; set; }
+        public Transform PointOfShoot { get; set; }
+
+        public Vector3 TargetPosition { get; set; }
 
         /// <summary>
         /// Расстояние промаха пули от точки выстрела.
         /// </summary>
-        private float MissDistance { get; set; } = 50f;
+        private float MissDistance { get; set; }
         
         private void Start()
         {
-            rb = GetComponent<Rigidbody>();
-            PointOfShoot = transform.position;
-        }
+            _bulletRigidbody = GetComponent<Rigidbody>();
 
+            MissDistance = 50;
+        }
+        //
+        // private void Update()
+        // {
+        //      if (Vector3.Distance(PointOfShoot.position, transform.position) > MissDistance)
+        //          Destroy(gameObject);
+        //      else if (TargetPosition != Vector3.zero)
+        //      
+        //          transform.position =
+        //              Vector3.MoveTowards(transform.position, TargetPosition, BulletVelocity * Time.deltaTime);
+        // }
+        //
+        
+        
         private void FixedUpdate()
         {
-            if (Vector3.Distance(PointOfShoot, transform.position) > MissDistance)
+            if (PointOfShoot == null) return; 
+            
+            if (Vector3.Distance(PointOfShoot.position, transform.position) > MissDistance)
                 Destroy(gameObject);
-            else
-                rb.AddForce(transform.forward * bulletSpeed, ForceMode.VelocityChange);
+            
+            _bulletRigidbody.velocity = (TargetPosition - PointOfShoot.position) * BulletVelocity / 2;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -42,7 +64,7 @@ namespace DmitryAdventure
                 enemy.OnHit();
             }
             
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

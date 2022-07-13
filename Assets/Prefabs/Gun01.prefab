@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3433803662626051336}
   m_Layer: 0
-  m_Name: BulletPoint
+  m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -304,6 +304,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1954747178576560728, guid: 5a8849fb3c45b4a55b0d333f329feda5, type: 3}
-  bulletPoint: {fileID: 3433803662626051336}
+  barrel: {fileID: 3433803662626051336}
   shotSound: {fileID: 1305385013842477256}
-  shotDelay: 0
+  shotDelay: 3

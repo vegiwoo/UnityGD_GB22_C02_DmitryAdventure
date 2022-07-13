@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // hp = 100;
@@ -10,8 +9,6 @@ namespace DmitryAdventure
     /// </summary>
     public class Enemy : MonoBehaviour
     {
-    
-        
         /// <summary>
         /// Номер маршрута врага
         /// </summary>
@@ -32,7 +29,7 @@ namespace DmitryAdventure
         private Rigidbody rb;
         
         [Tooltip("Радиус атаки")]
-        [SerializeField, Range(5,15)] private float attackRadius;
+        [SerializeField, Range(10f,20f)] private float attackRadius;
 
         private Transform attackTarget;
         
@@ -43,7 +40,7 @@ namespace DmitryAdventure
             rb = transform.GetComponent<Rigidbody>();
             rb.mass = 30;
 
-            attackRadius = 5f;
+            attackRadius = 15f;
         }
 
         private void Start()
@@ -76,12 +73,10 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            var hero = other.gameObject.GetComponent<PlayerController>().gameObject;
-            if (hero != null)
-            {
-                State = EnemyState.Attack;
-                attackTarget = hero.transform;
-            }
+            if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
+            
+            State = EnemyState.Attack;
+            attackTarget = other.gameObject.transform;
         }
     }
 }
