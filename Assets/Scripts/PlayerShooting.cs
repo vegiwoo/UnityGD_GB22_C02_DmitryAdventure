@@ -10,27 +10,27 @@ namespace DmitryAdventure
         /// </summary>
         [SerializeField] private Gun gun;
         
-        private PlayerInput playerInput;
-        private InputAction fireAction;
+        private PlayerInput _playerInput;
+        private InputAction _fireAction;
         
         private Camera _camera;
      
         private void Awake()
         {
-            playerInput = GetComponent<PlayerInput>();
-            fireAction = playerInput.actions["Fire"];
+            _playerInput = GetComponent<PlayerInput>();
+            _fireAction = _playerInput.actions["Fire"];
             
             _camera = Camera.main;
         }
         
         private void OnEnable()
         {
-            fireAction.performed += ShootWeapon;
+            _fireAction.performed += ShootWeapon;
         }
 
         private void OnDisable()
         {
-            fireAction.performed -= ShootWeapon;
+            _fireAction.performed -= ShootWeapon;
         }
         
         private void ShootWeapon(InputAction.CallbackContext context)

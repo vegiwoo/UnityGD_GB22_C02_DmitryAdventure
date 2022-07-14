@@ -597,7 +597,6 @@ GameObject:
   - component: {fileID: 3565162552792234291}
   - component: {fileID: 4509799710015193051}
   - component: {fileID: 626113599404731193}
-  - component: {fileID: 159238561242415357}
   m_Layer: 0
   m_Name: Arch
   m_TagString: Untagged
@@ -2641,7 +2640,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5368
+  m_VersionIndex: 5419
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2745,21 +2744,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &159238561242415357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791029373968917763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5181473f934074acfb346c7911e99f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  doorTrigger: {fileID: 3820012038467828690}
-  leftDoorHinges: {fileID: 7497114447803187466}
-  rightDoorHinges: {fileID: 590246865684683038}
 --- !u!1 &1594699599256850189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2771,6 +2755,7 @@ GameObject:
   - component: {fileID: 590246865684683038}
   - component: {fileID: 4377859648644835669}
   - component: {fileID: 6778413169064891560}
+  - component: {fileID: 262585500}
   m_Layer: 0
   m_Name: RightDoorHinges
   m_TagString: Untagged
@@ -2844,6 +2829,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &262585500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594699599256850189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5181473f934074acfb346c7911e99f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorOpeningAngle: 80
+  doorTrigger: {fileID: 3820012038467828690}
+  doorPlacement: 1
 --- !u!1 &2414910543243582057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,6 +2855,7 @@ GameObject:
   - component: {fileID: 7497114447803187466}
   - component: {fileID: 6312306522064239518}
   - component: {fileID: 5291756541882899196}
+  - component: {fileID: 270670866}
   m_Layer: 0
   m_Name: LeftDoorHinges
   m_TagString: Untagged
@@ -2928,6 +2929,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &270670866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414910543243582057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5181473f934074acfb346c7911e99f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorOpeningAngle: 80
+  doorTrigger: {fileID: 3820012038467828690}
+  doorPlacement: 0
 --- !u!1 &4183798071866172449
 GameObject:
   m_ObjectHideFlags: 0
@@ -3278,7 +3294,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6068
+  m_VersionIndex: 6119
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3675,7 +3691,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6165
+  m_VersionIndex: 6216
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

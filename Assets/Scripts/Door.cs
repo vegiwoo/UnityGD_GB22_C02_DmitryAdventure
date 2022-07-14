@@ -1,20 +1,28 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DmitryAdventure
 {
+    
+    public enum DoorPlacement
+    {
+        Left, Right
+    }
+    
     public class Door : MonoBehaviour
     {
-        [SerializeField] private DoorTrigger doorTrigger;
-        [SerializeField] private Transform leftDoorHinges;
-        [SerializeField] private Transform rightDoorHinges;
+        [SerializeField, Tooltip("Угол открывания дверей")]
+        private float doorOpeningAngle;
 
-        private bool isOpen;
+        [SerializeField] private DoorTrigger doorTrigger;
+
+        [SerializeField] private DoorPlacement doorPlacement;
+        private bool _isOpen = false;
+
+        private Coroutine _doorOpeningCoroutine;
 
         private void Start()
         {
+            doorOpeningAngle = 75;
             doorTrigger.Notify += OpenСloseDoor;
         }
 
@@ -22,29 +30,36 @@ namespace DmitryAdventure
         {
             switch (heroInTrigger)
             {
+                // Открыть двери 
                 case true:
-                    if (!isOpen)
+                    if (!_isOpen)
                     {
-                        // Открыть двери 
-                        if(rightDoorHinges != null)
-                            rightDoorHinges.RotateAround(rightDoorHinges.position, rightDoorHinges.up, 80);
-                        if(leftDoorHinges != null)
-                            leftDoorHinges.RotateAround(leftDoorHinges.position, leftDoorHinges.up, -80);
-                        
-                        
-                        isOpen = true;
+                        switch (doorPlacement)
+                        {
+                            case DoorPlacement.Left:
+                                transform.Rotate(0,-doorOpeningAngle,0, Space.Self);
+                                break;
+                            case DoorPlacement.Right:
+                                transform.Rotate(0,doorOpeningAngle,0, Space.Self);
+                                break; ;
+                        }
+                        _isOpen = true;
                     }
                     break;
+                // Закрыть двери
                 case false:
-                    if (isOpen)
+                    if (_isOpen)
                     {
-                        // Закрыть двери
-                        if(rightDoorHinges != null)
-                            rightDoorHinges.RotateAround(rightDoorHinges.position, rightDoorHinges.up, -80);
-                        if(leftDoorHinges != null)
-                            leftDoorHinges.RotateAround(leftDoorHinges.position, leftDoorHinges.up, 80);
-                        
-                        isOpen = false;
+                        switch (doorPlacement)
+                        {
+                            case DoorPlacement.Left:
+                                transform.Rotate(0,doorOpeningAngle,0, Space.Self);
+                                break;
+                            case DoorPlacement.Right:
+                                transform.Rotate(0,-doorOpeningAngle,0, Space.Self);
+                                break;
+                        }
+                        _isOpen = false;
                     }
                     break;
             }
@@ -56,3 +71,8 @@ namespace DmitryAdventure
         }
     }
 }
+
+/*
+ *  TODO: 1. Открывание дверей по joint
+ *  TODO: 2. Открывание дверей в направлении движения персонажа
+ */

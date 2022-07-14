@@ -18,6 +18,9 @@ namespace DmitryAdventure
         /// </summary>
         public Transform PointOfShoot { get; set; }
 
+        /// <summary>
+        /// Позиция цели.
+        /// </summary>
         public Vector3 TargetPosition { get; set; }
 
         /// <summary>
@@ -28,22 +31,9 @@ namespace DmitryAdventure
         private void Start()
         {
             _bulletRigidbody = GetComponent<Rigidbody>();
-
             MissDistance = 50;
         }
-        //
-        // private void Update()
-        // {
-        //      if (Vector3.Distance(PointOfShoot.position, transform.position) > MissDistance)
-        //          Destroy(gameObject);
-        //      else if (TargetPosition != Vector3.zero)
-        //      
-        //          transform.position =
-        //              Vector3.MoveTowards(transform.position, TargetPosition, BulletVelocity * Time.deltaTime);
-        // }
-        //
-        
-        
+
         private void FixedUpdate()
         {
             if (PointOfShoot == null) return; 

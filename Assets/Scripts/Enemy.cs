@@ -26,20 +26,22 @@ namespace DmitryAdventure
         /// </summary>
         public bool IsMovingForward { get;  set; }
 
-        private Rigidbody rb;
+        private Rigidbody _enemyRigidbody;
         
         [Tooltip("Радиус атаки")]
         [SerializeField, Range(10f,20f)] private float attackRadius;
 
-        private Transform attackTarget;
+        /// <summary>
+        /// Цель атаки
+        /// </summary>
+        private Transform _attackTarget;
         
         public EnemyState State { get; private set; }
         
         private void Awake()
         {
-            rb = transform.GetComponent<Rigidbody>();
-            rb.mass = 30;
-
+            _enemyRigidbody = transform.GetComponent<Rigidbody>();
+            _enemyRigidbody.mass = 30;
             attackRadius = 15f;
         }
 
@@ -50,20 +52,18 @@ namespace DmitryAdventure
 
         private void Update()
         {
-            if (State == EnemyState.Attack && attackTarget != null)
-            {
-                var direction = attackTarget.position - transform.position;
-                var rotation = Vector3.RotateTowards(transform.forward, direction, 10f * Time.deltaTime, 0f);
-                transform.rotation = Quaternion.LookRotation(rotation);
+            if (State != EnemyState.Attack || _attackTarget == null) return;
+            
+            var direction = _attackTarget.position - transform.position;
+            var rotation = Vector3.RotateTowards(transform.forward, direction, 10f * Time.deltaTime, 0f);
+            transform.rotation = Quaternion.LookRotation(rotation);
 
-                if (Vector3.Distance(transform.position, attackTarget.position) > attackRadius)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position,
-                        attackTarget.position, 0.05f);
-                }
-                
-                // Стреляет в героя
+            if (Vector3.Distance(transform.position, _attackTarget.position) > attackRadius)
+            {
+                transform.position = Vector3.MoveTowards(transform.position,
+                    _attackTarget.position, 0.05f);
             }
+            // TODO: Стрельба в героя
         }
 
         public void OnHit()
@@ -76,7 +76,7 @@ namespace DmitryAdventure
             if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
             
             State = EnemyState.Attack;
-            attackTarget = other.gameObject.transform;
+            _attackTarget = other.gameObject.transform;
         }
     }
 }

@@ -48,6 +48,7 @@ namespace DmitryAdventure
         /// <remarks>
         /// - генерирует пулю
         /// - воспроизводит звук выстрела
+        /// - запускает таймер задержки
         /// </remarks>>
         public void Fire(Vector3 targetPosition)
         {
@@ -58,7 +59,6 @@ namespace DmitryAdventure
             newBullet.PointOfShoot = barrel;
             newBullet.TargetPosition = targetPosition;
             newBullet.BulletVelocity = Shoot(targetPosition);
-            
             
             shotSound.pitch = Random.Range(0.8f, 1.2f); 
             shotSound.Play();

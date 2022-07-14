@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace DmitryAdventure
 {
     [DisallowMultipleComponent]
     public class GameManager : MonoBehaviour
     {
-        [FormerlySerializedAs("enemies")] [SerializeField] private EnemiesController enemiesController;
+       [SerializeField] private EnemiesController enemiesController;
         
         [Tooltip("Количество активных врагов на маршруте")]
         [SerializeField, Range(1,3)] private int numberEnemiesOnRoute = 1;

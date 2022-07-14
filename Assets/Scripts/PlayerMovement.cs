@@ -16,6 +16,9 @@ namespace DmitryAdventure
 
         [SerializeField, Tooltip("Скорость персонажа")]
         private float playerSpeed;
+
+        [SerializeField, Tooltip("Коэффициент ускорения при беге"), Range(2,5)]
+        private float runningAcceleration;
         
         [SerializeField, Tooltip("Скорость вращения"), Range(1f,5f)]
         private float rotationSpeed;
@@ -35,12 +38,7 @@ namespace DmitryAdventure
         private InputAction _runAction;
         
         private Camera _camera;
-
-        private void Start()
-        {
-            _camera = Camera.main;
-        }
-
+        
         private void Awake()
         {
             _controller = GetComponent<CharacterController>();
@@ -50,7 +48,13 @@ namespace DmitryAdventure
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
 
+            _camera = Camera.main;
+        }
+        
+        private void Start()
+        {
             playerSpeed = 2f;
+            runningAcceleration = 2.5f;
             jumpHeight = 0.4f;
             rotationSpeed = 4f;
 
@@ -77,7 +81,7 @@ namespace DmitryAdventure
 
             var currentSpeed = playerSpeed;
             if (_runAction.inProgress)
-                currentSpeed *= 2.5f;
+                currentSpeed *= runningAcceleration;
 
             _controller.Move(move * (Time.deltaTime * currentSpeed));
             
