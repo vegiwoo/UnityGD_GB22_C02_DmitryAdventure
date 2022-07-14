@@ -32,6 +32,7 @@ namespace DmitryAdventure
 
         private InputAction _moveAction;
         private InputAction _jumpAction;
+        private InputAction _runAction;
         
         private Camera _camera;
 
@@ -47,9 +48,10 @@ namespace DmitryAdventure
             _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
+            _runAction = _playerInput.actions["Run"];
 
             playerSpeed = 2f;
-            jumpHeight = 0.7f;
+            jumpHeight = 0.4f;
             rotationSpeed = 4f;
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -72,8 +74,12 @@ namespace DmitryAdventure
                 move = move.x * camTransform.right.normalized + move.z * camTransform.forward.normalized;
                 move.y = 0f;
             }
-            
-            _controller.Move(move * Time.deltaTime * playerSpeed);
+
+            var currentSpeed = playerSpeed;
+            if (_runAction.inProgress)
+                currentSpeed *= 2.5f;
+
+            _controller.Move(move * (Time.deltaTime * currentSpeed));
             
             if (_jumpAction.triggered && _groundedPlayer)
             {
@@ -90,3 +96,6 @@ namespace DmitryAdventure
         }
     }
 }
+
+// 6:40
+// https://www.youtube.com/watch?v=vThsrS4CcBM&list=PLsayvOBS34UC28wBw-3Lzu1zJ9sGxyLDO&index=1

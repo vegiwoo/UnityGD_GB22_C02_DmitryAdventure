@@ -266,6 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7451214802889846938}
   - component: {fileID: 2552460675803479594}
+  - component: {fileID: 4242527816888148781}
   m_Layer: 0
   m_Name: Gun01
   m_TagString: Untagged
@@ -304,6 +305,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1954747178576560728, guid: 5a8849fb3c45b4a55b0d333f329feda5, type: 3}
-  barrel: {fileID: 3433803662626051336}
   shotSound: {fileID: 1305385013842477256}
+  angeleInDeg: 0
+  barrel: {fileID: 3433803662626051336}
   shotDelay: 3
+--- !u!65 &4242527816888148781
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507964070017434373}
+  m_Material: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.65647346, y: 0.65964556, z: 2.1301641}
+  m_Center: {x: 0.01226887, y: 0.0033216346, z: -0.03250828}
