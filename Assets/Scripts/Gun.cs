@@ -10,27 +10,40 @@ namespace DmitryAdventure
         
         [SerializeField] 
         private AudioSource shotSound;
+
+        [SerializeField, Range(5,10)] 
+        private float lowFiringRange;
+        /// <summary>
+        /// Lower firing range.
+        /// </summary>
+        public float LowFiringRange => lowFiringRange;
         
-        [SerializeField, Tooltip("Угол стрельбы в градусах"), Range(8,85)]
+        [SerializeField, Range(20, 100)] 
+        private float upFiringRange;
+        /// <summary>
+        /// Upper firing range.
+        /// </summary>
+        public float UpFiringRange => upFiringRange;
+
+        [SerializeField, Tooltip("Shooting angle in degrees"), Range(8,85)]
         private float angeleInDeg;
         
-        [SerializeField, Tooltip("Точка появления пули")]
+        [SerializeField, Tooltip("Bullet spawn point")] 
         private Transform barrel;
+        public Transform Barrel => barrel;
         
-        [SerializeField, Range(0.5f,2f), Tooltip("Задержка выстрела")]
+        [SerializeField, Range(0.5f,2f), Tooltip("Delay between shots")]
         private float shotDelay;
-       
-        /// <summary>
-        /// Таймер задержки выстрела
-        /// </summary>
-        private float shotDelayTimer;
+        private float _shotDelayTimer;
 
         private static readonly float Gravity = Physics.gravity.y;
         
         private void Start()
         {
+            lowFiringRange = 5;
+            upFiringRange = 50;
             angeleInDeg = 10;
-            shotDelayTimer = 0f;
+            _shotDelayTimer = 0f;
             shotDelay = 0.5f;
         }
         
@@ -38,8 +51,8 @@ namespace DmitryAdventure
         {
             transform.localEulerAngles = new Vector3(-angeleInDeg, 0, 0);
             
-            if (shotDelayTimer > 0)
-                shotDelayTimer -= Time.deltaTime;
+            if (_shotDelayTimer > 0)
+                _shotDelayTimer -= Time.deltaTime;
         }
         
         /// <summary>
@@ -52,7 +65,7 @@ namespace DmitryAdventure
         /// </remarks>>
         public void Fire(Vector3 targetPosition)
         {
-            if(shotDelayTimer > 0) return;
+            if(_shotDelayTimer > 0) return;
 
             // TODO: Реализовать как пул объетов !
             var newBullet = Instantiate(bulletPrefab, barrel.position,barrel.rotation);
@@ -63,7 +76,7 @@ namespace DmitryAdventure
             shotSound.pitch = Random.Range(0.8f, 1.2f); 
             shotSound.Play();
             
-            shotDelayTimer = shotDelay;
+            _shotDelayTimer = shotDelay;
         }
         
         

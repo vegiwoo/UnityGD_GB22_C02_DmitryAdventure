@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4242527816888148781}
   m_Layer: 0
   m_Name: Gun01
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,7 +306,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1954747178576560728, guid: 5a8849fb3c45b4a55b0d333f329feda5, type: 3}
   shotSound: {fileID: 1305385013842477256}
-  angeleInDeg: 0
+  lowFiringRange: 5
+  upFiringRange: 50
+  angeleInDeg: 10
   barrel: {fileID: 3433803662626051336}
   shotDelay: 3
 --- !u!65 &4242527816888148781

@@ -1030,6 +1030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c238771e63c49fbb9d4797b910457e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackRadius: 0
 --- !u!54 &7661927029065131719
 Rigidbody:
   m_ObjectHideFlags: 0
