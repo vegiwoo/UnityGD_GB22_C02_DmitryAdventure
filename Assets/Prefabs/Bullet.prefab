@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 1332399844379766, guid: d5a42f6bd9584fe4ab47d227092cebdf, type: 3}
+  damage: 45
 --- !u!54 &842218338624290543
 Rigidbody:
   m_ObjectHideFlags: 0

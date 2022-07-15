@@ -12,6 +12,8 @@ namespace DmitryAdventure
         [SerializeField] private GameObject effectPrefab;
         private Rigidbody _bulletRigidbody;
 
+        [SerializeField] private float damage;
+        
         public float BulletSpeed { get; set; }
         public float BulletRange { get; set; }
         public Transform PointOfShoot { get; set; }
@@ -43,9 +45,7 @@ namespace DmitryAdventure
              
              var enemy = collision.gameObject.GetComponent<Enemy>();
              if (enemy != null)
-             {
-                 enemy.OnHit();
-             }
+                 enemy.OnHit(damage);
              
              Destroy(gameObject);
          }

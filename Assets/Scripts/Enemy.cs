@@ -1,82 +1,111 @@
 using UnityEngine;
 
-// hp = 100;
-
-namespace DmitryAdventure 
+namespace DmitryAdventure
 {
     /// <summary>
-    /// Противник.
+    /// Represents item of an enemy.
     /// </summary>
-    public class Enemy : MonoBehaviour
+    public class Enemy : Character
     {
-        /// <summary>
-        /// Номер маршрута врага
-        /// </summary>
-        public int RouteNumber { get;  set; }
-        /// <summary>
-        /// Текущая точка маршрута, к которой движется враг
-        /// </summary>
-        public Vector3 TargetPoint { get; set; }
-        /// <summary>
-        /// Скорость дивжения.
-        /// </summary>
-        public float MovingSpeed { get; set; } = 1f;
-        /// <summary>
-        /// Флаг движения врага вперед по маршруту.
-        /// </summary>
-        public bool IsMovingForward { get;  set; }
-
+        #region Сonstants, variables & properties
+        
         private Rigidbody _enemyRigidbody;
-        
-        [Tooltip("Радиус атаки")]
-        [SerializeField, Range(10f,20f)] private float attackRadius;
 
         /// <summary>
-        /// Цель атаки
+        /// Enemy route number.
         /// </summary>
-        private Transform _attackTarget;
+        public int RouteNumber { get; set; }
+
+        /// <summary>
+        /// Current waypoint enemy is moving towards.
+        /// </summary>
+        public Vector3 CurrentWaypoint { get; set; }
+
+        /// <summary>
+        /// Flag of enemy moving forward along route.
+        /// </summary>
+        public bool IsMovingForward { get; set; }
         
+        /// <summary>
+        /// Enemy Attack Range.
+        /// </summary>
+        [Tooltip("Enemy Attack Range")] [SerializeField, Range(10f, 30f)]
+        private float enemyAttackRange;
+
+        /// <summary>
+        /// Target of enemy attack.
+        /// </summary>
+        private Transform _targetEnemyAttack;
+
+        /// <summary>
+        /// Current enemy state.
+        /// </summary>
         public EnemyState State { get; private set; }
-        
+
+        #endregion
+
+        #region Monobehavior methods
+
         private void Awake()
         {
             _enemyRigidbody = transform.GetComponent<Rigidbody>();
-            _enemyRigidbody.mass = 30;
-            attackRadius = 15f;
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            _enemyRigidbody.mass = 30;
+            enemyAttackRange = 30f;
             State = EnemyState.Patrol;
         }
 
-        private void Update()
+        protected override void Update()
         {
-            if (State != EnemyState.Attack || _attackTarget == null) return;
+            base.Update();
             
-            var direction = _attackTarget.position - transform.position;
+            if (State != EnemyState.Attack || _targetEnemyAttack == null) return;
+
+            var direction = _targetEnemyAttack.position - transform.position;
             var rotation = Vector3.RotateTowards(transform.forward, direction, 10f * Time.deltaTime, 0f);
             transform.rotation = Quaternion.LookRotation(rotation);
 
-            if (Vector3.Distance(transform.position, _attackTarget.position) > attackRadius)
+            if (Vector3.Distance(transform.position, _targetEnemyAttack.position) > enemyAttackRange)
             {
                 transform.position = Vector3.MoveTowards(transform.position,
-                    _attackTarget.position, 0.05f);
+                    _targetEnemyAttack.position, 0.05f);
             }
             // TODO: Стрельба в героя
         }
 
-        public void OnHit()
-        {
-            Debug.Log("OnHit!");
-        }
+        #endregion
+
+        #region Functionality
+
+        #region Coroutines
+
+        // ...
+
+        #endregion
+
+        #region Event handlers
+
+        // ...
+
+        #endregion
+
+        #region Other methods
+        
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.GetComponent<PlayerMovement>() == null) return;
-            
+
             State = EnemyState.Attack;
-            _attackTarget = other.gameObject.transform;
+            _targetEnemyAttack = other.gameObject.transform;
         }
+
+        #endregion
+
+        #endregion
     }
 }

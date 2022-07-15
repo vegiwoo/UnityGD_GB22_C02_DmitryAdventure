@@ -70,12 +70,12 @@ namespace DmitryAdventure
 
                     var currentEnemyTransform = enemiesOnRoute[j].transform;
 
-                    if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.TargetPoint) > 0.5f)
+                    if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.CurrentWaypoint) > 0.5f)
                     {
                         currentEnemy.transform.position = Vector3.MoveTowards(currentEnemy.transform.position,
-                            currentEnemy.TargetPoint, 0.05f);
+                            currentEnemy.CurrentWaypoint, 0.05f);
 
-                        var rotateDir = currentEnemy.TargetPoint - currentEnemyTransform.position;
+                        var rotateDir = currentEnemy.CurrentWaypoint - currentEnemyTransform.position;
                         var rotation = Vector3.RotateTowards(currentEnemyTransform.forward,
                             new Vector3(rotateDir.x, 0, rotateDir.z),
                             10f * Time.deltaTime, 0f);
@@ -83,29 +83,29 @@ namespace DmitryAdventure
                     }
                     else
                     {
-                        currentEnemyTransform.position = currentEnemy.TargetPoint;
-                        var indexOfTargetPoint = Array.IndexOf(currentRoute.wayPoints, currentEnemy.TargetPoint);
+                        currentEnemyTransform.position = currentEnemy.CurrentWaypoint;
+                        var indexOfTargetPoint = Array.IndexOf(currentRoute.wayPoints, currentEnemy.CurrentWaypoint);
 
                         switch (currentEnemy.IsMovingForward)
                         {
                             case true:
                                 if (currentEnemyTransform.position != currentRoute.wayPoints.Last())
-                                    currentEnemy.TargetPoint = currentRoute.wayPoints[indexOfTargetPoint + 1];
+                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint + 1];
                                 else
                                 {
                                     currentEnemy.IsMovingForward = false;
-                                    currentEnemy.TargetPoint =
+                                    currentEnemy.CurrentWaypoint =
                                         currentRoute.wayPoints[currentRoute.wayPoints.Length - 1];
                                 }
 
                                 break;
                             case false:
                                 if (currentEnemyTransform.position != currentRoute.wayPoints.First())
-                                    currentEnemy.TargetPoint = currentRoute.wayPoints[indexOfTargetPoint - 1];
+                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint - 1];
                                 else
                                 {
                                     currentEnemy.IsMovingForward = true;
-                                    currentEnemy.TargetPoint = currentRoute.wayPoints[1];
+                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[1];
                                 }
 
                                 break;
@@ -143,20 +143,26 @@ namespace DmitryAdventure
          /// </summary>
          private void CheckEnemies()
          {
+             for (var index = 0; index < _enemies.Count; index++)
+                 if (_enemies[index].hp <= 0)
+                     _enemies.RemoveAt(index);
+
              for (var i = 0; i < enemiesController.routes.Length; i++)
              {
-                 if (_enemies != null && _enemies.Count(en => en.RouteNumber == i) == numberEnemiesOnRoute) continue;
+                 if (_enemies.Count(en => en.RouteNumber == i) == numberEnemiesOnRoute) continue;
 
                  var spawnPoint = enemiesController.routes[i].wayPoints[0];
                  var targetPoint = enemiesController.routes[i].wayPoints[1];
                  var newEnemy = Instantiate(enemiesController.enemyPrefab, spawnPoint, Quaternion.identity);
                  newEnemy.RouteNumber = i;
-                 newEnemy.TargetPoint = targetPoint;
+                 newEnemy.CurrentWaypoint = targetPoint;
                  newEnemy.IsMovingForward = true;
                  _enemies.Add(newEnemy);
              }
          }
-        #endregion
-        #endregion
+
+         #endregion
+
+         #endregion
     }
 }
