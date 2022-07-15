@@ -20,10 +20,8 @@ namespace DmitryAdventure
         [Tooltip("Required number enemies on route")] [SerializeField, Range(1, 3)]
         private int numberEnemiesOnRoute = 1;
 
-        private readonly List<Enemy> _enemies = new List<Enemy>(10);
+        private readonly List<Enemy> _enemies = new(10);
         private Coroutine _walkingEnemiesCoroutine;
-
-        private Vector3 _heroAimingPosition = Vector3.zero;
 
         #endregion
 
@@ -31,7 +29,6 @@ namespace DmitryAdventure
 
         private void Start()
         {
-            _heroAimingPosition = Vector3.zero;
             hero.HeroAimingNotify += PlayerIsAiming;
         }
 
@@ -126,17 +123,15 @@ namespace DmitryAdventure
         /// <summary>
         /// Gets a notification if player is aiming.
         /// </summary>
-        /// <param name="aimingPosition">Aiming position.</param>
-        private void PlayerIsAiming(Vector3 aimingPosition)
+        /// <param name="isAiming">Did player aim.</param>
+        private void PlayerIsAiming(bool isAiming)
         {
-            _heroAimingPosition = aimingPosition;
-
-            if (_heroAimingPosition == Vector3.zero)
+            if (!isAiming)
                 foreach (var aiming in aimingColorizes)
-                    aiming.SetColor(new Color32(237, 229,45,255)); 
+                    aiming.Set(new Color32(237, 229,45,255)); 
             else
                 foreach (var aiming in aimingColorizes)
-                    aiming.SetColor(new Color32(121, 237,45,255)); 
+                    aiming.Set(new Color32(121, 237,45,255)); 
         }
 
         #endregion

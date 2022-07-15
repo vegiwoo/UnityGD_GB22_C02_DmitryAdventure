@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +8,7 @@ namespace DmitryAdventure
     {
         #region Variables & Constants
         
-        public delegate void HeroAimingEvent(Vector3 targetShooting);
+        public delegate void HeroAimingEvent(bool isAiming);
         public event HeroAimingEvent? HeroAimingNotify;
         
         [SerializeField, Tooltip("Character's current weapon")] 
@@ -19,7 +18,7 @@ namespace DmitryAdventure
         private InputAction _fireAction;
         private Camera _camera;
         private Vector3 _aimingPoint;
-        
+
         #endregion
         
         #region Monobehavior methods
@@ -28,7 +27,8 @@ namespace DmitryAdventure
         {
             _playerInput = GetComponent<PlayerInput>();
             _fireAction = _playerInput.actions["Fire"];
-            if (Camera.main != null) _camera = Camera.main;
+            
+            _camera = Camera.main;
             _aimingPoint = Vector3.zero;
         }
 
@@ -64,16 +64,23 @@ namespace DmitryAdventure
         /// </summary>
         private void TakeAim()
         {
-            if (!Physics.Raycast(gun.Barrel.position, _camera.transform.forward, out var hit)) 
-                return;
+            var camTransform = _camera.transform;
             
+            if (!Physics.Raycast(camTransform.position, camTransform.forward, out var hit)) 
+                return;
+
+            var isAiming = false;
+
             var targetDistance = Vector3.Distance(gun.Barrel.position, hit.point);
             if (targetDistance > gun.LowFiringRange && targetDistance < gun.UpFiringRange)
+            {
+                isAiming = true;
                 _aimingPoint = hit.point;
-            else 
-                _aimingPoint = Vector3.zero;
-            
-            OnNotify(_aimingPoint);
+            }
+            else
+                _aimingPoint = camTransform.position + camTransform.forward * gun.UpFiringRange;
+
+            OnNotify(isAiming);
         }
         
         /// <summary>
@@ -84,19 +91,13 @@ namespace DmitryAdventure
         /// </remarks>
         private void ShootWeapon(InputAction.CallbackContext _)
         {
-            if (_aimingPoint != Vector3.zero)
-                gun.Fire(_aimingPoint);
-            
-            else
-            {
-                // TODO: Выстрел в воздух (когда цель не захвачена)
-            }
+            gun.Fire(_aimingPoint);
         }
         #endregion
 
-        private void OnNotify(Vector3 targetShooting)
+        private void OnNotify(bool isAiming)
         {
-            HeroAimingNotify?.Invoke(targetShooting);
+            HeroAimingNotify?.Invoke(isAiming);
         }
     }
 }

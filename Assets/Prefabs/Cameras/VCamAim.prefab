@@ -65,7 +65,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.043307, y: 1}
+    m_SensorSize: {x: 1.7438331, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 1
@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 2458386039024898867}
   - component: {fileID: 2458386039024898865}
   - component: {fileID: 2458386039024898864}
+  - component: {fileID: 1955474632}
   m_Layer: 5
   m_Name: AimReticle
   m_TagString: Untagged
@@ -156,7 +157,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2458386039024898865
 CanvasRenderer:
@@ -186,7 +187,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5cd7a1ac925704ca2b6be791e829c66e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8b85b3d390c6b481a870267ef6d17d7e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -196,6 +197,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1955474632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2458386039024898866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a569c1ecf8bac4c0e948a979b7cb4489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 2458386039024898864}
 --- !u!1 &2458386039302888581
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,8 +378,8 @@ MonoBehaviour:
   m_YDamping: 0.2
   m_ZDamping: 1
   m_TargetMovementOnly: 1
-  m_ScreenX: 0.18
-  m_ScreenY: 0.49
+  m_ScreenX: 0.16
+  m_ScreenY: 0.68
   m_CameraDistance: 3
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -373,7 +387,7 @@ MonoBehaviour:
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.9
   m_SoftZoneHeight: 0.9
-  m_BiasX: 0.322
+  m_BiasX: 0.356
   m_BiasY: 0.016999973
   m_CenterOnActivate: 0
   m_GroupFramingMode: 2
@@ -401,7 +415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RecenterTarget: 2
   m_VerticalAxis:
-    Value: 17
+    Value: 20
     m_SpeedMode: 1
     m_MaxSpeed: 2
     m_AccelTime: 0.2

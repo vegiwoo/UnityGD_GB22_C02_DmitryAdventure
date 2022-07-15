@@ -311,6 +311,7 @@ MonoBehaviour:
   angeleInDeg: 10
   barrel: {fileID: 3433803662626051336}
   shotDelay: 3
+  bulletSpeed: 15
 --- !u!65 &4242527816888148781
 BoxCollider:
   m_ObjectHideFlags: 0

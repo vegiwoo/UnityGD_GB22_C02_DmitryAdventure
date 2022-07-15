@@ -5,27 +5,22 @@ namespace DmitryAdventure
 {
     public class Gun : MonoBehaviour
     {
-        [SerializeField] 
-        private Bullet bulletPrefab;
-        
-        [SerializeField] 
-        private AudioSource shotSound;
-
-        [SerializeField, Range(5,10)] 
-        private float lowFiringRange;
+        [SerializeField] private Bullet bulletPrefab;
+        [SerializeField] private AudioSource shotSound;
+        [SerializeField, Range(2,5)] private float lowFiringRange;
         /// <summary>
         /// Lower firing range.
         /// </summary>
         public float LowFiringRange => lowFiringRange;
         
-        [SerializeField, Range(20, 100)] 
+        [SerializeField, Range(6, 50)] 
         private float upFiringRange;
         /// <summary>
         /// Upper firing range.
         /// </summary>
         public float UpFiringRange => upFiringRange;
 
-        [SerializeField, Tooltip("Shooting angle in degrees"), Range(8,85)]
+        [SerializeField, Tooltip("Shooting angle in degrees"), Range(10,85)]
         private float angeleInDeg;
         
         [SerializeField, Tooltip("Bullet spawn point")] 
@@ -37,10 +32,10 @@ namespace DmitryAdventure
         private float _shotDelayTimer;
 
         private static readonly float Gravity = Physics.gravity.y;
-        
+
         private void Start()
         {
-            lowFiringRange = 5;
+            lowFiringRange = 2;
             upFiringRange = 50;
             angeleInDeg = 10;
             _shotDelayTimer = 0f;
@@ -56,36 +51,34 @@ namespace DmitryAdventure
         }
         
         /// <summary>
-        /// Осуществляет выстрел.
+        /// Gets command to fire weapon.
         /// </summary>
-        /// <remarks>
-        /// - генерирует пулю
-        /// - воспроизводит звук выстрела
-        /// - запускает таймер задержки
-        /// </remarks>>
+        /// <param name="targetPosition">Target position to hit.</param>
         public void Fire(Vector3 targetPosition)
         {
             if(_shotDelayTimer > 0) return;
 
             // TODO: Реализовать как пул объетов !
-            var newBullet = Instantiate(bulletPrefab, barrel.position,barrel.rotation);
+            var newBullet = Instantiate(bulletPrefab, barrel.position, barrel.rotation);
+            
             newBullet.PointOfShoot = barrel;
             newBullet.TargetPosition = targetPosition;
-            newBullet.BulletVelocity = Shoot(targetPosition);
-            
+            newBullet.BulletSpeed = CalculateBulletSpeed(targetPosition);;
+            newBullet.BulletRange = upFiringRange;
+
             shotSound.pitch = Random.Range(0.8f, 1.2f); 
             shotSound.Play();
             
             _shotDelayTimer = shotDelay;
         }
         
-        
         /// <summary>
-        /// Рассчитывает скорость полета пули по баллистической траектории;
+        /// Calculates speed of a bullet along a ballistic trajectory.
         /// </summary>
-        /// <param name="targetPosition">Позиция цели для попадания</param>
-        /// <returns></returns>
-        private float Shoot(Vector3 targetPosition)
+        /// <param name="targetPosition">Target position to hit.</param>
+        /// <returns>Speed of bullet.</returns>
+        /// <remarks>https://youtu.be/lXSzdGBIPkg</remarks>
+        private float CalculateBulletSpeed(Vector3 targetPosition)
         {
             var fromShooterToTarget = targetPosition - transform.position;
             var fromShooterToTargetXZ = new Vector3(fromShooterToTarget.x, 0, fromShooterToTarget.z);

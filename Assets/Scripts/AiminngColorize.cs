@@ -10,7 +10,8 @@ namespace DmitryAdventure
     public class AiminngColorize : MonoBehaviour
     {
         #region Variables & constants
-        public Image image;
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private Image image;
         #endregion
 
         #region Monobehavior methods
@@ -21,11 +22,10 @@ namespace DmitryAdventure
         #endregion
 
         #region Funcationality
-        public void SetColor(Color32 newColor)
+        public void Set(Color32 newColor)
         {
             if (image.color == newColor) return;
             image.color = newColor;
-            
         }
         #endregion
     }
