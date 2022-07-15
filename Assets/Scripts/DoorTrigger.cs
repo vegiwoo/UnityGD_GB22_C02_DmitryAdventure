@@ -1,32 +1,46 @@
 #nullable enable
+using System;
 using UnityEngine;
 
 namespace DmitryAdventure
 {
-    public sealed class DoorTrigger : MonoBehaviour
+    /// <summary>
+    /// Represents a door trigger
+    /// </summary>
+    public class DoorTrigger : MonoBehaviour
     {
-        public delegate void DoorTriggerHandler(bool heroInTrigger);  
-        public event DoorTriggerHandler? Notify;
-        
+        #region Сonstants, variables & properties
+
+        public delegate void DoorTriggerHandler(Vector3 characterPosition);  
+        public event DoorTriggerHandler? CharacterDiscoveryNotify;
+
+        #endregion
+
+        #region Monobehavior methods
+
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<PlayerMovement>() != null)
-            {
-                OnNotify(true);
-            }
+            if (other.gameObject.GetComponent<Character>() == null) return;
+            OnNotify(other.transform.forward);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.GetComponent<PlayerMovement>() != null)
-            {
-                OnNotify(false);
-            }
+            if (other.gameObject.GetComponent<Character>() == null) return;
+            OnNotify(Vector3.zero);
         }
 
-        private void OnNotify(bool herointrigger)
+        #endregion
+
+        #region Functionality
+        #region Event handlers
+
+        private void OnNotify(Vector3 charForwardDirection)
         {
-            Notify?.Invoke(herointrigger);
+            CharacterDiscoveryNotify?.Invoke(charForwardDirection);
         }
+
+        #endregion
+        #endregion
     }
 }

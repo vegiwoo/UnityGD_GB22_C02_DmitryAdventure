@@ -1,78 +1,90 @@
+using System;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
-    
-    public enum DoorPlacement
-    {
-        Left, Right
-    }
-    
+    /// <summary>
+    /// Represents the door entity.
+    /// </summary>
+    [RequireComponent(typeof(HingeJoint))]
     public class Door : MonoBehaviour
     {
-        [SerializeField, Tooltip("Угол открывания дверей")]
-        private float doorOpeningAngle;
+        #region Сonstants, variables & properties
 
+        [SerializeField] private string name;
         [SerializeField] private DoorTrigger doorTrigger;
+        private HingeJoint _doorJoint;
 
-        [SerializeField] private DoorPlacement doorPlacement;
         private bool _isOpen = false;
+        
+        
+        #endregion
 
-        private Coroutine _doorOpeningCoroutine;
+        #region Monobehavior methods
+
+        private void Awake()
+        {
+            _doorJoint = GetComponent<HingeJoint>();
+        }
 
         private void Start()
         {
-            doorOpeningAngle = 75;
-            doorTrigger.Notify += OpenСloseDoor;
-        }
-
-        private void OpenСloseDoor(bool heroInTrigger)
-        {
-            switch (heroInTrigger)
-            {
-                // Открыть двери 
-                case true:
-                    if (!_isOpen)
-                    {
-                        switch (doorPlacement)
-                        {
-                            case DoorPlacement.Left:
-                                transform.Rotate(0,-doorOpeningAngle,0, Space.Self);
-                                break;
-                            case DoorPlacement.Right:
-                                transform.Rotate(0,doorOpeningAngle,0, Space.Self);
-                                break; ;
-                        }
-                        _isOpen = true;
-                    }
-                    break;
-                // Закрыть двери
-                case false:
-                    if (_isOpen)
-                    {
-                        switch (doorPlacement)
-                        {
-                            case DoorPlacement.Left:
-                                transform.Rotate(0,doorOpeningAngle,0, Space.Self);
-                                break;
-                            case DoorPlacement.Right:
-                                transform.Rotate(0,-doorOpeningAngle,0, Space.Self);
-                                break;
-                        }
-                        _isOpen = false;
-                    }
-                    break;
-            }
+            doorTrigger.CharacterDiscoveryNotify += OnCharacterDiscovery;
         }
 
         private void OnDestroy()
         {
-            doorTrigger.Notify -= OpenСloseDoor;
+            doorTrigger.CharacterDiscoveryNotify -= OnCharacterDiscovery;
         }
+
+        #endregion
+
+        #region Functionality
+
+        #region Coroutines
+
+        // ...
+
+        #endregion
+
+        #region Event handlers
+
+        private void OnCharacterDiscovery(Vector3 charForwardDirection)
+        {
+            var jointSpring = _doorJoint.spring;
+            
+            if (charForwardDirection != Vector3.zero && !_isOpen)
+            {
+                var a = charForwardDirection.normalized;
+                var b = transform.forward.normalized;
+            
+                var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
+            
+                if (collinearity)
+                    jointSpring.targetPosition = -90;
+                else
+                    jointSpring.targetPosition = 90;
+
+                _isOpen = true;
+            }
+            else
+            {
+                jointSpring.targetPosition = 0;
+                _isOpen = false;
+            }
+            
+            _doorJoint.spring = jointSpring;
+        }
+
+        #endregion
+
+        #region Other methods
+
+        // ...
+
+        #endregion
+
+        #endregion
     }
 }
-
-/*
- *  TODO: 1. Открывание дверей по joint
- *  TODO: 2. Открывание дверей в направлении движения персонажа
- */
