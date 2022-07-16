@@ -82,8 +82,6 @@ namespace DmitryAdventure
                 distance = Vector3.Distance(enemyPosition, targetPosition);
                 
                 yield return null;
-                
-                // TODO: Не подходить ближе заданной дистанции
                 // TODO: стрелять в игрока
             }
 

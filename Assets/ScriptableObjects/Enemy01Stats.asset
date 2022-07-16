@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chatacterName: EnemyType_001
   maxHp: 85
-  baseMovementSpeed: 2
+  baseMovementSpeed: 5
   baseRotationSpeed: 3
   attentionRadius: 12
   pointContactDistance: 0.5
