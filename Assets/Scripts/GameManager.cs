@@ -14,15 +14,12 @@ namespace DmitryAdventure
         #region Variables & constants
 
         [SerializeField] private PlayerShooting hero;
-        [SerializeField] private EnemiesController enemiesController;
+        [SerializeField] private EnemiesData enemiesData;
         [SerializeField] private AiminngColorize[] aimingColorizes;
-
-        [Tooltip("Required number enemies on route")] [SerializeField, Range(1, 3)]
-        private int numberEnemiesOnRoute = 1;
 
         private readonly List<Enemy> _enemies = new(10);
         private Coroutine _walkingEnemiesCoroutine;
-
+        
         #endregion
 
         #region Monobehavior methods
@@ -34,7 +31,6 @@ namespace DmitryAdventure
 
         private void Update()
         {
-            if (enemiesController.routes.Length <= 0) return;
             CheckEnemies();
             _walkingEnemiesCoroutine = StartCoroutine(WalkingEnemiesCourutine());
         }
@@ -50,14 +46,13 @@ namespace DmitryAdventure
         #region Coroutines
 
         /// <summary>
-        /// Организует перемещние врагов по марштурам.
+        /// Organizes movement of enemies along routes.
         /// </summary>
-        /// <returns>Стандарный тип корутины.</returns>
         private IEnumerator WalkingEnemiesCourutine()
         {
-            for (var i = 0; i < enemiesController.routes.Length; i++)
+            for (var i = 0; i < enemiesData.routes.Length; i++)
             {
-                var currentRoute = enemiesController.routes[i];
+                var currentRoute = enemiesData.routes[i];
                 if (currentRoute.wayPoints.Length < 2) continue;
 
                 var enemiesOnRoute = _enemies.Where(en => en.RouteNumber == i).ToList();
@@ -65,47 +60,47 @@ namespace DmitryAdventure
 
                 for (var j = 0; j < enemiesOnRoute.Count(); j++)
                 {
-                    var currentEnemy = enemiesOnRoute[j];
-                    if (currentEnemy.State != EnemyState.Patrol) continue;
+                    var ce = enemiesOnRoute[j];
+                    if (ce.State != EnemyState.Patrol) continue;
 
                     var currentEnemyTransform = enemiesOnRoute[j].transform;
 
-                    if (Vector3.Distance(currentEnemyTransform.position, currentEnemy.CurrentWaypoint) > 0.5f)
+                    if (Vector3.Distance(currentEnemyTransform.position, ce.CurrentWaypoint) > ce.enemyStats.pointContactDistance)
                     {
-                        currentEnemy.transform.position = Vector3.MoveTowards(currentEnemy.transform.position,
-                            currentEnemy.CurrentWaypoint, 0.05f);
+                        ce.transform.position = Vector3.MoveTowards(ce.transform.position,
+                            ce.CurrentWaypoint, ce.MovementSpeedDelta);
 
-                        var rotateDir = currentEnemy.CurrentWaypoint - currentEnemyTransform.position;
+                        var rotateDir = ce.CurrentWaypoint - currentEnemyTransform.position;
                         var rotation = Vector3.RotateTowards(currentEnemyTransform.forward,
                             new Vector3(rotateDir.x, 0, rotateDir.z),
-                            10f * Time.deltaTime, 0f);
+                            ce.enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
                         currentEnemyTransform.rotation = Quaternion.LookRotation(rotation);
                     }
                     else
                     {
-                        currentEnemyTransform.position = currentEnemy.CurrentWaypoint;
-                        var indexOfTargetPoint = Array.IndexOf(currentRoute.wayPoints, currentEnemy.CurrentWaypoint);
+                        currentEnemyTransform.position = ce.CurrentWaypoint;
+                        var indexOfTargetPoint = Array.IndexOf(currentRoute.wayPoints, ce.CurrentWaypoint);
 
-                        switch (currentEnemy.IsMovingForward)
+                        switch (ce.IsMovingForward)
                         {
                             case true:
                                 if (currentEnemyTransform.position != currentRoute.wayPoints.Last())
-                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint + 1];
+                                    ce.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint + 1];
                                 else
                                 {
-                                    currentEnemy.IsMovingForward = false;
-                                    currentEnemy.CurrentWaypoint =
+                                    ce.IsMovingForward = false;
+                                    ce.CurrentWaypoint =
                                         currentRoute.wayPoints[currentRoute.wayPoints.Length - 1];
                                 }
 
                                 break;
                             case false:
                                 if (currentEnemyTransform.position != currentRoute.wayPoints.First())
-                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint - 1];
+                                    ce.CurrentWaypoint = currentRoute.wayPoints[indexOfTargetPoint - 1];
                                 else
                                 {
-                                    currentEnemy.IsMovingForward = true;
-                                    currentEnemy.CurrentWaypoint = currentRoute.wayPoints[1];
+                                    ce.IsMovingForward = true;
+                                    ce.CurrentWaypoint = currentRoute.wayPoints[1];
                                 }
 
                                 break;
@@ -143,22 +138,38 @@ namespace DmitryAdventure
          /// </summary>
          private void CheckEnemies()
          {
-             for (var index = 0; index < _enemies.Count; index++)
-                 if (_enemies[index].hp <= 0)
-                     _enemies.RemoveAt(index);
-
-             for (var i = 0; i < enemiesController.routes.Length; i++)
-             {
-                 if (_enemies.Count(en => en.RouteNumber == i) == numberEnemiesOnRoute) continue;
-
-                 var spawnPoint = enemiesController.routes[i].wayPoints[0];
-                 var targetPoint = enemiesController.routes[i].wayPoints[1];
-                 var newEnemy = Instantiate(enemiesController.enemyPrefab, spawnPoint, Quaternion.identity);
-                 newEnemy.RouteNumber = i;
-                 newEnemy.CurrentWaypoint = targetPoint;
-                 newEnemy.IsMovingForward = true;
-                 _enemies.Add(newEnemy);
-             }
+             
+             
+             
+             
+             
+             
+             
+             
+             // // Removing dead enemies from route.
+             // for (var ei = 0; ei < _enemies.Count; ei++)
+             //     if (_enemies[ei].CurrentHp <= 0)
+             //         _enemies.RemoveAt(ei);
+             //
+             // // Checking required number of enemies on route.
+             // for (var routeNumber = 0; routeNumber < enemiesData.routes.Length; routeNumber++)
+             // {
+             //     var currentRoute = enemiesData.routes[routeNumber];
+             //
+             //     if (_enemies.Count(en => en.RouteNumber.Equals(routeNumber)) == currentRoute.numberEnemies ||
+             //         currentRoute.wayPoints.Length < 2) continue;
+             //
+             //     var spawnPoint = currentRoute.wayPoints[0];
+             //     var targetPoint = currentRoute.wayPoints[1];
+             //     
+             //     var newEnemy = Instantiate(enemiesData.enemyPrefab, spawnPoint, Quaternion.identity);
+             //     newEnemy.RouteNumber = routeNumber;
+             //     newEnemy.CurrentWaypoint = targetPoint;
+             //     newEnemy.IsMovingForward = true;
+             //     newEnemy.SetDiscoveryType(new [] { DiscoveryType.Player });
+             //     
+             //     _enemies.Add(newEnemy);
+             // }
          }
 
          #endregion

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd2e152a600b416bbf3eb64406aefc9, type: 3}
+  m_Name: Enenies
+  m_EditorClassIdentifier: 
+  routes:
+  - numberEnemies: 1
+    wayPoints:
+    - {x: 31.921, y: 13.753, z: 345.067}
+    - {x: 58.98, y: 14.82, z: 329.36}
+    - {x: 66.1, y: 12.76, z: 338.59}
+  enemyPrefab: {fileID: -7393698408962043864, guid: ba7e639863b654d3f82c1d3110a0913f, type: 3}

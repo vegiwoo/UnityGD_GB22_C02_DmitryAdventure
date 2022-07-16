@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5501286550847203191}
   - component: {fileID: 5739151918316049311}
   - component: {fileID: 2637640153451136581}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Lock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -597,7 +597,7 @@ GameObject:
   - component: {fileID: 3565162552792234291}
   - component: {fileID: 4509799710015193051}
   - component: {fileID: 626113599404731193}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Arch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2639,7 +2639,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5485
+  m_VersionIndex: 5422
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2754,7 +2754,7 @@ GameObject:
   - component: {fileID: 545269250773753735}
   - component: {fileID: 6569077294874986134}
   - component: {fileID: 5332169414446692683}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2808,7 +2808,7 @@ GameObject:
   - component: {fileID: 5556499115066427248}
   - component: {fileID: 1982235003570149423}
   - component: {fileID: 7612286392504760679}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2862,7 +2862,7 @@ GameObject:
   - component: {fileID: 21566071513688639}
   - component: {fileID: 8523619469093067285}
   - component: {fileID: 2085300838922759785}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2916,7 +2916,7 @@ GameObject:
   - component: {fileID: 3528007771552300029}
   - component: {fileID: 6769775346393290566}
   - component: {fileID: 5336180040695471894}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2970,7 +2970,7 @@ GameObject:
   - component: {fileID: 6781142934711654478}
   - component: {fileID: 4147528494274074107}
   - component: {fileID: 6968787352567107164}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3022,11 +3022,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.1125
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.23393752
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.56
       objectReference: {fileID: 0}
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3084,9 +3092,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8071469112000008401, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8670659252577835138, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: name
       value: LeftDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 9009480015787665393, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
@@ -3104,15 +3120,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.1875
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.23625
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.026
+      value: 0.52
       objectReference: {fileID: 0}
     - target: {fileID: 5392427494109728682, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3170,59 +3190,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 8071469112000008401, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8670659252577835138, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
       propertyPath: name
       value: RightDoor
       objectReference: {fileID: 0}
+    - target: {fileID: 9009480015787665393, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
---- !u!1 &325754695428470980 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9009480015787665393, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
-  m_PrefabInstance: {fileID: 8758738748770672437}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &8411202635169333565
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325754695428470980}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!4 &688720996548513765 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8071469112000008400, guid: 35f1991d85b5843c7857fa244dae266f, type: 3}
