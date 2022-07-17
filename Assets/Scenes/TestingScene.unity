@@ -191,7 +191,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh48870
+  m_Name: pb_Mesh29040
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 532549700}
   - component: {fileID: 532549699}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: Hero
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,7 +457,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 532549698}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.7644773, y: 0.89, z: 0.28495273}
+  m_LocalPosition: {x: 8.07, y: 0.89, z: -0.55}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -569,7 +569,7 @@ PrefabInstance:
       objectReference: {fileID: 1753042202}
     - target: {fileID: 3462889836144555466, guid: 0bd14568d589043fa98ff859bbd56e1c, type: 3}
       propertyPath: m_VersionIndex
-      value: 5527
+      value: 5641
       objectReference: {fileID: 0}
     - target: {fileID: 4509799710015193051, guid: 0bd14568d589043fa98ff859bbd56e1c, type: 3}
       propertyPath: m_Mesh
@@ -729,7 +729,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-113630
+  m_Name: pb_Mesh-98074
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1199,7 +1199,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-29602
+  m_Name: pb_Mesh-1296
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
