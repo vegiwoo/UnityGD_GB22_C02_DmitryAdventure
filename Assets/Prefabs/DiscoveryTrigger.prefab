@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6372982435987546601}
   - component: {fileID: 4664911509103504218}
   - component: {fileID: 1168145882284411674}
-  - component: {fileID: -2405901512117765747}
+  - component: {fileID: 27825488745646880}
   m_Layer: 0
   m_Name: DiscoveryTrigger
   m_TagString: Untagged
@@ -55,7 +55,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2405901512117765747
+--- !u!114 &27825488745646880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +64,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8751947559515203688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60febccc0b65c4054bad6710d57adc39, type: 3}
+  m_Script: {fileID: 11500000, guid: adc2729e2f6c74c749fe662e9202ce7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discoverableTypes: 

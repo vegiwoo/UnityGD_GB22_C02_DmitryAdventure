@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Route
+  - Enemy
   layers:
   - Default
   - TransparentFX

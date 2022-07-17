@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -36,7 +35,7 @@ namespace DmitryAdventure
         private EnemyState _enemyState;
         private Transform _discoveryTarget;
 
-        private Blinked blinkEffect;
+        private Blinked _blinkEffect;
         
         #endregion
 
@@ -46,7 +45,7 @@ namespace DmitryAdventure
         {
             _enemyRigidbody = transform.GetComponent<Rigidbody>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
-            blinkEffect = GetComponent<Blinked>();
+            _blinkEffect = GetComponent<Blinked>();
         }
 
         private void Start()
@@ -56,7 +55,7 @@ namespace DmitryAdventure
             _enemyRigidbody.mass = 30;
             _currentWaypoint = Route[PositionsRouteType.Next, 0];
 
-            _discoveryTrigger.discoverableTypes = discoveryTypes;
+            _discoveryTrigger.DiscoverableTypes = discoveryTypes;
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
             
             ToggleEnemyState(EnemyState.Patrol);
@@ -72,6 +71,9 @@ namespace DmitryAdventure
         #region Functionality
         #region Coroutines
         
+        /// <summary>
+        /// Coroutine for patrolling the enemy.
+        /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
             while (_enemyState == EnemyState.Patrol)
@@ -103,8 +105,10 @@ namespace DmitryAdventure
                 }
             }
         }
-        
-        // ReSharper disable Unity.PerformanceAnalysis
+
+        /// <summary>
+        /// Coroutine chasing and attacking enemy.
+        /// </summary>
         private IEnumerator EnemyAttackCoroutine()
         {
             while (_enemyState == EnemyState.Attack && _discoveryTarget != null)
@@ -137,11 +141,11 @@ namespace DmitryAdventure
         #endregion
 
         #region Event handlers
-
+        
         /// <summary>
         /// Moves enemy when attacking.
         /// </summary>
-        private void OnFindingTarget(DiscoveryType type, Transform targetTransform)
+        private void OnFindingTarget(DiscoveryType type, Transform targetTransform, bool _)
         {
             _discoveryTarget = targetTransform;
             
@@ -154,7 +158,7 @@ namespace DmitryAdventure
                     break;
             }
         }
-
+        
         #endregion
 
         #region Other methods
@@ -164,6 +168,10 @@ namespace DmitryAdventure
             // Do something...
         }
 
+        /// <summary>
+        /// Changes state of enemy.
+        /// </summary>
+        /// <param name="state">New state of enemy.</param>
         private void ToggleEnemyState(EnemyState state)
         {
             _enemyState = state;
@@ -185,7 +193,7 @@ namespace DmitryAdventure
         public override void OnHit(float damage)
         {
             base.OnHit(damage);
-            blinkEffect.StartBlink();
+            _blinkEffect.StartBlink();
         }
         
         #endregion

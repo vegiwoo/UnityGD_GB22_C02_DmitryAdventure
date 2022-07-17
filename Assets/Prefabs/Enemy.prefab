@@ -347,7 +347,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: DiscoveryTrigger
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -2405901512117765747, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
 --- !u!4 &4261610019691153572 stripped
 Transform:

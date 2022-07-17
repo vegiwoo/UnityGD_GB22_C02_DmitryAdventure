@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -13,11 +14,13 @@ namespace DmitryAdventure
         #region Сonstants, variables & properties
 
         [SerializeField] private string name;
-        [SerializeField] private DoorTrigger doorTrigger;
+        /// <summary>
+        /// An array of object types to discover.
+        /// </summary>
+        public DiscoveryType [] discoveryTypes;
+        private DiscoveryTrigger _trigger;
         private HingeJoint _doorJoint;
-
-        private bool _isOpen = false;
-        
+        private bool _isOpen;
         
         #endregion
 
@@ -25,17 +28,25 @@ namespace DmitryAdventure
 
         private void Awake()
         {
+            _trigger = GetComponentInChildren<DiscoveryTrigger>();
+            if (_trigger == null)
+            {
+                var parent = transform.parent;
+                _trigger = parent.GetComponentInChildren<DiscoveryTrigger>();
+            }
+
+            _trigger.DiscoverableTypes = discoveryTypes;
             _doorJoint = GetComponent<HingeJoint>();
         }
 
         private void Start()
         {
-            doorTrigger.CharacterDiscoveryNotify += OnCharacterDiscovery;
+            _trigger.DiscoveryTriggerNotify += OnTriggerNotify;
         }
 
         private void OnDestroy()
         {
-            doorTrigger.CharacterDiscoveryNotify -= OnCharacterDiscovery;
+            _trigger.DiscoveryTriggerNotify += OnTriggerNotify;
         }
 
         #endregion
@@ -43,46 +54,45 @@ namespace DmitryAdventure
         #region Functionality
 
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers
 
-        private void OnCharacterDiscovery(Vector3 charForwardDirection)
+        private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool entry)
         {
-            var jointSpring = _doorJoint.spring;
-            
-            if (charForwardDirection != Vector3.zero && !_isOpen)
+            if (discoveryTypes.Contains(discoveryType))
             {
-                var a = charForwardDirection.normalized;
-                var b = transform.forward.normalized;
+                var jointSpring = _doorJoint.spring;
             
-                var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
+                if (entry && discoveryTransform.forward != Vector3.zero && !_isOpen)
+                {
+                    var a = discoveryTransform.forward.normalized;
+                    var b = transform.forward.normalized;
             
-                if (collinearity)
-                    jointSpring.targetPosition = -90;
-                else
-                    jointSpring.targetPosition = 90;
+                    var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
+            
+                    if (collinearity)
+                        jointSpring.targetPosition = -90;
+                    else
+                        jointSpring.targetPosition = 90;
 
-                _isOpen = true;
+                    _isOpen = true;
+                }
+
+                if (!entry && discoveryTransform.forward != Vector3.zero && _isOpen)
+                {
+                    jointSpring.targetPosition = 0;
+                    _isOpen = false;
+                }
+                
+                _doorJoint.spring = jointSpring;
             }
-            else
-            {
-                jointSpring.targetPosition = 0;
-                _isOpen = false;
-            }
-            
-            _doorJoint.spring = jointSpring;
         }
-
         #endregion
 
         #region Other methods
-
         // ...
-
         #endregion
 
         #endregion

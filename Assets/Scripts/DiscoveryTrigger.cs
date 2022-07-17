@@ -1,4 +1,4 @@
-#nullable enable
+using System.Linq;
 using UnityEngine;
 
 namespace DmitryAdventure
@@ -9,13 +9,14 @@ namespace DmitryAdventure
     public sealed class DiscoveryTrigger : MonoBehaviour
     {
         #region Сonstants, variables & properties
-        
-        public DiscoveryType[] discoverableTypes;
-        
-        public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform);  
+
+        public DiscoveryType[] DiscoverableTypes { get; set; }
+
+        public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
 
         private const string PlayerTag = "Player";
+        private const string EnemyTag = "Enemy";
         
         #endregion
 
@@ -23,12 +24,24 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            if (discoverableTypes.Length <= 0) return;
+            if (DiscoverableTypes.Length == 0) return;
+
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
             
-            if (other.gameObject.CompareTag(PlayerTag) && other.gameObject.CompareTag(PlayerTag))
-            {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform);
-            }
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, true);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (DiscoverableTypes.Length == 0) return;
+            
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);
+            
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, false);
         }
 
         #endregion
@@ -43,9 +56,9 @@ namespace DmitryAdventure
 
         #region Event handlers
 
-        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoverableTransform)
+        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoverableTransform, bool entry)
         {
-            DiscoveryTriggerNotify?.Invoke(discoveryType, discoverableTransform);
+            DiscoveryTriggerNotify?.Invoke(discoveryType, discoverableTransform, entry);
         }
 
         #endregion
@@ -55,7 +68,5 @@ namespace DmitryAdventure
         #endregion
 
         #endregion
-
- 
     }
 }

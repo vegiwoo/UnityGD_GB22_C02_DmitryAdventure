@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 136658692c74e486a9028d58d01eac57, type: 3}
   m_Name: Enemy01Stats
   m_EditorClassIdentifier: 
-  chatacterName: EnemyType_001
+  characterName: 
   maxHp: 85
   baseMovementSpeed: 5
   baseRotationSpeed: 3
-  attentionRadius: 12
+  attentionRadius: 15
   pointContactDistance: 0.5
-  distanceFromTarget: 3
+  minAttackDistance: 5
