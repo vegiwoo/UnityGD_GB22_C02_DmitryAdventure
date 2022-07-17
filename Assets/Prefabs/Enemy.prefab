@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 218ed6bce7588421381b29a87eabad23, type: 2}
+  discoveryTypes: 00000000
 --- !u!114 &5537784887623331358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,8 +276,6 @@ MonoBehaviour:
   renderers:
   - {fileID: 7661927028573200910}
   - {fileID: 6698370573413571832}
-  blinkedColor: {r: 0.990566, g: 0.6783931, b: 0.52799034, a: 0}
-  blinkedTime: 0.99
 --- !u!1001 &7157669485824485709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -284,6 +283,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7661927029065131713}
     m_Modifications:
+    - target: {fileID: -2405901512117765747, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+      propertyPath: discoverableTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_RootOrder
       value: 2

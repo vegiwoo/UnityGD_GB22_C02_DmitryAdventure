@@ -48,7 +48,7 @@ namespace DmitryAdventure
 
         private void Start()
         {
-            CurrentHp = playerStats.MaxHP;
+            CurrentHp = playerStats.MaxHp;
             Cursor.lockState = CursorLockMode.Locked;
         }
 

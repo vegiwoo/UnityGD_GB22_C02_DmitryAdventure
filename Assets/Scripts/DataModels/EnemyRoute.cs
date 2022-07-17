@@ -1,9 +1,13 @@
 using System;
-using System.Linq;
 using UnityEngine;
 
 namespace DmitryAdventure
 {
+    public enum PositionsRouteType
+    {
+        Previous, Next
+    }
+    
     /// <summary>
     /// Represents enemy's route.
     /// </summary>
@@ -34,15 +38,14 @@ namespace DmitryAdventure
         /// <remarks>
         /// When receiving positions of type 'First' or 'Last', index is not specified.
         /// </remarks>>
-        public Vector3 this[PositionType type, int i]
+        public Vector3 this[PositionsRouteType type, int i]
         {
             get
             {
                 return type switch
                 {
-                    PositionType.Previous => wayPoints[i - 1].position,
-                    PositionType.Current => wayPoints[i].position,
-                    PositionType.Next => wayPoints[i + 1].position,
+                    PositionsRouteType.Previous => wayPoints[i - 1].position,
+                    PositionsRouteType.Next => wayPoints[i + 1].position,
                     _ => Vector3.zero
                 };
             }
@@ -51,37 +54,19 @@ namespace DmitryAdventure
         #endregion
 
         #region Monobehavior methods
-
-        private void Start()
-        {
-            Debug.Log($"Route length: {wayPoints.Length}");
-            Debug.Log($"Start index: {startIndex}");
-            Debug.Log($"End index: {EndIndex}");
-            
-            foreach (var point in wayPoints)
-            {
-               Debug.Log(point);
-            }
-        }
-
+        // ...
         #endregion
 
         #region Functionality
-
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods
-
         /// <summary>
         /// Change destination waypoint and direction of moving.
         /// </summary>
@@ -99,21 +84,15 @@ namespace DmitryAdventure
             return isMovingForward switch
             {
                 true => oldWayPoint != EndPoint
-                    ? (true, this[PositionType.Next,i])
-                    : (false, this[PositionType.Previous, i]),
+                    ? (true, this[PositionsRouteType.Next,i])
+                    : (false, this[PositionsRouteType.Previous, i]),
                 false => oldWayPoint != StartPoint
-                    ? (false, this[PositionType.Previous, i])
-                    : (true, this[PositionType.Next,i])
+                    ? (false, this[PositionsRouteType.Previous, i])
+                    : (true, this[PositionsRouteType.Next,i])
             };
         }
 
         #endregion
-
         #endregion
     }
-}
-
-public enum PositionType
-{
-    Previous, Current, Next
 }
