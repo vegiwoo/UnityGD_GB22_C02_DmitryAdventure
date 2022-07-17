@@ -33,6 +33,8 @@ namespace DmitryAdventure
 
         private EnemyState _enemyState = EnemyState.Patrol;
         private Transform _attackTarget;
+
+        private float velocity;
         
         #endregion
 
@@ -47,33 +49,23 @@ namespace DmitryAdventure
         private void Start()
         {
             CurrentHp = enemyStats.MaxHP;
+            CurrentSpeed = enemyStats.BaseMovementSpeed;
 
             _enemyRigidbody.mass = 30;
             _discoveryTrigger.DiscoveryTriggerNotify += OnAttackMovement;
-            
+
             _currentWaypoint = Route[PositionType.Next, 0];
 
             //newEnemy.SetDiscoveryType(new [] { DiscoveryType.Player });
+            
+            _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
         }
 
         protected override void Update()
         {
             base.Update();
             
-            if (!IsAlive())
-                Destroy(gameObject);
-
-            switch (_enemyState)
-            {
-                case EnemyState.Patrol:
-                    _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
-                    break;
-                case EnemyState.Attack:
-                    _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine(_attackTarget));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            };
+            if (!IsAlive()) Destroy(gameObject);
         }
 
         private void OnDestroy()
@@ -113,7 +105,6 @@ namespace DmitryAdventure
             _enemyState = EnemyState.Patrol;
             _enemyAttackCoroutine = null;
             yield break;
-            
         }
 
         private IEnumerator EnemyPatrolCoroutine()
@@ -122,27 +113,25 @@ namespace DmitryAdventure
             {
                 if (Vector3.Distance(transform.position, _currentWaypoint) > enemyStats.PointContactDistance)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,  _currentWaypoint, 0.05f);
+                    transform.position = Vector3.MoveTowards(transform.position,
+                        _currentWaypoint, MovementSpeedDelta * Time.deltaTime);
+                    
                     var rotateDir = _currentWaypoint - transform.position;
                     var rotation = Vector3.RotateTowards(transform.forward,
                         new Vector3(rotateDir.x, 0, rotateDir.z),
                         enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
                     transform.rotation = Quaternion.LookRotation(rotation);
-                    yield return null;
                 }
                 else
                 {
                     var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypoint);
                     _isMovingForward = result.isMovingForward;
                     _currentWaypoint = result.currentWayPoint;
-                    yield return null;
-                }
-            }
 
-            _enemyPatrolCoroutine = null;
-            yield break;
+                }
+                yield return null;
+            }
         }
-        
         #endregion
 
         #region Event handlers

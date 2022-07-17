@@ -19,8 +19,12 @@ namespace DmitryAdventure
         [SerializeField] private int maxNumberEnemies;
         public int MaxNumberEnemies => maxNumberEnemies;
 
-        public Vector3 StartPoint => wayPoints.First().position;
-        private Vector3 EndPoint => wayPoints.Last().position;
+        private int startIndex = 0;
+        private int EndIndex => wayPoints.Length - 1;
+        
+        public Vector3 StartPoint => wayPoints[startIndex].position;
+        
+        private Vector3 EndPoint => wayPoints[EndIndex].position;
       
         /// <summary>
         /// Returns requested route positions.
@@ -48,7 +52,17 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
-        // ...
+        private void Start()
+        {
+            Debug.Log($"Route length: {wayPoints.Length}");
+            Debug.Log($"Start index: {startIndex}");
+            Debug.Log($"End index: {EndIndex}");
+            
+            foreach (var point in wayPoints)
+            {
+               Debug.Log(point);
+            }
+        }
 
         #endregion
 
@@ -72,20 +86,24 @@ namespace DmitryAdventure
         /// Change destination waypoint and direction of moving.
         /// </summary>
         /// <param name="isMovingForward">Current direction of moving.</param>
-        /// <param name="currentPoint">Current waypoint.</param>
+        /// <param name="oldWayPoint">Old waypoint.</param>
         /// <returns>Calculation result.</returns>
-        public (bool isMovingForward, Vector3 currentWayPoint) ChangeWaypoint(bool isMovingForward, Vector3 currentPoint)
+        public (bool isMovingForward, Vector3 currentWayPoint) ChangeWaypoint(bool isMovingForward, Vector3 oldWayPoint)
         {
-            var itp = Array.IndexOf(wayPoints, currentPoint);
-
+            var i = Array.FindIndex(wayPoints,el =>
+            {
+                Vector3 position;
+                return (position = el.position).x.Equals(oldWayPoint.x) && position.z.Equals(oldWayPoint.z);
+            });
+            
             return isMovingForward switch
             {
-                true => currentPoint != EndPoint
-                    ? (true, this[PositionType.Next, itp])
-                    : (false, this[PositionType.Previous, itp]),
-                false => currentPoint != StartPoint
-                    ? (false, this[PositionType.Previous, itp])
-                    : (true, this[PositionType.Next, itp])
+                true => oldWayPoint != EndPoint
+                    ? (true, this[PositionType.Next,i])
+                    : (false, this[PositionType.Previous, i]),
+                false => oldWayPoint != StartPoint
+                    ? (false, this[PositionType.Previous, i])
+                    : (true, this[PositionType.Next,i])
             };
         }
 

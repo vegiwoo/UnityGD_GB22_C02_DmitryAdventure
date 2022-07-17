@@ -10,9 +10,7 @@ namespace DmitryAdventure
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
-        
-        //PlayerStats _characterStats;
-        
+
         /// <summary>
         /// Current hit points.
         /// </summary>
@@ -23,7 +21,9 @@ namespace DmitryAdventure
         /// </summary>
         protected float CurrentSpeed { get;  set; }
 
-        protected float MovementSpeedDelta => CurrentSpeed / 25;
+        protected float MovementSpeedDelta => CurrentSpeed / 3;
+        
+        protected float RotationSpeedDelta => CurrentSpeed / 10;
         
         protected const float GravityValue = -9.81f;
 
