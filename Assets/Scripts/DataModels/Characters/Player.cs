@@ -13,7 +13,6 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents main character.
     /// </summary>
-    [RequireComponent(typeof(PlayerStats))]
     public class Player : Character
     {
         #region Сonstants, variables & properties
@@ -47,8 +46,9 @@ namespace DmitryAdventure
             _camera = Camera.main;
         }
 
-        protected override void Start()
+        private void Start()
         {
+            CurrentHp = playerStats.MaxHP;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -88,14 +88,14 @@ namespace DmitryAdventure
                 move.y = 0f;
             }
             
-            CurrentSpeed = playerStats.baseMovementSpeed;
+            CurrentSpeed = playerStats.BaseMovementSpeed;
             if (_runAction.inProgress)
-                CurrentSpeed += playerStats.accelerationFactor;
+                CurrentSpeed += playerStats.AccelerationFactor;
             _controller.Move(move * (Time.deltaTime * CurrentSpeed));
             
             if (_jumpAction.triggered && _groundedPlayer)
             {
-                _playerVelocity.y += Mathf.Sqrt(playerStats.jumpHeight * -3.0f * GravityValue);
+                _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GravityValue);
             }
 
             _playerVelocity.y += GravityValue * Time.deltaTime;
@@ -104,7 +104,7 @@ namespace DmitryAdventure
             // Rotate towards camera direction 
             if (_camera == null) return;
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.baseRotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
         }
 
         #endregion

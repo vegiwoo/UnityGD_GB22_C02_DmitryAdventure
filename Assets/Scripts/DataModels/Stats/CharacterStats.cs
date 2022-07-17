@@ -5,12 +5,22 @@ namespace DmitryAdventure
     public class CharacterStats : ScriptableObject
     {
         [Header("General stats of characters")]
-        [Tooltip("Character name")] public string chatacterName;
-        [Tooltip("Max hit points"), Range(50,150)] public float maxHp;
+        [SerializeField,Tooltip("Character name")] private string chatacterName;
+        public string ChatacterName => chatacterName;
+        
+        [SerializeField,Tooltip("Max hit points"), Range(50,150)] private float maxHp;
+        public float MaxHP => maxHp;
+        
         [Header("Movement stats")]
-        [Tooltip("Character base movement speed"), Range(1,5)] public float baseMovementSpeed;
-        [Tooltip("Character base  rotation speed"),Range(1,5)] public float baseRotationSpeed;
-        [Tooltip("Character attention radius"), Range(10,30)] public float attentionRadius;
+        [SerializeField,Tooltip("Character base movement speed"), Range(1,5)] private float baseMovementSpeed;
+        public float BaseMovementSpeed => baseMovementSpeed;
+        
+        [SerializeField,Tooltip("Character base  rotation speed"),Range(1,5)] private float baseRotationSpeed;
+        public float BaseRotationSpeed => baseRotationSpeed;
+        
+        [SerializeField,Tooltip("Character attention radius"), Range(10,30)] private float attentionRadius;
+        public float AttentionRadius => attentionRadius;
+
         public float RotationAngleDelta => baseRotationSpeed * 2;
     }
 }

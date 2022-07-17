@@ -7,24 +7,23 @@ namespace DmitryAdventure
     /// <summary>
     /// Essence of playable or non-playable character.
     /// </summary>
-    [RequireComponent(typeof(CharacterStats))]
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
         
-        PlayerStats _characterStats;
+        //PlayerStats _characterStats;
         
         /// <summary>
         /// Current hit points.
         /// </summary>
-        public float CurrentHp { get; private set; }
+        public float CurrentHp { get; protected set; }
 
         /// <summary>
         /// Character current movement speed.
         /// </summary>
-        public float CurrentSpeed { get;  protected set; }
+        protected float CurrentSpeed { get;  set; }
 
-        public float MovementSpeedDelta => CurrentSpeed / 25;
+        protected float MovementSpeedDelta => CurrentSpeed / 25;
         
         protected const float GravityValue = -9.81f;
 
@@ -32,15 +31,9 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
-        protected virtual void Start()
-        {
-            CurrentHp = _characterStats.maxHp;
-        }
-
         protected virtual void Update()
         {
             OnMovement();
-            CheckHitPoints();
         }
 
         #endregion
@@ -69,7 +62,7 @@ namespace DmitryAdventure
         /// <summary>
         /// Checks character's health limit.
         /// </summary>
-        protected virtual bool CheckHitPoints()
+        protected bool IsAlive()
         {
             return CurrentHp > 0;
         }

@@ -10,11 +10,13 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [Tooltip("Running acceleration factor"), Range(2,5)]
-        public float accelerationFactor;
+        [SerializeField,Tooltip("Running acceleration factor"), Range(2,5)]
+        private float accelerationFactor;
+        public float AccelerationFactor => accelerationFactor;
 
-        [SerializeField]
-        public float jumpHeight;
+        [SerializeField, Range(0.1f,3.0f)]
+        private float jumpHeight;
+        public float JumpHeight => jumpHeight;
 
         #endregion
 

@@ -8,10 +8,12 @@ namespace DmitryAdventure
     [CreateAssetMenu]
     public class EnemyStats : CharacterStats
     {
-        [Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
-        public float pointContactDistance;
+        [SerializeField,Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
+        private float pointContactDistance;
+        public float PointContactDistance => pointContactDistance;
         
-        [Tooltip("Distance from target at which enemy keeps when attacking."), Range(1,5)]
-        public float distanceFromTarget;
+        [SerializeField,Tooltip("Distance from target at which enemy keeps when attacking."), Range(1,5)]
+        private float minAttackDistance;
+        public float MinAttackDistance => minAttackDistance;
     }
 }

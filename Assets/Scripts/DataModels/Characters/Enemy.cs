@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,30 +7,32 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
-    [RequireComponent(typeof(EnemyStats))]
     public class Enemy : Character
     {
         #region Сonstants, variables & properties
 
         [SerializeField] public EnemyStats enemyStats;
 
-        public int RouteNumber { get; set; }
-        
+        public EnemyRoute Route { get; set; }
+
         /// <summary>
         /// Current destination of route.
         /// </summary>
-        public Vector3 CurrentWaypoint { get; set; }
+        private Vector3 _currentWaypoint;
 
         /// <summary>
         /// Flag of enemy's movement forward along route.
         /// </summary>
-        public bool IsMovingForward { get; set; }
+        private bool _isMovingForward = true;
         
         private Rigidbody _enemyRigidbody;
         private DiscoveryTrigger _discoveryTrigger;
+
+        private Coroutine _enemyPatrolCoroutine;
         private Coroutine _enemyAttackCoroutine;
 
-        public EnemyState State { get; private set; }
+        private EnemyState _enemyState = EnemyState.Patrol;
+        private Transform _attackTarget;
         
         #endregion
 
@@ -37,19 +40,40 @@ namespace DmitryAdventure
 
         private void Awake()
         {
-             enemyStats = transform.GetComponent<EnemyStats>();
             _enemyRigidbody = transform.GetComponent<Rigidbody>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
         }
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            
+            CurrentHp = enemyStats.MaxHP;
+
             _enemyRigidbody.mass = 30;
-            State = EnemyState.Patrol;
-            
             _discoveryTrigger.DiscoveryTriggerNotify += OnAttackMovement;
+            
+            _currentWaypoint = Route[PositionType.Next, 0];
+
+            //newEnemy.SetDiscoveryType(new [] { DiscoveryType.Player });
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            
+            if (!IsAlive())
+                Destroy(gameObject);
+
+            switch (_enemyState)
+            {
+                case EnemyState.Patrol:
+                    _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
+                    break;
+                case EnemyState.Attack:
+                    _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine(_attackTarget));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            };
         }
 
         private void OnDestroy()
@@ -60,14 +84,15 @@ namespace DmitryAdventure
         #endregion
 
         #region Functionality
-
         #region Coroutines
 
         private IEnumerator EnemyAttackCoroutine(Transform targetTransform)
         {
+            _enemyPatrolCoroutine = null;
+            
             var distance = Vector3.Distance(transform.position, targetTransform.position);
             
-            while (distance <= enemyStats.attentionRadius)
+            while (distance <= enemyStats.AttentionRadius)
             {
                 var enemyTransform = transform;
                 var enemyPosition = enemyTransform.position;
@@ -76,7 +101,7 @@ namespace DmitryAdventure
                 var rotation = Vector3.RotateTowards(enemyTransform.forward, direction, enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
                 transform.rotation = Quaternion.LookRotation(rotation);
                 
-                if(distance > enemyStats.distanceFromTarget)
+                if(distance > enemyStats.MinAttackDistance)
                     transform.position = Vector3.MoveTowards(enemyPosition, targetPosition, MovementSpeedDelta);
                 
                 distance = Vector3.Distance(enemyPosition, targetPosition);
@@ -85,13 +110,39 @@ namespace DmitryAdventure
                 // TODO: стрелять в игрока
             }
 
-            State = EnemyState.Patrol;
+            _enemyState = EnemyState.Patrol;
             _enemyAttackCoroutine = null;
             yield break;
-
-
+            
         }
 
+        private IEnumerator EnemyPatrolCoroutine()
+        {
+            while (_enemyState == EnemyState.Patrol)
+            {
+                if (Vector3.Distance(transform.position, _currentWaypoint) > enemyStats.PointContactDistance)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position,  _currentWaypoint, 0.05f);
+                    var rotateDir = _currentWaypoint - transform.position;
+                    var rotation = Vector3.RotateTowards(transform.forward,
+                        new Vector3(rotateDir.x, 0, rotateDir.z),
+                        enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
+                    transform.rotation = Quaternion.LookRotation(rotation);
+                    yield return null;
+                }
+                else
+                {
+                    var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypoint);
+                    _isMovingForward = result.isMovingForward;
+                    _currentWaypoint = result.currentWayPoint;
+                    yield return null;
+                }
+            }
+
+            _enemyPatrolCoroutine = null;
+            yield break;
+        }
+        
         #endregion
 
         #region Event handlers
@@ -123,10 +174,8 @@ namespace DmitryAdventure
         /// </summary>
         private void OnAttackMovement(DiscoveryType type, Transform targetTransform)
         {
-            if (type != DiscoveryType.Player || State == EnemyState.Attack) return;
-            State = EnemyState.Attack;
-
-            _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine(targetTransform));
+            _enemyState = EnemyState.Attack;
+            _attackTarget = targetTransform;
         }
 
         #endregion
