@@ -34,6 +34,8 @@ namespace DmitryAdventure
         protected virtual void Update()
         {
             OnMovement();
+            if(!IsAlive()) 
+                Destroy(gameObject);
         }
 
         #endregion
@@ -62,7 +64,7 @@ namespace DmitryAdventure
         /// <summary>
         /// Checks character's health limit.
         /// </summary>
-        protected bool IsAlive()
+        private bool IsAlive()
         {
             return CurrentHp > 0;
         }
@@ -72,10 +74,9 @@ namespace DmitryAdventure
         /// </summary>
         /// <param name="damage">Damage value.</param>
         /// <returns></returns>
-        public virtual bool OnHit(float damage)
+        public virtual void OnHit(float damage)
         {
             CurrentHp -= damage;
-            return CurrentHp <= 0;   
         }
 
         #endregion

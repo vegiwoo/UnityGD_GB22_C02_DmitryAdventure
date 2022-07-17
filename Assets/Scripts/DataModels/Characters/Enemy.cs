@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +6,7 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
+    [RequireComponent(typeof(Blinked))]
     public class Enemy : Character
     {
         #region Сonstants, variables & properties
@@ -34,7 +34,7 @@ namespace DmitryAdventure
         private EnemyState _enemyState = EnemyState.Patrol;
         private Transform _attackTarget;
 
-        private float velocity;
+        private Blinked blinkEffect;
         
         #endregion
 
@@ -44,6 +44,7 @@ namespace DmitryAdventure
         {
             _enemyRigidbody = transform.GetComponent<Rigidbody>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
+            blinkEffect = GetComponent<Blinked>();
         }
 
         private void Start()
@@ -59,13 +60,6 @@ namespace DmitryAdventure
             //newEnemy.SetDiscoveryType(new [] { DiscoveryType.Player });
             
             _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            
-            if (!IsAlive()) Destroy(gameObject);
         }
 
         private void OnDestroy()
@@ -156,7 +150,12 @@ namespace DmitryAdventure
         {
             // Do something...
         }
-        
+
+        public override void OnHit(float damage)
+        {
+            base.OnHit(damage);
+            blinkEffect.StartBlink();
+        }
 
         /// <summary>
         /// Moves enemy when attacking.
