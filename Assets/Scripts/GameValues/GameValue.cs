@@ -1,11 +1,9 @@
-using UnityEngine;
-
 namespace DmitryAdventure
 {
     /// <summary>
     /// Represents play value in game.
     /// </summary>
-    internal class GameValue
+    public class GameValue
     {
         #region Сonstants, variables & properties
         /// <summary>

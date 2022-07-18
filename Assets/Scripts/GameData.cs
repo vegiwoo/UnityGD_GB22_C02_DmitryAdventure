@@ -6,11 +6,17 @@ namespace DmitryAdventure
     /// <summary>
     /// Static data for game.
     /// </summary>
-    internal class GameData
+    /// <remarks>Singleton (No Thread Safe)</remarks>>
+    public sealed class GameData
     {
         #region Сonstants, variables & properties
 
-        public static Dictionary<GUI, GameValue> GameValues = new Dictionary<GUI, GameValue>
+        private static GameData _instance;  
+        public static GameData Instance {  
+            get { return _instance ??= new GameData(); }  
+        }
+
+        public readonly Dictionary<GUI, GameValue> GameValues = new Dictionary<GUI, GameValue>
         {
             {
                 new GUI(), 
@@ -29,12 +35,15 @@ namespace DmitryAdventure
             }
         };
 
+        /// <summary>
+        /// Hero's maximum inventory capacity
+        /// </summary>
+        public float MaximumInventoryCapacity = 3.0f;
+
         #endregion
 
         #region Initializers and Deinitializer
-
-        //...
-
+        GameData() {}
         #endregion
 
         #region Functionality

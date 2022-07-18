@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1400856072472306119}
   - component: {fileID: 7111982069171127223}
   - component: {fileID: 7401494993308275546}
+  - component: {fileID: 1311563509}
   m_Layer: 0
   m_Name: LootBox
   m_TagString: Untagged
@@ -64,6 +65,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &1311563509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594717803764491650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcabb74e7f7204230835993de159675b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openingSound: {fileID: 0}
+  possibleCapacity: 2
+  rarityLevels: 0000000001000000
+  heroFoundValuesHandler:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: DmitryAdventure.EconimicManager, Assembly-CSharp
+        m_MethodName: PutInCharacterInventory
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &2170564628807635100
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71,6 +102,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1400856072472306119}
     m_Modifications:
+    - target: {fileID: 27825488745646880, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+      propertyPath: discoverableTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_RootOrder
       value: 1
