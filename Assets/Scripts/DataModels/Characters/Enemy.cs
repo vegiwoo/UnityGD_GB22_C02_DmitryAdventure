@@ -41,8 +41,10 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             _enemyRigidbody = transform.GetComponent<Rigidbody>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _blinkEffect = GetComponent<Blinked>();
@@ -60,6 +62,10 @@ namespace DmitryAdventure
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
             
             ToggleEnemyState(EnemyState.Patrol);
+            
+            // TODO: Weapon for enemy!
+            
+            
         }
 
         private void OnDestroy()
@@ -168,6 +174,12 @@ namespace DmitryAdventure
         {
             // Do something...
         }
+
+        protected override void OnTakeAim()
+        {
+            // Прицеливается когда атакует
+        }
+
 
         /// <summary>
         /// Changes state of enemy.

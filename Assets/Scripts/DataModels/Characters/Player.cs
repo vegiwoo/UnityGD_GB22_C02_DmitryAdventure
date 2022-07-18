@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 
 /*
  * Refs:
@@ -28,6 +27,7 @@ namespace DmitryAdventure
         private InputAction _moveAction;
         private InputAction _jumpAction;
         private InputAction _runAction;
+        private InputAction _fireAction;
         
         private Camera _camera;
         
@@ -35,14 +35,17 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             _controller = GetComponent<CharacterController>();
             
             _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
+            _fireAction = _playerInput.actions["Fire"];
 
             _camera = Camera.main;
         }
@@ -51,12 +54,14 @@ namespace DmitryAdventure
         {
             CurrentHp = playerStats.MaxHp;
             Cursor.lockState = CursorLockMode.Locked;
+            
+            _fireAction.performed += ShootWeapon;
         }
+        
 
-        protected override void Update()
+        private void OnDestroy()
         {
-            base.Update();
-            OnHit(0.25f);
+            _fireAction.performed -= ShootWeapon;
         }
 
         #endregion
@@ -113,7 +118,23 @@ namespace DmitryAdventure
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
         }
+        
+        protected override void OnTakeAim()
+        {
+            var camTransform = _camera.transform;
+            
+            if (!Physics.Raycast(camTransform.position, camTransform.forward, out var hit)) 
+                return;
 
+            var targetDistance = Vector3.Distance(currentWeapon.ShotPoint.position, hit.point);
+            if (targetDistance < currentWeapon.ShotRange)
+            {
+                AimingPoint = hit.point;
+            }
+            else
+                AimingPoint = camTransform.position + camTransform.forward * currentWeapon.ShotRange;
+        }
+        
         public override void OnHit(float damage)
         {
             CurrentHp = -damage;
@@ -122,7 +143,6 @@ namespace DmitryAdventure
         }
 
         #endregion
-
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DmitryAdventure
 {
@@ -9,11 +10,17 @@ namespace DmitryAdventure
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
+        
+        [SerializeField] public CharacterType characterType;
+        [SerializeField, Tooltip("Character's chosen weapon")] protected Weapon currentWeapon;
+
+        [SerializeField, Tooltip("Color of crosshair beam to display in editor")]
+        private Color aimingColor;
 
         /// <summary>
-        /// Character type.
+        /// Aiming point for weapon.
         /// </summary>
-        [SerializeField] public CharacterType characterType;
+        protected Vector3 AimingPoint;
         
         /// <summary>
         /// Current hit points.
@@ -39,14 +46,28 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
+        protected virtual void Awake()
+        {
+            AimingPoint = Vector3.zero;
+        }
+
         protected virtual void Update()
         {
             OnMovement();
+            OnTakeAim();
 
             if (CurrentHp <= 0)
             {
                 Destroy(gameObject);
             }
+        }
+        
+        private void OnDrawGizmos()
+        {
+            if (AimingPoint == Vector3.zero) return;
+            
+            Gizmos.color = aimingColor;
+            Gizmos.DrawLine(currentWeapon.ShotPoint.position, AimingPoint!);
         }
 
         #endregion
@@ -72,6 +93,28 @@ namespace DmitryAdventure
         /// </summary>
         protected abstract void OnMovement();
 
+        /// <summary>
+        /// Aiming character.
+        /// </summary>
+        protected abstract void OnTakeAim();
+        
+        /// <summary>
+        /// Fires a shot from a weapon.
+        /// </summary>
+        /// <param name="_">CallbackContext for more information.</param>
+        protected void ShootWeapon(InputAction.CallbackContext _)
+        {
+            currentWeapon.Fire(AimingPoint);
+        }
+        
+        /// <summary>
+        /// Fires a shot from a weapon.
+        /// </summary>
+        protected void ShootWeapon()
+        {
+            currentWeapon.Fire(AimingPoint);
+        }
+        
         /// <summary>
         /// Character Damage Method.
         /// </summary>

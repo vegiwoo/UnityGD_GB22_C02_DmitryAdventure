@@ -13,7 +13,18 @@ namespace DmitryAdventure
         private static readonly float Gravity = Physics.gravity.y;
 
         [SerializeField] private WeaponStats weaponStats;
-        [SerializeField] private Transform shotPoint;
+        /// <summary>
+        /// Shot range in meter.
+        /// </summary>
+        public float ShotRange => weaponStats.ShotRange;
+
+        [SerializeField, Tooltip("Firing point at end of gun barrel")] private Transform shotPoint;
+       
+        /// <summary>
+        /// Firing point at end of gun barrel.
+        /// </summary>
+        public Transform ShotPoint => shotPoint; 
+            
         [SerializeField] private AudioSource shotSound;
 
         /// <summary>
@@ -55,7 +66,7 @@ namespace DmitryAdventure
         /// Gets command to fire weapon.
         /// </summary>
         /// <param name="targetPosition">Target position to hit.</param>
-        private void Fire(Vector3 targetPosition)
+        public void Fire(Vector3 targetPosition)
         {
             if(_shotDelayTimer > 0) return;
 

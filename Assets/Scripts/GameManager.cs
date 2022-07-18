@@ -17,7 +17,6 @@ namespace DmitryAdventure
         
         [Header("Links")] 
         [SerializeField] private Player player;
-        [SerializeField] private PlayerShooting hero;
         [SerializeField] private AiminngColorize[] aimingColorizes;
         #endregion
 
@@ -28,13 +27,13 @@ namespace DmitryAdventure
             hpBar.maxValue = player.playerStats.MaxHp;
             hpBar.value = player.CurrentHp;
             
-            hero.HeroAimingNotify += PlayerIsAiming;
+           // hero.HeroAimingNotify += PlayerIsAiming;
             player.CharacterNotify += PlayerOnCharacterNotify;
         }
         
         private void OnDestroy()
         {
-            hero.HeroAimingNotify -= PlayerIsAiming;
+            //hero.HeroAimingNotify -= PlayerIsAiming;
             player.CharacterNotify -= PlayerOnCharacterNotify;
         }
 
