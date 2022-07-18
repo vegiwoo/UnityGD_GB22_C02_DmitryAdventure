@@ -10,7 +10,17 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        public DiscoveryType[] DiscoverableTypes { get; set; }
+        [SerializeField, Tooltip("Discoverable types for trigger")]
+        private DiscoveryType[] discoverableTypes;
+        
+        /// <summary>
+        /// Discoverable types for trigger.
+        /// </summary>
+        public DiscoveryType[] DiscoverableTypes
+        {
+            get => discoverableTypes;
+            set => discoverableTypes = value;
+        }
 
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
