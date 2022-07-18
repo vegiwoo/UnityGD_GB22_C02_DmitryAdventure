@@ -50,6 +50,7 @@ namespace DmitryAdventure
 
         private void Start()
         {
+            characterType = CharacterType.EnemyType01;
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMovementSpeed;
             _enemyRigidbody.mass = 30;
@@ -192,7 +193,7 @@ namespace DmitryAdventure
         
         public override void OnHit(float damage)
         {
-            base.OnHit(damage);
+            CurrentHp -= damage;
             _blinkEffect.StartBlink();
         }
         

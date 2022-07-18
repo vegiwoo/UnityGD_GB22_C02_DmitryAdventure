@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,25 +10,32 @@ namespace DmitryAdventure
     public class GameManager : MonoBehaviour
     {
         #region Variables & constants
-
+        [Header("Game")] 
+        [SerializeField, Range(5,20)] private int goalToKillEnemies = 0;
+        
+        [Header("UI")] [SerializeField] private Slider hpBar;
+        
+        [Header("Links")] 
         [SerializeField] private Player player;
         [SerializeField] private PlayerShooting hero;
         [SerializeField] private AiminngColorize[] aimingColorizes;
-        [Header("UI")] [SerializeField] private Slider hpBar;
         #endregion
 
         #region Monobehavior methods
         private void Start()
         {
-            hero.HeroAimingNotify += PlayerIsAiming;
             hpBar.minValue = 0;
             hpBar.maxValue = player.playerStats.MaxHp;
             hpBar.value = player.CurrentHp;
+            
+            hero.HeroAimingNotify += PlayerIsAiming;
+            player.CharacterNotify += PlayerOnCharacterNotify;
         }
-
+        
         private void OnDestroy()
         {
             hero.HeroAimingNotify -= PlayerIsAiming;
+            player.CharacterNotify -= PlayerOnCharacterNotify;
         }
 
         #endregion
@@ -50,6 +58,23 @@ namespace DmitryAdventure
             else
                 foreach (var aiming in aimingColorizes)
                     aiming.Set(new Color32(121, 237,45,255)); 
+        }
+        
+        /// <summary>
+        /// Receives an event from Player.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        private void PlayerOnCharacterNotify(CharacterEventArgs e)
+        {
+            if (e.CurrentHp > 0)
+            {
+                hpBar.value = e.CurrentHp;
+            }
+            else
+            {
+                Debug.Log("You lost");
+                UnityEditor.EditorApplication.isPaused = true;
+            }
         }
 
         #endregion

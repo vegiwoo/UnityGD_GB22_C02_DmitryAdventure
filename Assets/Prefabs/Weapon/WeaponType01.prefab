@@ -265,10 +265,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7451214802889846938}
-  - component: {fileID: 2552460675803479594}
   - component: {fileID: 4242527816888148781}
+  - component: {fileID: 6082788871895686188}
   m_Layer: 0
-  m_Name: Gun01
+  m_Name: WeaponType01
   m_TagString: Player
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -292,26 +292,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2552460675803479594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8507964070017434373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03cea3982145d4aebadf7db622e187c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1954747178576560728, guid: 5a8849fb3c45b4a55b0d333f329feda5, type: 3}
-  shotSound: {fileID: 1305385013842477256}
-  lowFiringRange: 5
-  upFiringRange: 50
-  angeleInDeg: 10
-  barrel: {fileID: 3433803662626051336}
-  shotDelay: 3
-  bulletSpeed: 15
 --- !u!65 &4242527816888148781
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -325,3 +305,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.65647346, y: 0.65964556, z: 2.1301641}
   m_Center: {x: 0.01226887, y: 0.0033216346, z: -0.03250828}
+--- !u!114 &6082788871895686188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507964070017434373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1359ae5aa984b4e1ab49f61467af9582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponStats: {fileID: 11400000, guid: f4f7baaa6f1b943c2bf167f1a002a74d, type: 2}
+  shotPoint: {fileID: 0}
+  shotSound: {fileID: 0}

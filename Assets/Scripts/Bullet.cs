@@ -47,7 +47,16 @@ namespace DmitryAdventure
              
              var enemy = collision.gameObject.GetComponent<Enemy>();
              if (enemy != null)
+             {
                  enemy.OnHit(damage);
+                 
+                 if (enemy.CurrentHp <= 0)
+                 {
+                     
+                 }
+             }
+
+             
              
              Destroy(gameObject);
          }

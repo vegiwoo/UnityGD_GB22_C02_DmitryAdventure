@@ -24,7 +24,7 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            if (DiscoverableTypes.Length == 0) return;
+            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
@@ -35,7 +35,7 @@ namespace DmitryAdventure
 
         private void OnTriggerExit(Collider other)
         {
-            if (DiscoverableTypes.Length == 0) return;
+            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
             
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);

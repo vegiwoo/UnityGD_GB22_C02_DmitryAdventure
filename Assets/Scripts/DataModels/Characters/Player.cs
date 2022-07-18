@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 
 /*
  * Refs:
@@ -50,6 +51,12 @@ namespace DmitryAdventure
         {
             CurrentHp = playerStats.MaxHp;
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            OnHit(0.25f);
         }
 
         #endregion
@@ -105,6 +112,13 @@ namespace DmitryAdventure
             if (_camera == null) return;
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
+        }
+
+        public override void OnHit(float damage)
+        {
+            CurrentHp = -damage;
+            var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+            OnCharacterNotify(args);
         }
 
         #endregion

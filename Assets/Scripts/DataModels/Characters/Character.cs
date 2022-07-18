@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace DmitryAdventure
 {
@@ -11,6 +10,11 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
+        /// <summary>
+        /// Character type.
+        /// </summary>
+        [SerializeField] public CharacterType characterType;
+        
         /// <summary>
         /// Current hit points.
         /// </summary>
@@ -28,8 +32,8 @@ namespace DmitryAdventure
         protected const float GravityValue = -9.81f;
 
         // Events 
-        delegate void CharacterHandler(string message);
-        event CharacterHandler CharacterNotify;
+        public delegate void CharacterHandler(CharacterEventArgs e);
+        public event CharacterHandler CharacterNotify;
 
         #endregion
 
@@ -38,8 +42,11 @@ namespace DmitryAdventure
         protected virtual void Update()
         {
             OnMovement();
-            if(!IsAlive()) 
+
+            if (CurrentHp <= 0)
+            {
                 Destroy(gameObject);
+            }
         }
 
         #endregion
@@ -66,24 +73,18 @@ namespace DmitryAdventure
         protected abstract void OnMovement();
 
         /// <summary>
-        /// Checks character's health limit.
-        /// </summary>
-        private bool IsAlive()
-        {
-            return CurrentHp > 0;
-        }
-
-        /// <summary>
         /// Character Damage Method.
         /// </summary>
         /// <param name="damage">Damage value.</param>
         /// <returns></returns>
-        public virtual void OnHit(float damage)
-        {
-            CurrentHp -= damage;
-        }
+        public abstract void OnHit(float damage);
+        
+        #endregion
+        #endregion
 
-        #endregion
-        #endregion
+        protected void OnCharacterNotify(CharacterEventArgs e)
+        {
+            CharacterNotify?.Invoke(e);
+        }
     }
 }
