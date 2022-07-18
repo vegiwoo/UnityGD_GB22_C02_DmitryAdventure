@@ -12,14 +12,14 @@ namespace DmitryAdventure
 
         [SerializeField] private GameObject effectPrefab;
         private Rigidbody _bulletRigidbody;
-
-        [SerializeField] private float damage;
         
         public float BulletSpeed { get; set; }
         public float BulletRange { get; set; }
         public Transform PointOfShoot { get; set; }
         public Vector3 TargetPosition { get; set; }
         
+        private int Damage { get; set; }
+
         #endregion
 
         #region Monobehavior methods
@@ -45,26 +45,31 @@ namespace DmitryAdventure
          {
              Instantiate(effectPrefab, transform.position, Quaternion.identity);
              
-             var enemy = collision.gameObject.GetComponent<Enemy>();
-             if (enemy != null)
+             var character = collision.gameObject.GetComponent<Character>();
+             if (character != null)
              {
-                 enemy.OnHit(damage);
-                 
-                 if (enemy.CurrentHp <= 0)
-                 {
-                     
-                 }
+                 character.OnHit(Damage);
              }
 
-             
-             
              Destroy(gameObject);
          }
-
-        #endregion
+        
+         #endregion
 
         #region Functionality
-        //...
+
+        /// <summary>
+        /// Assigning parameters for a bullet from a weapon.
+        /// </summary>
+        public void SetParams(Transform pointOfShoot, Vector3 targetPosition, float bulletSpeed, float bulletRange, int damage)
+        {
+            PointOfShoot = pointOfShoot;
+            TargetPosition = targetPosition;
+            BulletSpeed = bulletSpeed;
+            BulletRange = bulletRange;
+            Damage = damage;
+        }
         #endregion
+        
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +9,11 @@ namespace DmitryAdventure
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
-        
+
+        /// <summary>
+        /// Unique ID of character.
+        /// </summary>
+        public GUI CharacterID = new ();
         [SerializeField] public CharacterType characterType;
         [SerializeField, Tooltip("Character's chosen weapon")] protected Weapon currentWeapon;
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DmitryAdventure
 {
@@ -13,10 +14,17 @@ namespace DmitryAdventure
 
         [SerializeField] private Enemy enemyPrefab;
         [SerializeField] private EnemyRoute[] routes;
+        
+        /// <summary>
+        /// Inner collection of enemies.
+        /// </summary>
         private List<Enemy> _enemies;
         
         private Coroutine _walkingEnemiesCoroutine;
 
+        // Events 
+        public UnityEvent<int> killedEnemies;
+        
         #endregion
 
         #region Monobehavior methods
@@ -53,8 +61,13 @@ namespace DmitryAdventure
         /// </summary>
         private void CheckingEnemiesOnRoutes()
         {
-            _enemies.RemoveAll(ch => ch.CurrentHp < 0);
-
+            // Remove killed enemies.
+            var killed = _enemies.RemoveAll(ch => ch.CurrentHp < 0);
+            if (killed > 0)
+            {
+                killedEnemies.Invoke(killed);
+            }
+            
             for (var i = 0; i < routes.Length; i++)
             {
                 if (_enemies.Count(en => en.Route.Number == i) == routes[i].MaxNumberEnemies) continue;

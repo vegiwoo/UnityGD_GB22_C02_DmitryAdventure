@@ -72,11 +72,7 @@ namespace DmitryAdventure
 
             // TODO: Implement as object pool
             var newBullet = Instantiate(weaponStats.BulletPrefab, shotPoint.position, shotPoint.rotation);
-            
-            newBullet.PointOfShoot = shotPoint;
-            newBullet.TargetPosition = targetPosition;
-            newBullet.BulletSpeed = CalculateBulletSpeed(targetPosition);;
-            newBullet.BulletRange = weaponStats.ShotRange;
+            newBullet.SetParams(shotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange, weaponStats.DamagePerShot);
 
             shotSound.pitch = Random.Range(0.8f, 1.2f); 
             shotSound.Play();

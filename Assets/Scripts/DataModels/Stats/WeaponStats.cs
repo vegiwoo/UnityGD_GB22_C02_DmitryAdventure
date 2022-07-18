@@ -33,5 +33,12 @@ namespace DmitryAdventure
         /// Weapon tilt angle in degrees.
         /// </summary>
         public int TiltAngleInDeg => tiltAngleInDeg;
+
+        [SerializeField, Tooltip("Damage per shot"), Range(5, 15)]
+        private int damagePerShot;
+        /// <summary>
+        /// Damage per shot.
+        /// </summary>
+        public int DamagePerShot => damagePerShot;
     }
 }
