@@ -27,6 +27,10 @@ namespace DmitryAdventure
         
         protected const float GravityValue = -9.81f;
 
+        // Events 
+        delegate void CharacterHandler(string message);
+        event CharacterHandler CharacterNotify;
+
         #endregion
 
         #region Monobehavior methods

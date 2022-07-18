@@ -16,8 +16,8 @@ namespace DmitryAdventure
         #region Сonstants, variables & properties
 
         [SerializeField] private int number;
-        public int Number => number;
-        
+        [SerializeField] public int Number { get; set; }
+
         [SerializeField] private Transform[] wayPoints;
 
         [SerializeField] private int maxNumberEnemies;

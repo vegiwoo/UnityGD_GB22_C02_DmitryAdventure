@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DmitryAdventure
 {
@@ -8,14 +9,20 @@ namespace DmitryAdventure
     public class GameManager : MonoBehaviour
     {
         #region Variables & constants
+
+        [SerializeField] private Player player;
         [SerializeField] private PlayerShooting hero;
         [SerializeField] private AiminngColorize[] aimingColorizes;
+        [Header("UI")] [SerializeField] private Slider hpBar;
         #endregion
 
         #region Monobehavior methods
         private void Start()
         {
             hero.HeroAimingNotify += PlayerIsAiming;
+            hpBar.minValue = 0;
+            hpBar.maxValue = player.playerStats.MaxHp;
+            hpBar.value = player.CurrentHp;
         }
 
         private void OnDestroy()

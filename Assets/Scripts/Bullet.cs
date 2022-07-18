@@ -5,6 +5,7 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents item of projectile.
     /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
     public class Bullet : MonoBehaviour
     {
         #region Сonstants, variables & properties
@@ -18,7 +19,6 @@ namespace DmitryAdventure
         public float BulletRange { get; set; }
         public Transform PointOfShoot { get; set; }
         public Vector3 TargetPosition { get; set; }
-        
         
         #endregion
 
@@ -34,8 +34,10 @@ namespace DmitryAdventure
          private void FixedUpdate()
          {
              if (Vector3.Distance(PointOfShoot.position, transform.position) > BulletRange)
+             {
                  Destroy(gameObject);
-             
+             }
+
              _bulletRigidbody.velocity = (TargetPosition - PointOfShoot.position) * BulletSpeed / 2;
          }
 
