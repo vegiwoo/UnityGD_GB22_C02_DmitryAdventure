@@ -128,6 +128,10 @@ namespace DmitryAdventure
         #endregion
         #endregion
 
+        /// <summary>
+        /// Character event for interested subscribers.
+        /// </summary>
+        /// <param name="e">Notification arguments.</param>
         protected void OnCharacterNotify(CharacterEventArgs e)
         {
             CharacterNotify?.Invoke(e);

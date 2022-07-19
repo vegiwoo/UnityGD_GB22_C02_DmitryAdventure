@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,11 +19,7 @@ namespace DmitryAdventure
         #endregion
 
         #region Monobehavior methods
-
-        private void Start()
-        {
-            CallInventoryContent();
-        }
+        // ...
 
         #endregion
 
@@ -38,33 +33,27 @@ namespace DmitryAdventure
 
         #region Event handlers
 
-        // ...
-
+        /// <summary>
+        /// Callback when updating the user's inventory.
+        /// </summary>
+        /// <param name="values">Current collection of items in inventory.</param>
+        public void OnCharacterInventoryUpdate(IEnumerable<(GameValue value, int count)> values)
+        {
+            inventoryContentEvent.Invoke(values.ToList());
+        }
         #endregion
 
         #region Other methods
-
-
-        /// <summary>
-        /// Requests contents of the hero's inventory
-        /// </summary>
-        private void CallInventoryContent()
-        {
-            var inventoryContent = characterInventory.GetInventoryContent();
-            inventoryContentEvent.Invoke(inventoryContent.ToList());
-        }
-
+        
         /// <summary>
         /// Transfers game values to character's inventory.
         /// </summary>
         public void PutInCharacterInventory(List<GameValue> values)
         {
-            var inventoryContent = characterInventory.PutInInventory(values);
-            inventoryContentEvent.Invoke(inventoryContent.ToList());
+            characterInventory.PushInInventory(values);
         }
 
         #endregion
-
         #endregion
     }
 }

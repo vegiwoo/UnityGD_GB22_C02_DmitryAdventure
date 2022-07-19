@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace DmitryAdventure
@@ -11,6 +12,7 @@ namespace DmitryAdventure
     public class GameManager : MonoBehaviour
     {
         #region Variables & constants
+
         [Header("Game")] 
         [SerializeField, Range(1,20)] private int goalToKillEnemiesCount = 1;
         private int _currentKillEnemiesCount = 0;
@@ -41,12 +43,12 @@ namespace DmitryAdventure
 
             enemiesLabel.text = $"{_enemiesMark}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
 
-            player.CharacterNotify += PlayerOnCharacterNotify;
+            player.CharacterNotify += PlayerOnCharacterHandler;
         }
-        
+
         private void OnDestroy()
         {
-            player.CharacterNotify -= PlayerOnCharacterNotify;
+            player.CharacterNotify -= PlayerOnCharacterHandler;
         }
 
         #endregion
@@ -61,7 +63,7 @@ namespace DmitryAdventure
         /// Receives an event from Player.
         /// </summary>
         /// <param name="e">Event arguments.</param>
-        private void PlayerOnCharacterNotify(CharacterEventArgs e)
+        private void PlayerOnCharacterHandler(CharacterEventArgs e)
         {
             if (e.CurrentHp > 0)
             {

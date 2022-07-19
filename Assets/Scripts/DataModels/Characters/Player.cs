@@ -13,11 +13,13 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents main character.
     /// </summary>
+    [RequireComponent(typeof(CharacterInventory))]
     public class Player : Character
     {
         #region Сonstants, variables & properties
 
         [SerializeField] public PlayerStats playerStats;
+        [SerializeField] private Mine minePrefab;
         
         private CharacterController _controller;
         private PlayerInput _playerInput;
@@ -28,9 +30,12 @@ namespace DmitryAdventure
         private InputAction _jumpAction;
         private InputAction _runAction;
         private InputAction _fireAction;
+        private InputAction _mineAction;
         
         private Camera _camera;
-        
+
+        private static CharacterInventory _characterInventory;
+
         #endregion
 
         #region Monobehavior methods
@@ -40,12 +45,14 @@ namespace DmitryAdventure
             base.Awake();
             
             _controller = GetComponent<CharacterController>();
+            _characterInventory = GetComponent<CharacterInventory>();
             
             _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
             _fireAction = _playerInput.actions["Fire"];
+            _mineAction = _playerInput.actions["Mine"];
 
             _camera = Camera.main;
         }
@@ -56,12 +63,13 @@ namespace DmitryAdventure
             Cursor.lockState = CursorLockMode.Locked;
             
             _fireAction.performed += ShootWeapon;
+            _mineAction.performed += MineActionOnPerformed;
         }
         
-
         private void OnDestroy()
         {
             _fireAction.performed -= ShootWeapon;
+            _mineAction.performed -= MineActionOnPerformed;
         }
 
         #endregion
@@ -75,13 +83,12 @@ namespace DmitryAdventure
         #endregion
 
         #region Event handlers
-
-        // ...
-
+        
         #endregion
 
         #region Other methods
 
+        // Movement
         protected override void OnMovement()
         {
             _groundedPlayer = _controller.isGrounded;
@@ -119,6 +126,7 @@ namespace DmitryAdventure
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
         }
         
+        // Shooting
         protected override void OnTakeAim()
         {
             var camTransform = _camera.transform;
@@ -140,6 +148,14 @@ namespace DmitryAdventure
             CurrentHp = -damage;
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
             OnCharacterNotify(args);
+        }
+
+        private void MineActionOnPerformed(InputAction.CallbackContext context)
+        {
+            var popMine = _characterInventory.PopFromInventory(GameData.MineKey);
+            if (popMine == null) return;
+
+            Instantiate(minePrefab, new Vector3(AimingPoint.x,AimingPoint.y + 0.2f,AimingPoint.z), Quaternion.identity);
         }
 
         #endregion
