@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DmitryAdventure
 {
@@ -12,12 +14,17 @@ namespace DmitryAdventure
         #region Сonstants, variables & properties
 
         [SerializeField] private CharacterInventory characterInventory;
-        
+
+        public UnityEvent<List<(GameValue value, int count)>> inventoryContentEvent;
+
         #endregion
 
         #region Monobehavior methods
 
-        // ...
+        private void Start()
+        {
+            CallInventoryContent();
+        }
 
         #endregion
 
@@ -37,27 +44,23 @@ namespace DmitryAdventure
 
         #region Other methods
 
+
+        /// <summary>
+        /// Requests contents of the hero's inventory
+        /// </summary>
+        private void CallInventoryContent()
+        {
+            var inventoryContent = characterInventory.GetInventoryContent();
+            inventoryContentEvent.Invoke(inventoryContent.ToList());
+        }
+
         /// <summary>
         /// Transfers game values to character's inventory.
         /// </summary>
         public void PutInCharacterInventory(List<GameValue> values)
         {
-            var addedWeight = values.Select(v => v.Weight).Sum();
-            if (characterInventory.IsItemsPlacedInInventory(addedWeight))
-            {
-                characterInventory.PutInInventory(values);
-                
-                // Отчет в UI - ценности по количеству
-                // - аптечек, ключей, мин
-                
-                
-                
-                // Отчет по поступлении в UI
-            }
-            else
-            {
-                Debug.Log("Found items don`t fit in inventory :(");
-            }
+            var inventoryContent = characterInventory.PutInInventory(values);
+            inventoryContentEvent.Invoke(inventoryContent.ToList());
         }
 
         #endregion

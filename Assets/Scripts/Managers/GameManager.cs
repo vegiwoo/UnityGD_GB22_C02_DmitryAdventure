@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +18,9 @@ namespace DmitryAdventure
         [Header("UI")] 
         [SerializeField] private Slider hpBar;
         [SerializeField] private Text enemiesLabel;
+        [SerializeField] private Text keyLabel;
+        [SerializeField] private Text mineLabel;
+        [SerializeField] private Text medicineLabel;
         
         [Header("Links")] 
         [SerializeField] private Player player;
@@ -82,6 +87,25 @@ namespace DmitryAdventure
             
             Debug.Log(WinMessage);
             UnityEditor.EditorApplication.isPaused = true;
+        }
+
+        public void OnInventoryContent(List<(GameValue value, int count)> items)
+        {
+            foreach (var item in items)
+            {
+                switch (item.value.Name)
+                {
+                    case GameData.KeyKey:
+                        keyLabel.text = $"KEYS: {item.count:00}";
+                        break;
+                    case GameData.MineKey:
+                        mineLabel.text = $"MINES: {item.count:00}";
+                        break;
+                    case GameData.MedicineKey:
+                        medicineLabel.text = $"MEDICINE: {item.count:00}";
+                        break;
+                }
+            }
         }
         
         #endregion

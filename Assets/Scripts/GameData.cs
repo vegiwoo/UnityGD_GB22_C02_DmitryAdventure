@@ -20,25 +20,24 @@ namespace DmitryAdventure
         {
             {
                 new GUI(), 
-                new GameValue("Medicine", "Easily restore lost health", 
+                new GameValue(MedicineKey, "Easily restore lost health", 
                     GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f)
             },
             {
                 new GUI(), 
-                new GameValue("Key", "Every rusty key opens something", 
+                new GameValue(KeyKey, "Every rusty key opens something", 
                     GameValueType.Item, RarityLevel.Rare, 0, 0.15f)
             },
             {
                 new GUI(), 
-                new GameValue("Mine", "Enemies on this mine fly up like crazy frogs", 
+                new GameValue(MineKey, "Enemies on this mine fly up like crazy frogs", 
                     GameValueType.Item, RarityLevel.Rare, 50, 1.50f)
             }
         };
 
-        /// <summary>
-        /// Hero's maximum inventory capacity
-        /// </summary>
-        public float MaximumInventoryCapacity = 3.0f;
+        public const string MedicineKey = "Medicine";
+        public const string KeyKey = "Key";
+        public const string MineKey = "Mine";
 
         #endregion
 
