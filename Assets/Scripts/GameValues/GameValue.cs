@@ -36,7 +36,6 @@ namespace DmitryAdventure
         #endregion
 
         #region Initializers and Deinitializer
-
         public GameValue(string name, string description, GameValueType type, RarityLevel rarity, float cost,
             float weight)
         {

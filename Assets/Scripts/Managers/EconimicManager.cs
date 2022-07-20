@@ -26,9 +26,7 @@ namespace DmitryAdventure
         #region Functionality
 
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers

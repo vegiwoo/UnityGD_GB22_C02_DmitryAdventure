@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace DmitryAdventure
@@ -26,7 +24,6 @@ namespace DmitryAdventure
         
         [Header("Links")] 
         [SerializeField] private Player player;
-        [SerializeField] private AiminngColorize[] aimingColorizes;
 
         private readonly string _enemiesMark = "Enemies".ToUpper();
         private const string WinMessage = "You win :)";

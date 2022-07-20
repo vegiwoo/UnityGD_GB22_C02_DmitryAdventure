@@ -52,7 +52,6 @@ namespace DmitryAdventure
         #endregion
 
         #region Functionality
-
         #region Coroutines
         // ...
         #endregion
@@ -61,33 +60,39 @@ namespace DmitryAdventure
 
         private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool entry)
         {
-            if (discoveryTypes.Contains(discoveryType))
-            {
-                var jointSpring = _doorJoint.spring;
+            if (!discoveryTypes.Contains(discoveryType)) return;
             
-                if (entry && discoveryTransform.forward != Vector3.zero && !_isOpen)
+            var jointSpring = _doorJoint.spring;
+            var forward = discoveryTransform.forward;
+            
+            switch (entry)
+            {
+                case true when forward != Vector3.zero && !_isOpen:
                 {
-                    var a = discoveryTransform.forward.normalized;
+                    var a = forward.normalized;
                     var b = transform.forward.normalized;
             
                     var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
-            
+
                     if (collinearity)
+                    {
                         jointSpring.targetPosition = -90;
+                    }
                     else
+                    {
                         jointSpring.targetPosition = 90;
-
+                    }
+                    
                     _isOpen = true;
+                    break;
                 }
-
-                if (!entry && discoveryTransform.forward != Vector3.zero && _isOpen)
-                {
+                case false when discoveryTransform.forward != Vector3.zero && _isOpen:
                     jointSpring.targetPosition = 0;
                     _isOpen = false;
-                }
-                
-                _doorJoint.spring = jointSpring;
+                    break;
             }
+
+            _doorJoint.spring = jointSpring;
         }
         #endregion
 

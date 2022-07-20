@@ -54,17 +54,12 @@ namespace DmitryAdventure
         #endregion
 
         #region Functionality
-
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods

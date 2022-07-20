@@ -37,21 +37,29 @@ namespace DmitryAdventure
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
-            
+            }
+
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, true);
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
-            
+
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);
+            }
             
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, false);
+            }
         }
 
         #endregion
@@ -59,9 +67,7 @@ namespace DmitryAdventure
         #region Functionality
 
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers

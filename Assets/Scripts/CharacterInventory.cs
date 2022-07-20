@@ -25,29 +25,23 @@ namespace DmitryAdventure
 
         private void Start()
         {
+            // HACK: Временный хардкод
             var aa = new GameValue(GameData.MineKey, "Enemies on this mine fly up like crazy frogs",
                 GameValueType.Item, RarityLevel.Rare, 50, 1.50f);
             PushInInventory(new []{aa, aa, aa});
             
             //updateEvent.Invoke(GetInventoryContent());
-            
-            
         }
-
         #endregion
 
         #region Functionality
 
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods

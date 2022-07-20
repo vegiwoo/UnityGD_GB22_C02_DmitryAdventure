@@ -140,7 +140,9 @@ namespace DmitryAdventure
                 AimingPoint = hit.point;
             }
             else
+            {
                 AimingPoint = camTransform.position + camTransform.forward * currentWeapon.ShotRange;
+            }
         }
         
         public override void OnHit(float damage)

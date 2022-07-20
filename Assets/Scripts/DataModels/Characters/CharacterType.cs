@@ -8,4 +8,3 @@ namespace DmitryAdventure
         Player, EnemyType01
     }
 }
-

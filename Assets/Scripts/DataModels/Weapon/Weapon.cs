@@ -23,9 +23,12 @@ namespace DmitryAdventure
         /// <summary>
         /// Firing point at end of gun barrel.
         /// </summary>
-        public Transform ShotPoint => shotPoint; 
-            
-        [SerializeField] private AudioSource shotSound;
+        public Transform ShotPoint => shotPoint;
+
+        [field: SerializeField, Tooltip("Аудиоклип для звука выстрела")] 
+        private AudioClip ShotSoundClip { get; set; }
+
+        private AudioSource _shotSound; 
 
         /// <summary>
         /// A timer counting down time until next shot is possible.
@@ -39,14 +42,17 @@ namespace DmitryAdventure
         private void Start()
         {
             _shotDelayTimer = 0f;
+            _shotSound = new AudioSource() { clip = ShotSoundClip, volume = 0.8f, playOnAwake = false };
         }
 
         private void Update()
         {
             transform.localEulerAngles = new Vector3(-weaponStats.TiltAngleInDeg, 0, 0);
-            
+
             if (_shotDelayTimer > 0)
+            {
                 _shotDelayTimer -= Time.deltaTime;
+            }
         }
 
         #endregion
@@ -68,15 +74,19 @@ namespace DmitryAdventure
         /// <param name="targetPosition">Target position to hit.</param>
         public void Fire(Vector3 targetPosition)
         {
-            if(_shotDelayTimer > 0) return;
+            if (_shotDelayTimer > 0) return;
 
             // TODO: Implement as object pool
             var newBullet = Instantiate(weaponStats.BulletPrefab, shotPoint.position, shotPoint.rotation);
-            newBullet.SetParams(shotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange, weaponStats.DamagePerShot);
+            newBullet.SetParams(shotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
+                weaponStats.DamagePerShot);
 
-            shotSound.pitch = Random.Range(0.8f, 1.2f); 
-            shotSound.Play();
-            
+            if (_shotSound != null)
+            {
+                _shotSound.pitch = Random.Range(0.8f, 1.2f); 
+                _shotSound.Play();
+            }
+
             _shotDelayTimer = weaponStats.ShotDelay;
         }
 

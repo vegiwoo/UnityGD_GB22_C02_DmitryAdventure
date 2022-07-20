@@ -64,8 +64,6 @@ namespace DmitryAdventure
             ToggleEnemyState(EnemyState.Patrol);
             
             // TODO: Weapon for enemy!
-            
-            
         }
 
         private void OnDestroy()
@@ -104,7 +102,9 @@ namespace DmitryAdventure
                 }
 
                 if (_enemyState == EnemyState.Patrol)
+                {
                     yield return null;
+                }
                 else
                 {          
                     _enemyPatrolCoroutine = null;
@@ -137,7 +137,8 @@ namespace DmitryAdventure
                             _discoveryTarget.position, (MovementSpeedDelta / 2 * Time.deltaTime));
                     }
                     yield return null;
-                } else
+                } 
+                else
                 {          
                     ToggleEnemyState(EnemyState.Patrol);
                     _enemyAttackCoroutine = null;

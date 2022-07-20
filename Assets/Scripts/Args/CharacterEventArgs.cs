@@ -29,15 +29,11 @@ namespace DmitryAdventure
         #region Functionality
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods
-
         // ...
-
         #endregion
 
         #endregion

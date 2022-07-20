@@ -8,4 +8,3 @@ namespace DmitryAdventure
         Ordinary, Rare, Legendary, Epic
     }
 }
-

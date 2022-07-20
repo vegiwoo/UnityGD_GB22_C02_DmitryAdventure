@@ -12,7 +12,8 @@ namespace DmitryAdventure
         #region Сonstants, variables & properties
 
         private static GameData _instance;  
-        public static GameData Instance {  
+        public static GameData Instance 
+        {  
             get { return _instance ??= new GameData(); }  
         }
 
@@ -42,23 +43,19 @@ namespace DmitryAdventure
         #endregion
 
         #region Initializers and Deinitializer
-        GameData() {}
+
+        private GameData() {}
         #endregion
 
         #region Functionality
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods
-
         // ...
-
         #endregion
-
         #endregion
     }
 }
