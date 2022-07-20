@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using DmitryAdventure.Characters;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -23,7 +25,7 @@ namespace DmitryAdventure
         private Coroutine _walkingEnemiesCoroutine;
 
         // Events 
-        public UnityEvent<int> killedEnemies;
+        public UnityEvent<int> killedEnemiesEvent;
         
         #endregion
 
@@ -31,7 +33,7 @@ namespace DmitryAdventure
 
         private void Start()
         {
-            _enemies = new List<Enemy>(12);
+            _enemies = new List<Enemy>(32);
         }
 
         private void Update()
@@ -61,14 +63,14 @@ namespace DmitryAdventure
             var killed = _enemies.RemoveAll(ch => ch.CurrentHp < 0);
             if (killed > 0)
             {
-                killedEnemies.Invoke(killed);
+                killedEnemiesEvent.Invoke(killed);
             }
             
             for (var i = 0; i < routes.Length; i++)
             {
-                if (_enemies.Count(en => en.Route.Number == i) == routes[i].MaxNumberEnemies) continue;
+                if (_enemies.Count(en => en.Route.RouteNumber == i) == routes[i].MaxNumberEnemies) continue;
 
-                var spawnPoint = routes[i].StartPoint;
+                var spawnPoint = routes[i].FirstWaypoint;
                 var newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
                 newEnemy.Route = routes[i];
 

@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -10,23 +11,13 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [SerializeField, Tooltip("Discoverable types for trigger")]
-        private DiscoveryType[] discoverableTypes;
-        
-        /// <summary>
-        /// Discoverable types for trigger.
-        /// </summary>
-        public DiscoveryType[] DiscoverableTypes
-        {
-            get => discoverableTypes;
-            set => discoverableTypes = value;
-        }
-
+        [field:SerializeField, Tooltip("Discoverable types for trigger")]
+        public DiscoveryType[] DiscoverableTypes { get; set;}
+   
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
 
-        private const string PlayerTag = "Player";
-        private const string EnemyTag = "Enemy";
+     
         
         #endregion
 
@@ -36,12 +27,12 @@ namespace DmitryAdventure
         {
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
             }
 
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, true);
             }
@@ -51,12 +42,12 @@ namespace DmitryAdventure
         {
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);
             }
             
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, false);
             }

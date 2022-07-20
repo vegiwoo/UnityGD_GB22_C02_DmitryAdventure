@@ -17,28 +17,37 @@ namespace DmitryAdventure
             get { return _instance ??= new GameData(); }  
         }
 
+        public static readonly float Gravity = Physics.gravity.y;
+        
         public readonly Dictionary<GUI, GameValue> GameValues = new Dictionary<GUI, GameValue>
         {
             {
                 new GUI(), 
-                new GameValue(MedicineKey, "Easily restore lost health", 
+                new GameValue(MedicineLabelText, "Easily restore lost health", 
                     GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f)
             },
             {
                 new GUI(), 
-                new GameValue(KeyKey, "Every rusty key opens something", 
+                new GameValue(KeyLabelText, "Every rusty key opens something", 
                     GameValueType.Item, RarityLevel.Rare, 0, 0.15f)
             },
             {
                 new GUI(), 
-                new GameValue(MineKey, "Enemies on this mine fly up like crazy frogs", 
+                new GameValue(MineLabelText, "Enemies on this mine fly up like crazy frogs", 
                     GameValueType.Item, RarityLevel.Rare, 50, 1.50f)
             }
         };
+        
+        public const string PlayerTag = "Player";
+        public const string EnemyTag = "Enemy";
 
-        public const string MedicineKey = "Medicine";
-        public const string KeyKey = "Key";
-        public const string MineKey = "Mine";
+        public const string EnemiesLabelText = "ENEMIES";
+        public const string MedicineLabelText = "MEDICINES";
+        public const string KeyLabelText = "KEYS";
+        public const string MineLabelText = "MINES";
+
+        public const string WinMessage = "You win :)";
+        public const string LoseMessage = "You lose :(";
 
         #endregion
 

@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Represents item of an enemy.
@@ -52,9 +53,9 @@ namespace DmitryAdventure
 
         private void Start()
         {
-            characterType = CharacterType.EnemyType01;
+            CharacterType = CharacterType.EnemyType01;
             CurrentHp = enemyStats.MaxHp;
-            CurrentSpeed = enemyStats.BaseMovementSpeed;
+            CurrentSpeed = enemyStats.BaseMoveSpeed;
             _enemyRigidbody.mass = 30;
             _currentWaypoint = Route[PositionsRouteType.Next, 0];
 

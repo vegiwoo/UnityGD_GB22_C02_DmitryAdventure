@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -8,37 +9,23 @@ namespace DmitryAdventure
     [CreateAssetMenu]
     public class WeaponStats : ScriptableObject
     {
-        [Header("Required entities")]
-        [SerializeField] private Bullet bulletPrefab;
-        public Bullet BulletPrefab => bulletPrefab;
+        [field:Header("Required entities")]
+        [field:SerializeField] public Bullet BulletPrefab { get; set; }
 
-        [Header("Type")] 
-        [SerializeField] private WeaponType weaponType;
+        [field:Header("Type")] 
+        [field:SerializeField] public WeaponType WeaponType { get; set; }
         
-        [Header("Weapon stats")] 
-        [SerializeField, Tooltip("Shot range in meters"), Range(20f,50f)]
-        private float shotRange;
-        /// <summary>
-        /// Shot range in meters.
-        /// </summary>
-        public float ShotRange => shotRange;
+        [field:Header("Weapon stats")] 
+        [field:SerializeField, Tooltip("Shot range in meters"), Range(20f,50f)]
+        public float ShotRange { get; set; }
 
-        [SerializeField, Tooltip("Shot delay in seconds"), Range(0.1f, 5.0f)]
-        private float shotDelay;
-        public float ShotDelay => shotDelay;
+        [field:SerializeField, Tooltip("Shot delay in seconds"), Range(0.1f, 5.0f)]
+        public float ShotDelay { get; set; }
 
-        [SerializeField, Tooltip("Weapon tilt angle in degrees"), Range(0f, 45f)]
-        private int tiltAngleInDeg;
-        /// <summary>
-        /// Weapon tilt angle in degrees.
-        /// </summary>
-        public int TiltAngleInDeg => tiltAngleInDeg;
-
-        [SerializeField, Tooltip("Damage per shot"), Range(5, 15)]
-        private int damagePerShot;
-        /// <summary>
-        /// Damage per shot.
-        /// </summary>
-        public int DamagePerShot => damagePerShot;
+        [field:SerializeField, Tooltip("Weapon tilt angle in degrees"), Range(0f, 45f)]
+        public int TiltAngleInDeg { get; set; }
+        
+        [field:SerializeField, Tooltip("Damage per shot"), Range(5, 15)]
+        public int DamagePerShot { get; set; }
     }
 }

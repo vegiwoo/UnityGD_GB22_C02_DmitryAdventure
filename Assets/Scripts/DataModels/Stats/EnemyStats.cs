@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -8,12 +9,10 @@ namespace DmitryAdventure
     [CreateAssetMenu]
     public class EnemyStats : CharacterStats
     {
-        [SerializeField,Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
-        private float pointContactDistance;
-        public float PointContactDistance => pointContactDistance;
-        
-        [SerializeField,Tooltip("Distance from target at which enemy keeps when attacking."), Range(1,5)]
-        private float minAttackDistance;
-        public float MinAttackDistance => minAttackDistance;
+        [field: SerializeField, Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
+        public float PointContactDistance { get; set; }
+
+        [field:SerializeField,Tooltip("Distance from target at which enemy keeps when attacking."), Range(1,5)]
+        public float MinAttackDistance { get; set; }
     }
 }

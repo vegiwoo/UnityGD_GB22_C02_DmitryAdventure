@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     public class SwitchVCam : MonoBehaviour

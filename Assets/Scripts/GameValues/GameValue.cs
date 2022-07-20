@@ -1,5 +1,4 @@
-using UnityEngine;
-
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>

@@ -1,5 +1,7 @@
 using UnityEngine;
+using DmitryAdventure.Armament;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>

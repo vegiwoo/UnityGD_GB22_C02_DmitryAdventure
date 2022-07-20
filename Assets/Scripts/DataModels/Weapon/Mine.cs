@@ -1,4 +1,5 @@
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Armament
 {
     /// <summary>
     /// Represents a mine.

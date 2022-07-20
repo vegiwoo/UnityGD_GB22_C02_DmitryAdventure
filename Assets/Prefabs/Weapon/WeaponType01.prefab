@@ -318,5 +318,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponStats: {fileID: 11400000, guid: f4f7baaa6f1b943c2bf167f1a002a74d, type: 2}
-  shotPoint: {fileID: 0}
-  shotSound: {fileID: 0}
+  <ShotPoint>k__BackingField: {fileID: 3433803662626051336}
+  <ShotSoundClip>k__BackingField: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}

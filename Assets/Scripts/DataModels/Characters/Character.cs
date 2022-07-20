@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DmitryAdventure.Armament;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Essence of playable or non-playable character.
@@ -9,37 +11,22 @@ namespace DmitryAdventure
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
+        [field:SerializeField, Tooltip("Type of personage")] protected CharacterType CharacterType { get; set; }
+        [field:SerializeField, Tooltip("Character's chosen weapon")] protected Weapon CurrentWeapon { get; set; }
 
-        /// <summary>
-        /// Unique ID of character.
-        /// </summary>
-        public GUI CharacterID = new ();
-        [SerializeField] public CharacterType characterType;
-        [SerializeField, Tooltip("Character's chosen weapon")] protected Weapon currentWeapon;
-
-        [SerializeField, Tooltip("Color of crosshair beam to display in editor")]
-        private Color aimingColor;
-
+        [field:SerializeField, Tooltip("Color of crosshair beam to display in editor")]
+        private Color AimingColor { get; set; }
+        
         /// <summary>
         /// Aiming point for weapon.
         /// </summary>
         protected Vector3 AimingPoint;
         
-        /// <summary>
-        /// Current hit points.
-        /// </summary>
-        public float CurrentHp { get; protected set; }
-
-        /// <summary>
-        /// Character current movement speed.
-        /// </summary>
-        protected float CurrentSpeed { get;  set; }
+        [field: SerializeField, ReadonlyField, Tooltip("Current hit points.")] public float CurrentHp { get; protected set; }
+        
+        [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]protected float CurrentSpeed { get;  set; }
 
         protected float MovementSpeedDelta => CurrentSpeed / 3;
-        
-        protected float RotationSpeedDelta => CurrentSpeed / 10;
-        
-        protected const float GravityValue = -9.81f;
 
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
@@ -69,8 +56,8 @@ namespace DmitryAdventure
         {
             if (AimingPoint == Vector3.zero) return;
             
-            Gizmos.color = aimingColor;
-            Gizmos.DrawLine(currentWeapon.ShotPoint.position, AimingPoint!);
+            Gizmos.color = AimingColor;
+            Gizmos.DrawLine(CurrentWeapon.ShotPoint.position, AimingPoint!);
         }
 
         #endregion
@@ -100,17 +87,19 @@ namespace DmitryAdventure
         /// Fires a shot from a weapon.
         /// </summary>
         /// <param name="_">CallbackContext for more information.</param>
+        /// <remarks>For player.</remarks>>
         protected void ShootWeapon(InputAction.CallbackContext _)
         {
-            currentWeapon.Fire(AimingPoint);
+            CurrentWeapon.Fire(AimingPoint);
         }
         
         /// <summary>
         /// Fires a shot from a weapon.
         /// </summary>
+        /// <remarks>For NPC.</remarks>>
         protected void ShootWeapon()
         {
-            currentWeapon.Fire(AimingPoint);
+            CurrentWeapon.Fire(AimingPoint);
         }
         
         /// <summary>

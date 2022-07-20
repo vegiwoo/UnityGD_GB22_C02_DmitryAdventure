@@ -1,7 +1,8 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Armament
 {
     /// <summary>
     /// Represents general type of weapon.
@@ -10,22 +11,12 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        private static readonly float Gravity = Physics.gravity.y;
+        [SerializeField] public WeaponStats weaponStats;
+        
+        [field:SerializeField, Tooltip("Firing point at end of gun barrel")] 
+        public Transform ShotPoint { get; set; }
 
-        [SerializeField] private WeaponStats weaponStats;
-        /// <summary>
-        /// Shot range in meter.
-        /// </summary>
-        public float ShotRange => weaponStats.ShotRange;
-
-        [SerializeField, Tooltip("Firing point at end of gun barrel")] private Transform shotPoint;
-       
-        /// <summary>
-        /// Firing point at end of gun barrel.
-        /// </summary>
-        public Transform ShotPoint => shotPoint;
-
-        [field: SerializeField, Tooltip("Аудиоклип для звука выстрела")] 
+        [field: SerializeField, Tooltip("Sound clip for gunshot sound")] 
         private AudioClip ShotSoundClip { get; set; }
 
         private AudioSource _shotSound; 
@@ -42,7 +33,7 @@ namespace DmitryAdventure
         private void Start()
         {
             _shotDelayTimer = 0f;
-            _shotSound = new AudioSource() { clip = ShotSoundClip, volume = 0.8f, playOnAwake = false };
+            _shotSound = new AudioSource { clip = ShotSoundClip, volume = 0.8f, playOnAwake = false };
         }
 
         private void Update()
@@ -77,8 +68,8 @@ namespace DmitryAdventure
             if (_shotDelayTimer > 0) return;
 
             // TODO: Implement as object pool
-            var newBullet = Instantiate(weaponStats.BulletPrefab, shotPoint.position, shotPoint.rotation);
-            newBullet.SetParams(shotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
+            var newBullet = Instantiate(weaponStats.BulletPrefab, ShotPoint.position, ShotPoint.rotation);
+            newBullet.SetParams(ShotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
                 weaponStats.DamagePerShot);
 
             if (_shotSound != null)
@@ -106,7 +97,7 @@ namespace DmitryAdventure
             var y = fromShooterToTarget.y;
 
             var angleInRadians = weaponStats.TiltAngleInDeg * Mathf.PI / 180;
-            var v2 = Gravity * Mathf.Pow(x, 2) /
+            var v2 = GameData.Gravity * Mathf.Pow(x, 2) /
                      (2 * (y - Mathf.Tan(angleInRadians) * x) * Mathf.Pow(Mathf.Cos(angleInRadians), 2));
             return Mathf.Sqrt(Mathf.Abs(v2));
         }

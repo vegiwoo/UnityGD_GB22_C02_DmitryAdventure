@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DmitryAdventure.Armament;
 
 /*
  * Refs:
@@ -8,7 +9,8 @@ using UnityEngine.InputSystem;
  * - https://youtu.be/SeBEvM2zMpY
  */
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Represents main character.
@@ -107,17 +109,19 @@ namespace DmitryAdventure
                 move.y = 0f;
             }
             
-            CurrentSpeed = playerStats.BaseMovementSpeed;
+            CurrentSpeed = playerStats.BaseMoveSpeed;
             if (_runAction.inProgress)
+            {
                 CurrentSpeed += playerStats.AccelerationFactor;
+            }
             _controller.Move(move * (Time.deltaTime * CurrentSpeed));
             
             if (_jumpAction.triggered && _groundedPlayer)
             {
-                _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GravityValue);
+                _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
             }
 
-            _playerVelocity.y += GravityValue * Time.deltaTime;
+            _playerVelocity.y += GameData.Gravity * Time.deltaTime;
             _controller.Move(_playerVelocity * Time.deltaTime);
             
             // Rotate towards camera direction 
@@ -134,14 +138,14 @@ namespace DmitryAdventure
             if (!Physics.Raycast(camTransform.position, camTransform.forward, out var hit)) 
                 return;
 
-            var targetDistance = Vector3.Distance(currentWeapon.ShotPoint.position, hit.point);
-            if (targetDistance < currentWeapon.ShotRange)
+            var targetDistance = Vector3.Distance( CurrentWeapon.ShotPoint.position, hit.point);
+            if (targetDistance < CurrentWeapon.weaponStats.ShotRange)
             {
                 AimingPoint = hit.point;
             }
             else
             {
-                AimingPoint = camTransform.position + camTransform.forward * currentWeapon.ShotRange;
+                AimingPoint = camTransform.position + camTransform.forward * CurrentWeapon.weaponStats.ShotRange;
             }
         }
         
@@ -154,12 +158,11 @@ namespace DmitryAdventure
 
         private void MineActionOnPerformed(InputAction.CallbackContext context)
         {
-            var popMine = _characterInventory.PopFromInventory(GameData.MineKey);
+            var popMine = _characterInventory.PopFromInventory(GameData.MineLabelText);
             if (popMine == null) return;
 
             Instantiate(minePrefab, new Vector3(AimingPoint.x,AimingPoint.y + 0.2f,AimingPoint.z), Quaternion.identity);
         }
-
         #endregion
         #endregion
     }

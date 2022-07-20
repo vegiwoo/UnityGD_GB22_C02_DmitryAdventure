@@ -1,7 +1,8 @@
-using System;
 using UnityEngine;
+using DmitryAdventure.Characters;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Armament
 {
     /// <summary>
     /// Represents ammunition

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DmitryAdventure.Characters;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace DmitryAdventure
 
         [Header("Game")] 
         [SerializeField, Range(1,20)] private int goalToKillEnemiesCount = 1;
-        private int _currentKillEnemiesCount = 0;
+        private int _currentKillEnemiesCount;
         
         [Header("UI")] 
         [SerializeField] private Slider hpBar;
@@ -24,11 +26,7 @@ namespace DmitryAdventure
         
         [Header("Links")] 
         [SerializeField] private Player player;
-
-        private readonly string _enemiesMark = "Enemies".ToUpper();
-        private const string WinMessage = "You win :)";
-        private const string LoseMessage = "You lose :(";
-
+        
         #endregion
 
         #region Monobehavior methods
@@ -38,7 +36,7 @@ namespace DmitryAdventure
             hpBar.maxValue = player.playerStats.MaxHp;
             hpBar.value = player.CurrentHp;
 
-            enemiesLabel.text = $"{_enemiesMark}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
+            enemiesLabel.text = $"{GameData.EnemiesLabelText}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
 
             player.CharacterNotify += PlayerOnCharacterHandler;
         }
@@ -68,7 +66,7 @@ namespace DmitryAdventure
             }
             else
             {
-                Debug.Log(LoseMessage);
+                Debug.Log(GameData.LoseMessage);
                 UnityEditor.EditorApplication.isPaused = true;
             }
         }
@@ -80,11 +78,11 @@ namespace DmitryAdventure
         public void OnKilledEnemies(int numberKilled)
         {
             _currentKillEnemiesCount += numberKilled;
-            enemiesLabel.text = $"{_enemiesMark}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
+            enemiesLabel.text = $"{GameData.EnemiesLabelText}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
 
             if (_currentKillEnemiesCount < goalToKillEnemiesCount) return;
             
-            Debug.Log(WinMessage);
+            Debug.Log(GameData.WinMessage);
             UnityEditor.EditorApplication.isPaused = true;
         }
 
@@ -94,13 +92,13 @@ namespace DmitryAdventure
             {
                 switch (item.value.Name)
                 {
-                    case GameData.KeyKey:
+                    case GameData.KeyLabelText:
                         keyLabel.text = $"KEYS: {item.count:00}";
                         break;
-                    case GameData.MineKey:
+                    case GameData.MineLabelText:
                         mineLabel.text = $"MINES: {item.count:00}";
                         break;
-                    case GameData.MedicineKey:
+                    case GameData.MedicineLabelText:
                         medicineLabel.text = $"MEDICINE: {item.count:00}";
                         break;
                 }

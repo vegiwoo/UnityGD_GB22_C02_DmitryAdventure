@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     public enum PositionsRouteType
@@ -15,20 +16,19 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [SerializeField] private int number;
-        public int Number => number;
+        [field: SerializeField, Tooltip("Enemy route number")] 
+        public int RouteNumber { get; set; }
 
         [SerializeField] private Transform[] wayPoints;
 
-        [SerializeField] private int maxNumberEnemies;
-        public int MaxNumberEnemies => maxNumberEnemies;
+        [field:SerializeField, Tooltip("Maximum number of enemies on the route")] public int MaxNumberEnemies { get; set; }
 
-        private int startIndex = 0;
-        private int EndIndex => wayPoints.Length - 1;
+        private const int RouteStartIndex = 0;
+        private int RouteEndIndex => wayPoints.Length - 1;
         
-        public Vector3 StartPoint => wayPoints[startIndex].position;
+        public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].position;
         
-        private Vector3 EndPoint => wayPoints[EndIndex].position;
+        private Vector3 LastWaypoint => wayPoints[RouteEndIndex].position;
       
         /// <summary>
         /// Returns requested route positions.
@@ -67,6 +67,7 @@ namespace DmitryAdventure
         #endregion
 
         #region Other methods
+        
         /// <summary>
         /// Change destination waypoint and direction of moving.
         /// </summary>
@@ -83,10 +84,10 @@ namespace DmitryAdventure
             
             return isMovingForward switch
             {
-                true => oldWayPoint != EndPoint
+                true => oldWayPoint != LastWaypoint
                     ? (true, this[PositionsRouteType.Next,i])
                     : (false, this[PositionsRouteType.Previous, i]),
-                false => oldWayPoint != StartPoint
+                false => oldWayPoint != FirstWaypoint
                     ? (false, this[PositionsRouteType.Previous, i])
                     : (true, this[PositionsRouteType.Next,i])
             };
