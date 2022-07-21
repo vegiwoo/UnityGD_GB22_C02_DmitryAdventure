@@ -99,7 +99,10 @@ namespace DmitryAdventure.Characters
             }
             else
             {
-                CurrentHp += medicine.HpBoostRate;
+                CurrentHp = CurrentHp + medicine.HpBoostRate <= playerStats.MaxHp
+                    ? CurrentHp += medicine.HpBoostRate
+                    : playerStats.MaxHp;
+                
                 AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
 
                 var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);

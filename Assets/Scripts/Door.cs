@@ -26,6 +26,8 @@ namespace DmitryAdventure
         private DiscoveryTrigger _trigger;
         private HingeJoint _doorJoint;
 
+        private Rigidbody DoorRigidbody { get; set; }
+
         [field: SerializeField, Tooltip("Determines if door is locked")] private bool isLocked;
         
         private bool _isOpen;
@@ -36,6 +38,8 @@ namespace DmitryAdventure
 
         private void Awake()
         {
+            DoorRigidbody = GetComponent<Rigidbody>();
+            
             _trigger = GetComponentInChildren<DiscoveryTrigger>();
             if (_trigger == null)
             {
@@ -50,6 +54,8 @@ namespace DmitryAdventure
         private void Start()
         {
             _trigger.DiscoveryTriggerNotify += OnTriggerNotify;
+
+            DoorRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         }
 
         private void OnDestroy()
@@ -66,7 +72,13 @@ namespace DmitryAdventure
 
         #region Event handlers
 
-        private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool entry)
+        /// <summary>
+        /// Handles DiscoveryTrigger fire event.
+        /// </summary>
+        /// <param name="discoveryType">Type of detected object.</param>
+        /// <param name="discoveryTransform">Transform of object..</param>
+        /// <param name="isItemEnters">Object enters or exits trigger.</param>
+        private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isItemEnters)
         {
             if (!discoveryTypes.Contains(discoveryType)) return;
 
@@ -78,7 +90,8 @@ namespace DmitryAdventure
                 if (key != null)
                 {
                     AudioSource.PlayClipAtPoint(openLockedDoorSound, transform.position);
-                    OpenCloseDoor(discoveryTransform, entry);
+                    OpenCloseDoor(discoveryTransform, isItemEnters);
+                    DoorRigidbody.constraints = RigidbodyConstraints.None;
                     isLocked = false;
                 }
                 else
@@ -88,10 +101,15 @@ namespace DmitryAdventure
             }
             else
             {
-                OpenCloseDoor(discoveryTransform, entry);
+                OpenCloseDoor(discoveryTransform, isItemEnters);
             }
         }
 
+        /// <summary>
+        /// Opens or closes door.
+        /// </summary>
+        /// <param name="discoveryTransform">Position of the entity detected by trigger to calculate the direction</param>
+        /// <param name="entry"></param>
         private void OpenCloseDoor(Transform discoveryTransform, bool entry)
         {
             var jointSpring = _doorJoint.spring;
