@@ -38,8 +38,12 @@ namespace DmitryAdventure
             }
         };
         
+        // Tags
         public const string PlayerTag = "Player";
         public const string EnemyTag = "Enemy";
+
+        // Layer masks
+        public static readonly LayerMask PlayerLayerMask = LayerMask.GetMask($"Player");
 
         public const string EnemiesLabelText = "ENEMIES";
         public const string MedicineLabelText = "MEDICINES";
@@ -63,7 +67,8 @@ namespace DmitryAdventure
         #endregion
 
         #region Other methods
-        // ...
+    //..
+
         #endregion
         #endregion
     }

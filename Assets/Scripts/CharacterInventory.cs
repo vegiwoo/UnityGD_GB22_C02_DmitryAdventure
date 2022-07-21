@@ -18,7 +18,7 @@ namespace DmitryAdventure
         /// <summary>
         /// Event to be called after inventory has been updated.
         /// </summary>
-        public UnityEvent<IEnumerable<(GameValue value, int count)>> updateEvent;
+        public UnityEvent<IEnumerable<(GameValue value, int count)>> inventoryUpdateEvent;
         #endregion
 
         #region Monobehavior methods
@@ -26,9 +26,9 @@ namespace DmitryAdventure
         private void Start()
         {
             // HACK: Hardcode!
-            var aa = new GameValue(GameData.MineLabelText, "Enemies on this mine fly up like crazy frogs",
+            var mine = new GameValue(GameData.MineLabelText, "Enemies on this mine fly up like crazy frogs",
                 GameValueType.Item, RarityLevel.Rare, 50, 1.50f);
-            PushInInventory(new []{aa, aa, aa});
+            PushInInventory(new []{mine, mine, mine});
             
             //updateEvent.Invoke(GetInventoryContent());
         }
@@ -71,7 +71,7 @@ namespace DmitryAdventure
                 }
             }
             
-            updateEvent.Invoke(GetInventoryContent());
+            inventoryUpdateEvent.Invoke(GetInventoryContent());
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace DmitryAdventure
             inInventory.count -= 1;
             Inventory[nameKey] = inInventory;
             
-            updateEvent.Invoke(GetInventoryContent());
+            inventoryUpdateEvent.Invoke(GetInventoryContent());
 
             return inInventory.value;
         }

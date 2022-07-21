@@ -12,44 +12,41 @@ namespace DmitryAdventure.Armament
     {
         #region Сonstants, variables & properties
 
-        [SerializeField] protected GameObject effectPrefab;
-        [SerializeField] protected AudioClip effectClip;
+        [SerializeField] 
+        protected GameObject effectPrefab;
         protected Rigidbody AmmunitionRigidbody;
-        private AudioSource _effectSound;
         
-        /// <summary>
-        /// Damage dealt by ammunition.
-        /// </summary>
-        [field: SerializeField, Tooltip("Ammo damage"), Range(10f,100f)] 
+        [SerializeField] 
+        private AudioClip effectSoundClip;
+
+        [field: SerializeField, Tooltip("Damage dealt by ammunition"), Range(10f,100f)] 
         protected int Damage { get; set; }
         
         #endregion
 
         #region Monobehavior methods
-
+        
         protected virtual void Start()
         {
             AmmunitionRigidbody = GetComponent<Rigidbody>();
-            _effectSound = new AudioSource { clip = effectClip, volume = 0.8f, playOnAwake = false};
         }
 
         protected virtual void OnCollisionEnter(Collision collision)
         {
             var character = collision.gameObject.GetComponent<Character>();
-            if (character == null) return;
-            
+            if (character != null)
+            {
+                character.OnHit(Damage);
+            }
+  
+            AudioSource.PlayClipAtPoint(effectSoundClip, transform.position);
+
             if (effectPrefab != null)
             {
                 Instantiate(effectPrefab, transform.position, Quaternion.identity);
             }
             
-            if (_effectSound != null)
-            {
-                _effectSound.Play();
-            }
-            
-            character.OnHit(Damage);
-            Destroy(gameObject, 0.1f);
+            Destroy(gameObject);
         }
 
         #endregion

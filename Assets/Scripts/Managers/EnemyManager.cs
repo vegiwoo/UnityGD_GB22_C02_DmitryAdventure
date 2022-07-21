@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using DmitryAdventure.Characters;
 
 // ReSharper disable once CheckNamespace
-namespace DmitryAdventure
+namespace DmitryAdventure.Managers
 {
     /// <summary>
     /// Controls movement of enemies on routes.
@@ -64,6 +64,7 @@ namespace DmitryAdventure
             if (killed > 0)
             {
                 killedEnemiesEvent.Invoke(killed);
+                Debug.Log("Invoke killed");
             }
             
             for (var i = 0; i < routes.Length; i++)

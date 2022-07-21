@@ -17,7 +17,7 @@ namespace DmitryAdventure
         private DiscoveryTrigger _discoveryTrigger;
 
         [SerializeField]
-        private AudioSource openingSound;
+        private AudioClip openingSound;
         
         [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
         private int possibleCapacity = 2;
@@ -72,7 +72,7 @@ namespace DmitryAdventure
             switch (type)
             {
                 case DiscoveryType.Player:
-                    openingSound.Play();
+                    AudioSource.PlayClipAtPoint(openingSound, transform.position);
                     heroFoundValuesHandler.Invoke(_objectsInBox);
                     _objectsInBox = null;
                     IsBoxEmpty = true;

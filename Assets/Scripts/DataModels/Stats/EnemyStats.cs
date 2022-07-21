@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
-namespace DmitryAdventure
+namespace DmitryAdventure.Stats
 {
     /// <summary>
     /// Represents characteristics of enemy.

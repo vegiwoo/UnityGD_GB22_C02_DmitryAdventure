@@ -1,5 +1,6 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DmitryAdventure.Stats;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Armament
@@ -16,11 +17,6 @@ namespace DmitryAdventure.Armament
         [field:SerializeField, Tooltip("Firing point at end of gun barrel")] 
         public Transform ShotPoint { get; set; }
 
-        [field: SerializeField, Tooltip("Sound clip for gunshot sound")] 
-        private AudioClip ShotSoundClip { get; set; }
-
-        private AudioSource _shotSound; 
-
         /// <summary>
         /// A timer counting down time until next shot is possible.
         /// </summary>
@@ -33,7 +29,6 @@ namespace DmitryAdventure.Armament
         private void Start()
         {
             _shotDelayTimer = 0f;
-            _shotSound = new AudioSource { clip = ShotSoundClip, volume = 0.8f, playOnAwake = false };
         }
 
         private void Update()
@@ -71,13 +66,7 @@ namespace DmitryAdventure.Armament
             var newBullet = Instantiate(weaponStats.BulletPrefab, ShotPoint.position, ShotPoint.rotation);
             newBullet.SetParams(ShotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
                 weaponStats.DamagePerShot);
-
-            if (_shotSound != null)
-            {
-                _shotSound.pitch = Random.Range(0.8f, 1.2f); 
-                _shotSound.Play();
-            }
-
+            
             _shotDelayTimer = weaponStats.ShotDelay;
         }
 

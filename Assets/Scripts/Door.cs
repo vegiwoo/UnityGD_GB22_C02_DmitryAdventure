@@ -13,7 +13,7 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [SerializeField] private string name;
+        [SerializeField] private string objectName;
         /// <summary>
         /// An array of object types to discover.
         /// </summary>

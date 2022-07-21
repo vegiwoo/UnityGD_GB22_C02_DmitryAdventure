@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using DmitryAdventure.Characters;
 
 // ReSharper disable once CheckNamespace
-namespace DmitryAdventure
+namespace DmitryAdventure.Managers
 {
     /// <summary>
     /// Organizes game
@@ -60,15 +60,14 @@ namespace DmitryAdventure
         /// <param name="e">Event arguments.</param>
         private void PlayerOnCharacterHandler(CharacterEventArgs e)
         {
-            if (e.CurrentHp > 0)
+            if (e.Die)
             {
-                hpBar.value = e.CurrentHp;
-            }
-            else
-            {
+                hpBar.value = 0;
                 Debug.Log(GameData.LoseMessage);
                 UnityEditor.EditorApplication.isPaused = true;
             }
+            
+            hpBar.value = e.CurrentHp;
         }
 
         /// <summary>

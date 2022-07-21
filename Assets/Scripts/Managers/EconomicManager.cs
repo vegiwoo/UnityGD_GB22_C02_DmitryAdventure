@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
-namespace DmitryAdventure
+namespace DmitryAdventure.Managers
 {
     /// <summary>
     /// Game economy manager.

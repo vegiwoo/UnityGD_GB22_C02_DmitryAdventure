@@ -1,3 +1,4 @@
+#nullable enable
 using System.Linq;
 using UnityEngine;
 
@@ -13,11 +14,10 @@ namespace DmitryAdventure
 
         [field:SerializeField, Tooltip("Discoverable types for trigger")]
         public DiscoveryType[] DiscoverableTypes { get; set;}
-   
+
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
 
-     
         
         #endregion
 
