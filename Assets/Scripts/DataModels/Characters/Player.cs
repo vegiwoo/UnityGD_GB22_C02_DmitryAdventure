@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DmitryAdventure.Stats;
+using JetBrains.Annotations;
 
 /*
  * Refs:
@@ -102,9 +103,9 @@ namespace DmitryAdventure.Characters
             }
             else
             {
-                CurrentHp += 25.0f;
+                CurrentHp += popMedicine.HpBoostRate;
                 AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
-                
+
                 var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
                 OnCharacterNotify(args);
             }
@@ -161,6 +162,34 @@ namespace DmitryAdventure.Characters
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
             OnCharacterNotify(args);
         }
+        
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        [CanBeNull]
+        private GameValue LookingForKeyInInventory()
+        {
+            if(_characterInventory == null) return null;
+            
+            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
+            if (popMedicine == null)
+            {
+                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
+            }
+            else
+            {
+                CurrentHp += popMedicine.HpBoostRate;
+                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
+
+                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+                OnCharacterNotify(args);
+            }
+            
+            // Dummy
+            return null;
+        }
+        
+        
         #endregion
         #endregion
     }

@@ -20,6 +20,9 @@ namespace DmitryAdventure
         public DiscoveryType [] discoveryTypes;
         private DiscoveryTrigger _trigger;
         private HingeJoint _doorJoint;
+
+        [field: SerializeField, Tooltip("Determines if door is locked")] private bool isLocked;
+        
         private bool _isOpen;
         
         #endregion
@@ -61,7 +64,16 @@ namespace DmitryAdventure
         private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool entry)
         {
             if (!discoveryTypes.Contains(discoveryType)) return;
-            
+
+            // if (isLocked)
+            // {
+            //     
+            // }
+            // else
+            // {
+            //     
+            // }
+
             var jointSpring = _doorJoint.spring;
             var forward = discoveryTransform.forward;
             

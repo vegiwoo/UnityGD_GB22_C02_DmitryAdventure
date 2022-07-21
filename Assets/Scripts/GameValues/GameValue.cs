@@ -14,11 +14,11 @@ namespace DmitryAdventure
         /// <summary>
         /// Game value description.
         /// </summary>
-        public string Description { get; }
+        private string Description { get; }
         /// <summary>
         /// Game value type.
         /// </summary>
-        public GameValueType Type { get; }
+        private GameValueType Type { get; }
         /// <summary>
         /// Rarity level in game.
         /// </summary>
@@ -26,17 +26,22 @@ namespace DmitryAdventure
         /// <summary>
         /// Price in in-game currency.
         /// </summary>
-        public float Cost { get; private set; }
+        private float Cost { get;}
         /// <summary>
-        /// Weight in kilograms.
+        /// Weight in kilograms. 
         /// </summary>
-        public float Weight { get; private set; }
-        
+        private float Weight { get; }
+
+        /// <summary>
+        /// Indicator of increase and decrease in character's HP.
+        /// </summary>
+        public float HpBoostRate { get; }
+
         #endregion
 
         #region Initializers and Deinitializer
         public GameValue(string name, string description, GameValueType type, RarityLevel rarity, float cost,
-            float weight)
+            float weight, float hpBoostRate)
         {
             Name = name;
             Description = description;
@@ -44,6 +49,7 @@ namespace DmitryAdventure
             Rarity = rarity;
             Cost = cost;
             Weight = weight;
+            HpBoostRate = hpBoostRate;
         }
         #endregion
     }

@@ -24,17 +24,17 @@ namespace DmitryAdventure
             {
                 new GUI(), 
                 new GameValue(MedicineLabelText, "Easily restore lost health", 
-                    GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f)
+                    GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f, hpBoostRate:25.0f)
             },
             {
                 new GUI(), 
                 new GameValue(KeyLabelText, "Every rusty key opens something", 
-                    GameValueType.Item, RarityLevel.Rare, 0, 0.15f)
+                    GameValueType.Item, RarityLevel.Rare, 0, 0.15f, hpBoostRate:0)
             },
             {
                 new GUI(), 
                 new GameValue(MineLabelText, "Enemies on this mine fly up like crazy frogs", 
-                    GameValueType.Item, RarityLevel.Rare, 50, 1.50f)
+                    GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate:-100.0f)
             }
         };
         
