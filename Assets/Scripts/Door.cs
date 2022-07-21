@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DmitryAdventure.Characters;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -14,6 +15,10 @@ namespace DmitryAdventure
         #region Сonstants, variables & properties
 
         [SerializeField] private string objectName;
+
+        [field: SerializeField] private AudioClip lockedDoorSound;
+        [field: SerializeField] private AudioClip openLockedDoorSound;
+        
         /// <summary>
         /// An array of object types to discover.
         /// </summary>
@@ -65,25 +70,40 @@ namespace DmitryAdventure
         {
             if (!discoveryTypes.Contains(discoveryType)) return;
 
-            // if (isLocked)
-            // {
-            //     
-            // }
-            // else
-            // {
-            //     
-            // }
+            var character = discoveryTransform.gameObject.GetComponent<Character>();
+            
+            if (isLocked)
+            {
+                var key = character.FindItemInInventory(GameData.KeyLabelText);
+                if (key != null)
+                {
+                    AudioSource.PlayClipAtPoint(openLockedDoorSound, transform.position);
+                    OpenCloseDoor(discoveryTransform, entry);
+                    isLocked = false;
+                }
+                else
+                {
+                    AudioSource.PlayClipAtPoint(lockedDoorSound, transform.position);
+                }
+            }
+            else
+            {
+                OpenCloseDoor(discoveryTransform, entry);
+            }
+        }
 
+        private void OpenCloseDoor(Transform discoveryTransform, bool entry)
+        {
             var jointSpring = _doorJoint.spring;
             var forward = discoveryTransform.forward;
-            
+
             switch (entry)
             {
                 case true when forward != Vector3.zero && !_isOpen:
                 {
                     var a = forward.normalized;
                     var b = transform.forward.normalized;
-            
+
                     var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
 
                     if (collinearity)
@@ -94,11 +114,11 @@ namespace DmitryAdventure
                     {
                         jointSpring.targetPosition = 90;
                     }
-                    
+
                     _isOpen = true;
                     break;
                 }
-                case false when discoveryTransform.forward != Vector3.zero && _isOpen:
+                case false when forward != Vector3.zero && _isOpen:
                     jointSpring.targetPosition = 0;
                     _isOpen = false;
                     break;
@@ -106,6 +126,7 @@ namespace DmitryAdventure
 
             _doorJoint.spring = jointSpring;
         }
+
         #endregion
 
         #region Other methods

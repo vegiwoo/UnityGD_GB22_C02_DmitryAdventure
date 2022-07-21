@@ -17,7 +17,6 @@ namespace DmitryAdventure
 
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
-
         
         #endregion
 
