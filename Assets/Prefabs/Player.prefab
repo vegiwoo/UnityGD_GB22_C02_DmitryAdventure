@@ -319,6 +319,8 @@ MonoBehaviour:
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
   playerStats: {fileID: 11400000, guid: 741fac13886274f589c10ca6347bc6df, type: 2}
+  eatingSound: {fileID: 8300000, guid: 1e0ccd528a980486586d265c72ec2e5f, type: 3}
+  errorSound: {fileID: 8300000, guid: 6ca2ee956920f4d58bc4bbc8e4574a99, type: 3}
 --- !u!114 &5901563002306245264
 MonoBehaviour:
   m_ObjectHideFlags: 0

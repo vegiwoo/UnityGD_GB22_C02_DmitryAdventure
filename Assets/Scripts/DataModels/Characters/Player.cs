@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DmitryAdventure.Stats;
@@ -26,27 +27,35 @@ namespace DmitryAdventure.Characters
         private PlayerInput _playerInput;
         private Vector3 _playerVelocity;
         private bool _groundedPlayer;
+        
+        private CharacterInventory _characterInventory;
 
         private InputAction _moveAction;
         private InputAction _jumpAction;
         private InputAction _runAction;
+        private InputAction _therapyAction;
         
         private Camera _camera;
         
         private Blinked _blinkEffect;
 
+        [field: SerializeField] private AudioClip eatingSound;
+        [field: SerializeField] private AudioClip errorSound;
+        
         #endregion
 
         #region Monobehavior methods
 
         private void Awake()
         {
-            _controller = GetComponent<CharacterController>();
-            _playerInput = GetComponent<PlayerInput>();
+            _controller = gameObject.GetComponent<CharacterController>();
+            _playerInput = gameObject.GetComponent<PlayerInput>();
+            _characterInventory = gameObject.GetComponent<CharacterInventory>();
             
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
+            _therapyAction = _playerInput.actions["Therapy"];
 
             _camera = Camera.main;
 
@@ -56,7 +65,15 @@ namespace DmitryAdventure.Characters
         private void Start()
         {
             CurrentHp = playerStats.MaxHp;
+
+            _therapyAction.performed += TherapyActionOnPerformed;
+            
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private void OnDestroy()
+        {
+            _therapyAction.performed -= TherapyActionOnPerformed;
         }
 
         #endregion
@@ -70,7 +87,28 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Event handlers
-        
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        /// <param name="context">CallbackContext for more info.</param>
+        private void TherapyActionOnPerformed(InputAction.CallbackContext context)
+        {
+            if(_characterInventory == null) return;
+            
+            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
+            if (popMedicine == null)
+            {
+                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
+            }
+            else
+            {
+                CurrentHp += 25.0f;
+                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
+                
+                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+                OnCharacterNotify(args);
+            }
+        }
         #endregion
 
         #region Other methods

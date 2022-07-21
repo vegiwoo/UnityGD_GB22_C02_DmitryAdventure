@@ -1,5 +1,4 @@
 using UnityEngine;
-using Random = UnityEngine.Random;
 using DmitryAdventure.Stats;
 
 // ReSharper disable once CheckNamespace

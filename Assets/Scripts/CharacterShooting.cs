@@ -95,6 +95,10 @@ namespace DmitryAdventure.Characters
 
         #region Event handlers
 
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        /// <param name="context">CallbackContext for more info.</param>
         private void MineActionOnPerformed(InputAction.CallbackContext context)
         {
             if(_characterInventory == null) return;

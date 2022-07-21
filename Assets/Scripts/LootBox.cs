@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -62,8 +63,21 @@ namespace DmitryAdventure
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
 
+        private void OnDestroy()
+        {
+            _discoveryTrigger.DiscoveryTriggerNotify -= OnFindingTarget;
+        }
+
+        #endregion
+
+        #region Functionality
+        #region Coroutines
+        // ...
+        #endregion
+
+        #region Event handlers
         /// <summary>
-        /// Moves enemy when attacking.
+        /// Event handler from discovery trigger.
         /// </summary>
         private void OnFindingTarget(DiscoveryType type, Transform targetTransform, bool _)
         {
@@ -81,16 +95,6 @@ namespace DmitryAdventure
                     break;
             }
         }
-
-        #endregion
-
-        #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ...
         #endregion
 
         #region Other methods
