@@ -13,59 +13,85 @@ public class AgentMoveTo : MonoBehaviour
 {
     private NavMeshAgent agent;
     public Transform[] goals;
-    private int _currentGoal;
 
-    private bool _isMovingForward;
+    [field: SerializeField] private bool IsCircularRoute { get; set; }
+
+    private int _currentGoal;
 
     private AgentState State { get; set; }
 
     private Coroutine patrolCoroutine;
+
+    private bool _isMovingForward;
+
+    private int StartIndex { get; } = 0;
+    private int LastIndex { get; set; }
+    
     private void Start()  
     {
         agent  = GetComponent<NavMeshAgent>();
         _currentGoal = 0;
         State = AgentState.Patrol;
         _isMovingForward = true;
+
+        LastIndex = goals.Length - 1;
         
-        patrolCoroutine = StartCoroutine(MovingCoroutine());
+        patrolCoroutine = StartCoroutine(PatrolCoroutine());
     }
-    
-    private IEnumerator MovingCoroutine()
+
+    private IEnumerator PatrolCoroutine()
     {
         while (State == AgentState.Patrol)
         {
-            var tPosition = transform.position;
-            var pPosition = goals[_currentGoal].position;
-            
-            agent.destination = pPosition;
-            
-            if (Math.Abs(tPosition.x - pPosition.x) < 0.1f && 
-                Math.Abs(tPosition.z - pPosition.z) < 0.1f)
+            if (_currentGoal >= 0 && _currentGoal <= goals.Length)
             {
+                agent.SetDestination(goals[_currentGoal].position);
 
-                _isMovingForward = _currentGoal != goals.Length;
-                
-                
-                
-                if (_isMovingForward)
+                // change point 
+                if (Math.Abs(transform.position.x - goals[_currentGoal].position.x) < 0.1f && 
+                    Math.Abs(transform.position.z - goals[_currentGoal].position.z) < 0.1f)
                 {
-                    _isMovingForward = _currentGoal != goals.Length;
-                    _currentGoal = _currentGoal != goals.Length ? _currentGoal++ : _currentGoal--;
+
+                    if (_isMovingForward)
+                    {
+                        if (_currentGoal != LastIndex)
+                        {
+                            _currentGoal++;
+                        }
+                        else
+                        {
+                            if (IsCircularRoute)
+                            {
+                                _currentGoal = StartIndex;
+                            }
+                            else
+                            {
+                                _isMovingForward = !_isMovingForward;
+                                _currentGoal--;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (_currentGoal != StartIndex)
+                        {
+                            _currentGoal--;
+                        }
+                        else
+                        {
+                            _isMovingForward = !_isMovingForward;
+                            _currentGoal++;
+                        }
+                    }
+                   
                 }
-                else
-                {
-                    _isMovingForward = _currentGoal == 0;
-                    _currentGoal = _currentGoal == 0 ? _currentGoal-- : _currentGoal++;
-                }
+            }
+            else
+            {
+                Debug.LogErrorFormat($"Индекса {_currentGoal} нет в массиве!");
             }
             
             yield return null;
         }
-    }
-    
-    private IEnumerator ChangeWaypoint()
-    {
-
-        yield break;
     }
 }

@@ -1072,8 +1072,6 @@ MonoBehaviour:
   - {fileID: 1491393910}
   - {fileID: 521025752}
   - {fileID: 853941788}
-  - {fileID: 1915913258}
-  - {fileID: 1341201305}
 --- !u!195 &1049692558
 NavMeshAgent:
   m_ObjectHideFlags: 0
