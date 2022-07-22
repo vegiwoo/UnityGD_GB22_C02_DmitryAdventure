@@ -17,7 +17,7 @@ namespace DmitryAdventure.Armament
         protected Rigidbody AmmunitionRigidbody;
         
         [SerializeField] 
-        private AudioClip effectSoundClip;
+        protected AudioClip effectSoundClip;
 
         [field: SerializeField, Tooltip("Damage dealt by ammunition"), Range(10f,100f)] 
         protected int Damage { get; set; }
