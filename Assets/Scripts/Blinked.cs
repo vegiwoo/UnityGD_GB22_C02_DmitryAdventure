@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -34,7 +35,9 @@ namespace DmitryAdventure
                     mat.SetColor(EmissionColor, new Color(Mathf.Sin(t * 30) * 0.5f + 0.5f, 0, 0, 1));
 
                 if (t >= 0.98f)
+                {
                     yield break;
+                }
                 
                 yield return null;
             }

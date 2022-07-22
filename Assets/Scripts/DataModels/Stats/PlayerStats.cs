@@ -1,6 +1,7 @@
 using UnityEngine;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Stats
 {
     /// <summary>
     /// Represents characteristics of player.
@@ -10,13 +11,11 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [SerializeField,Tooltip("Running acceleration factor"), Range(2,5)]
-        private float accelerationFactor;
-        public float AccelerationFactor => accelerationFactor;
+        [field:SerializeField,Tooltip("Running acceleration factor"), Range(2,5)]
+        public float AccelerationFactor { get; set; }
 
-        [SerializeField, Range(0.1f,3.0f)]
-        private float jumpHeight;
-        public float JumpHeight => jumpHeight;
+        [field:SerializeField, Range(0.1f,3.0f)]
+        public float JumpHeight { get; set; }
 
         #endregion
 

@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -8,4 +9,3 @@ namespace DmitryAdventure
         Player, Enemy
     }
 }
-

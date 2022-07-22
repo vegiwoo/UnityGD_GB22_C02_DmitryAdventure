@@ -1,6 +1,8 @@
+#nullable enable
 using System.Linq;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -10,13 +12,12 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        public DiscoveryType[] DiscoverableTypes { get; set; }
+        [field:SerializeField, Tooltip("Discoverable types for trigger")]
+        public DiscoveryType[] DiscoverableTypes { get; set;}
 
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
 
-        private const string PlayerTag = "Player";
-        private const string EnemyTag = "Enemy";
         
         #endregion
 
@@ -24,24 +25,32 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            if (DiscoverableTypes.Length == 0) return;
+            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
-            
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            }
+
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, true);
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (DiscoverableTypes.Length == 0) return;
-            
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(PlayerTag))
+            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
+
+            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);
+            }
             
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(EnemyTag))
+            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
+            {
                 OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, false);
+            }
         }
 
         #endregion
@@ -49,9 +58,7 @@ namespace DmitryAdventure
         #region Functionality
 
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers

@@ -1,5 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DmitryAdventure.Stats;
+using JetBrains.Annotations;
 
 /*
  * Refs:
@@ -8,11 +11,13 @@ using UnityEngine.InputSystem;
  * - https://youtu.be/SeBEvM2zMpY
  */
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Represents main character.
     /// </summary>
+    [RequireComponent(typeof(PlayerInput), typeof(CharacterController), typeof(CharacterShooting))]
     public class Player : Character
     {
         #region Сonstants, variables & properties
@@ -23,12 +28,20 @@ namespace DmitryAdventure
         private PlayerInput _playerInput;
         private Vector3 _playerVelocity;
         private bool _groundedPlayer;
+        
+        private CharacterInventory _characterInventory;
 
         private InputAction _moveAction;
         private InputAction _jumpAction;
         private InputAction _runAction;
+        private InputAction _therapyAction;
         
         private Camera _camera;
+        
+        private Blinked _blinkEffect;
+
+        [field: SerializeField] private AudioClip eatingSound;
+        [field: SerializeField] private AudioClip errorSound;
         
         #endregion
 
@@ -36,20 +49,32 @@ namespace DmitryAdventure
 
         private void Awake()
         {
-            _controller = GetComponent<CharacterController>();
+            _controller = gameObject.GetComponent<CharacterController>();
+            _playerInput = gameObject.GetComponent<PlayerInput>();
+            _characterInventory = gameObject.GetComponent<CharacterInventory>();
             
-            _playerInput = GetComponent<PlayerInput>();
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
+            _therapyAction = _playerInput.actions["Therapy"];
 
             _camera = Camera.main;
+
+            _blinkEffect = GetComponent<Blinked>();
         }
 
         private void Start()
         {
             CurrentHp = playerStats.MaxHp;
+
+            _therapyAction.performed += TherapyActionOnPerformed;
+            
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private void OnDestroy()
+        {
+            _therapyAction.performed -= TherapyActionOnPerformed;
         }
 
         #endregion
@@ -63,13 +88,33 @@ namespace DmitryAdventure
         #endregion
 
         #region Event handlers
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        /// <param name="context">CallbackContext for more info.</param>
+        private void TherapyActionOnPerformed(InputAction.CallbackContext context)
+        {
+            if(_characterInventory == null) return;
+            
+            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
+            if (popMedicine == null)
+            {
+                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
+            }
+            else
+            {
+                CurrentHp += popMedicine.HpBoostRate;
+                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
 
-        // ...
-
+                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+                OnCharacterNotify(args);
+            }
+        }
         #endregion
 
         #region Other methods
 
+        // Movement
         protected override void OnMovement()
         {
             _groundedPlayer = _controller.isGrounded;
@@ -88,17 +133,19 @@ namespace DmitryAdventure
                 move.y = 0f;
             }
             
-            CurrentSpeed = playerStats.BaseMovementSpeed;
+            CurrentSpeed = playerStats.BaseMoveSpeed;
             if (_runAction.inProgress)
+            {
                 CurrentSpeed += playerStats.AccelerationFactor;
+            }
             _controller.Move(move * (Time.deltaTime * CurrentSpeed));
             
             if (_jumpAction.triggered && _groundedPlayer)
             {
-                _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GravityValue);
+                _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
             }
 
-            _playerVelocity.y += GravityValue * Time.deltaTime;
+            _playerVelocity.y += GameData.Gravity * Time.deltaTime;
             _controller.Move(_playerVelocity * Time.deltaTime);
             
             // Rotate towards camera direction 
@@ -107,8 +154,43 @@ namespace DmitryAdventure
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
         }
 
-        #endregion
+        public override void OnHit(float damage)
+        {
+            CurrentHp -= damage;
+            _blinkEffect.StartBlink();
+            
+            var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+            OnCharacterNotify(args);
+        }
+        
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        [CanBeNull]
+        private GameValue LookingForKeyInInventory()
+        {
+            if(_characterInventory == null) return null;
+            
+            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
+            if (popMedicine == null)
+            {
+                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
+            }
+            else
+            {
+                CurrentHp += popMedicine.HpBoostRate;
+                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
 
+                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+                OnCharacterNotify(args);
+            }
+            
+            // Dummy
+            return null;
+        }
+        
+        
+        #endregion
         #endregion
     }
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7569b2964a24d8e919240b7a6d4df1, type: 3}
+  m_Name: WeaponType01
+  m_EditorClassIdentifier: 
+  <BulletPrefab>k__BackingField: {fileID: 1954747178576560728, guid: 5a8849fb3c45b4a55b0d333f329feda5, type: 3}
+  <WeaponType>k__BackingField: 0
+  <ShotRange>k__BackingField: 45
+  <ShotDelay>k__BackingField: 0.5
+  <TiltAngleInDeg>k__BackingField: 10
+  <DamagePerShot>k__BackingField: 10

@@ -1,12 +1,14 @@
 using System.Collections;
 using UnityEngine;
+using DmitryAdventure.Stats;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
-    [RequireComponent(typeof(Blinked))]
+    [RequireComponent(typeof(Blinked), typeof(CharacterShooting))]
     public class Enemy : Character
     {
         #region Сonstants, variables & properties
@@ -32,7 +34,7 @@ namespace DmitryAdventure
         private Coroutine _enemyPatrolCoroutine;
         private Coroutine _enemyAttackCoroutine;
 
-        private EnemyState _enemyState;
+        public EnemyState enemyState;
         private Transform _discoveryTarget;
 
         private Blinked _blinkEffect;
@@ -50,8 +52,9 @@ namespace DmitryAdventure
 
         private void Start()
         {
+            CharacterType = CharacterType.EnemyType01;
             CurrentHp = enemyStats.MaxHp;
-            CurrentSpeed = enemyStats.BaseMovementSpeed;
+            CurrentSpeed = enemyStats.BaseMoveSpeed;
             _enemyRigidbody.mass = 30;
             _currentWaypoint = Route[PositionsRouteType.Next, 0];
 
@@ -59,6 +62,8 @@ namespace DmitryAdventure
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
             
             ToggleEnemyState(EnemyState.Patrol);
+            
+            // TODO: Weapon for enemy!
         }
 
         private void OnDestroy()
@@ -76,7 +81,7 @@ namespace DmitryAdventure
         /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
-            while (_enemyState == EnemyState.Patrol)
+            while (enemyState == EnemyState.Patrol)
             {
                 if (Vector3.Distance(transform.position, _currentWaypoint) > enemyStats.PointContactDistance)
                 {
@@ -96,8 +101,10 @@ namespace DmitryAdventure
                     _currentWaypoint = result.currentWayPoint;
                 }
 
-                if (_enemyState == EnemyState.Patrol)
+                if (enemyState == EnemyState.Patrol)
+                {
                     yield return null;
+                }
                 else
                 {          
                     _enemyPatrolCoroutine = null;
@@ -111,7 +118,7 @@ namespace DmitryAdventure
         /// </summary>
         private IEnumerator EnemyAttackCoroutine()
         {
-            while (_enemyState == EnemyState.Attack && _discoveryTarget != null)
+            while (enemyState == EnemyState.Attack && _discoveryTarget != null)
             {
                 var distanceToTarget = Vector3.Distance(transform.position, _discoveryTarget.position);
                 if (distanceToTarget <= enemyStats.AttentionRadius)
@@ -121,8 +128,6 @@ namespace DmitryAdventure
                         new Vector3(rotateDir.x, 0, rotateDir.z),
                         enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
                     transform.rotation = Quaternion.LookRotation(rotation);
-                    
-                    // TODO: Стрелять в цель 
 
                     if (distanceToTarget > enemyStats.MinAttackDistance)
                     {
@@ -130,7 +135,8 @@ namespace DmitryAdventure
                             _discoveryTarget.position, (MovementSpeedDelta / 2 * Time.deltaTime));
                     }
                     yield return null;
-                } else
+                } 
+                else
                 {          
                     ToggleEnemyState(EnemyState.Patrol);
                     _enemyAttackCoroutine = null;
@@ -174,16 +180,18 @@ namespace DmitryAdventure
         /// <param name="state">New state of enemy.</param>
         private void ToggleEnemyState(EnemyState state)
         {
-            _enemyState = state;
+            enemyState = state;
 
-            switch (_enemyState)
+            switch (enemyState)
             {
                 case EnemyState.Patrol:
                     _discoveryTarget = null;
                     _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
+                    _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
                     break;
                 case EnemyState.Attack:
                     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
+                    _discoveryTrigger.DiscoveryTriggerNotify -= OnFindingTarget;
                     break;
                 default:
                     break;
@@ -192,7 +200,7 @@ namespace DmitryAdventure
         
         public override void OnHit(float damage)
         {
-            base.OnHit(damage);
+            CurrentHp -= damage;
             _blinkEffect.StartBlink();
         }
         

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 136658692c74e486a9028d58d01eac57, type: 3}
   m_Name: Enemy01Stats
   m_EditorClassIdentifier: 
-  characterName: 
-  maxHp: 85
-  baseMovementSpeed: 5
-  baseRotationSpeed: 3
-  attentionRadius: 15
-  pointContactDistance: 0.5
-  minAttackDistance: 5
+  <CharacterName>k__BackingField: Some Enemy Type 01
+  <MaxHp>k__BackingField: 85
+  <BaseMoveSpeed>k__BackingField: 4
+  <BaseRotationSpeed>k__BackingField: 3
+  <AttentionRadius>k__BackingField: 12
+  <PointContactDistance>k__BackingField: 0.5
+  <MinAttackDistance>k__BackingField: 4.5

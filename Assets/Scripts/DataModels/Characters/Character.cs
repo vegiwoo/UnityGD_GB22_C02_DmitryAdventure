@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace DmitryAdventure
+// ReSharper disable once CheckNamespace
+namespace DmitryAdventure.Characters
 {
     /// <summary>
     /// Essence of playable or non-playable character.
@@ -10,22 +9,20 @@ namespace DmitryAdventure
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
-
-        /// <summary>
-        /// Current hit points.
-        /// </summary>
+        [field:SerializeField, Tooltip("Type of personage")]
+        public CharacterType CharacterType { get; set; }
+        
+        [field: SerializeField, ReadonlyField, Tooltip("Current hit points.")]
         public float CurrentHp { get; protected set; }
-
-        /// <summary>
-        /// Character current movement speed.
-        /// </summary>
+        
+        [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
         protected float CurrentSpeed { get;  set; }
 
         protected float MovementSpeedDelta => CurrentSpeed / 3;
-        
-        protected float RotationSpeedDelta => CurrentSpeed / 10;
-        
-        protected const float GravityValue = -9.81f;
+
+        // Events 
+        public delegate void CharacterHandler(CharacterEventArgs e);
+        public event CharacterHandler CharacterNotify;
 
         #endregion
 
@@ -34,24 +31,22 @@ namespace DmitryAdventure
         protected virtual void Update()
         {
             OnMovement();
-            if(!IsAlive()) 
-                Destroy(gameObject);
-        }
 
+            if (CurrentHp <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+        
         #endregion
 
         #region Functionality
-
         #region Coroutines
-
         // ...
-
         #endregion
 
         #region Event handlers
-
         // ...
-
         #endregion
 
         #region Other methods
@@ -62,24 +57,22 @@ namespace DmitryAdventure
         protected abstract void OnMovement();
 
         /// <summary>
-        /// Checks character's health limit.
-        /// </summary>
-        private bool IsAlive()
-        {
-            return CurrentHp > 0;
-        }
-
-        /// <summary>
         /// Character Damage Method.
         /// </summary>
         /// <param name="damage">Damage value.</param>
         /// <returns></returns>
-        public virtual void OnHit(float damage)
-        {
-            CurrentHp -= damage;
-        }
+        public abstract void OnHit(float damage);
+        
+        #endregion
+        #endregion
 
-        #endregion
-        #endregion
+        /// <summary>
+        /// Character event for interested subscribers.
+        /// </summary>
+        /// <param name="e">Notification arguments.</param>
+        protected void OnCharacterNotify(CharacterEventArgs e)
+        {
+            CharacterNotify?.Invoke(e);
+        }
     }
 }

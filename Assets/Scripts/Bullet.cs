@@ -1,32 +1,26 @@
 using UnityEngine;
+using DmitryAdventure.Armament;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
     /// Represents item of projectile.
     /// </summary>
-    public class Bullet : MonoBehaviour
+    public class Bullet : Ammunition
     {
         #region Сonstants, variables & properties
+        private float BulletSpeed { get; set; }
+        private float BulletRange { get; set; }
+        private Transform PointOfShoot { get; set; }
+        private Vector3 TargetPosition { get; set; }
 
-        [SerializeField] private GameObject effectPrefab;
-        private Rigidbody _bulletRigidbody;
-
-        [SerializeField] private float damage;
-        
-        public float BulletSpeed { get; set; }
-        public float BulletRange { get; set; }
-        public Transform PointOfShoot { get; set; }
-        public Vector3 TargetPosition { get; set; }
-        
-        
         #endregion
 
         #region Monobehavior methods
-
-        private void Start()
+        protected override void Start()
          {
-             _bulletRigidbody = GetComponent<Rigidbody>();
+             base.Start();
              BulletSpeed = 15;
              BulletRange = 50;
          }
@@ -34,26 +28,29 @@ namespace DmitryAdventure
          private void FixedUpdate()
          {
              if (Vector3.Distance(PointOfShoot.position, transform.position) > BulletRange)
+             {
                  Destroy(gameObject);
-             
-             _bulletRigidbody.velocity = (TargetPosition - PointOfShoot.position) * BulletSpeed / 2;
+             }
+
+             AmmunitionRigidbody.velocity = (TargetPosition - PointOfShoot.position) * BulletSpeed / 2;
          }
 
-         private void OnCollisionEnter(Collision collision)
-         {
-             Instantiate(effectPrefab, transform.position, Quaternion.identity);
-             
-             var enemy = collision.gameObject.GetComponent<Enemy>();
-             if (enemy != null)
-                 enemy.OnHit(damage);
-             
-             Destroy(gameObject);
-         }
-
-        #endregion
+         #endregion
 
         #region Functionality
-        //...
+
+        /// <summary>
+        /// Assigning parameters for a bullet from a weapon.
+        /// </summary>
+        public void SetParams(Transform pointOfShoot, Vector3 targetPosition, float bulletSpeed, float bulletRange, int damage)
+        {
+            PointOfShoot = pointOfShoot;
+            TargetPosition = targetPosition;
+            BulletSpeed = bulletSpeed;
+            BulletRange = bulletRange;
+            Damage = damage;
+        }
+
         #endregion
     }
 }
