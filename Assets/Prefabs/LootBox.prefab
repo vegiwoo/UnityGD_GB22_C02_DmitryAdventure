@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcabb74e7f7204230835993de159675b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openingSound: {fileID: 8300000, guid: b993ce3da374c45a48e254a08e63f41c, type: 3}
+  openingSoundClip: {fileID: 8300000, guid: b993ce3da374c45a48e254a08e63f41c, type: 3}
   possibleCapacity: 2
   rarityLevels: 0000000001000000
   heroFoundValuesHandler:
