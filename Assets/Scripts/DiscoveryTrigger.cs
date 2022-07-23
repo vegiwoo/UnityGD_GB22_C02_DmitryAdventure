@@ -1,4 +1,3 @@
-#nullable enable
 using System.Linq;
 using UnityEngine;
 
@@ -12,6 +11,11 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
+        public DiscoveryTrigger(DiscoveryType[] discoverableTypes)
+        {
+            DiscoverableTypes = discoverableTypes;
+        }
+
         [field:SerializeField, Tooltip("Discoverable types for trigger")]
         public DiscoveryType[] DiscoverableTypes { get; set;}
 
@@ -24,7 +28,7 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
+            if (DiscoverableTypes is null || DiscoverableTypes.Length == 0) return;
 
             var discoveryTransform = other.gameObject.transform;
             const bool isItemEnters = true;
