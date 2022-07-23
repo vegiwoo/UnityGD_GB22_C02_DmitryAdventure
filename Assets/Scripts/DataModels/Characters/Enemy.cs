@@ -101,8 +101,7 @@ namespace DmitryAdventure.Characters
         /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
-            Debug.Log($"Patrol coroutine +");
-            
+
             while (true)
             {
                 var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
@@ -125,7 +124,6 @@ namespace DmitryAdventure.Characters
                }
                else
                {
-                   Debug.Log($"Patrol coroutine -");
                    _enemyPatrolCoroutine = null;
                    yield break;
                }
@@ -151,8 +149,7 @@ namespace DmitryAdventure.Characters
                     yield return null;
                 }
                 else
-                {
-                    Debug.Log($"Attack coroutine -");
+                { ;
                     ToggleEnemyState(EnemyState.Patrol);
                     
                     _enemyAttackCoroutine = null;
