@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,7 +17,9 @@ namespace DmitryAdventure
         private DiscoveryTrigger _discoveryTrigger;
 
         [SerializeField]
-        private AudioClip openingSound;
+        private AudioClip openingSoundClip;
+
+        private AudioSource openingAudioSource { get; set; }
         
         [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
         private int possibleCapacity = 2;
@@ -59,7 +60,11 @@ namespace DmitryAdventure
             _objectsInBox = new List<GameValue>(_capacity);
             
             FillingBox();
-            
+
+            var audioSource = gameObject.AddComponent<AudioSource>();
+            MakeAudio(in openingSoundClip, ref audioSource);
+            openingAudioSource = audioSource;
+
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
 
@@ -86,7 +91,11 @@ namespace DmitryAdventure
             switch (type)
             {
                 case DiscoveryType.Player:
-                    AudioSource.PlayClipAtPoint(openingSound, transform.position);
+                    
+                    //AudioSource.PlayClipAtPoint(openingSoundClip, transform.position);
+                    
+                    openingAudioSource.Play();
+                    
                     heroFoundValuesHandler.Invoke(_objectsInBox);
                     _objectsInBox = null;
                     IsBoxEmpty = true;
@@ -116,6 +125,18 @@ namespace DmitryAdventure
             IsBoxEmpty = false;
         }
 
+        private static void MakeAudio(in AudioClip clip, ref AudioSource audioSource)
+        {
+            audioSource.clip = clip;
+            audioSource.playOnAwake = false;
+            audioSource.pitch = Random.Range(0.85f, 1.0f);
+            audioSource.panStereo = audioSource.spatialBlend = audioSource.spread = 0;
+            audioSource.volume = audioSource.reverbZoneMix = audioSource.dopplerLevel = 1;
+            audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+            audioSource.minDistance = 1;
+            audioSource.maxDistance = 500;
+        }
+        
         #endregion
         #endregion
     }

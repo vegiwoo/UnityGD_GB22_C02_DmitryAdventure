@@ -165,8 +165,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5181473f934074acfb346c7911e99f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: SomeDoor
+  objectName: SomeDoor
+  lockedDoorSound: {fileID: 8300000, guid: d80ef7322442e4a7f9d5c0d933630f4c, type: 3}
+  openLockedDoorSound: {fileID: 8300000, guid: ccd51680ff45f4f8e82951e7f25d877f, type: 3}
   discoveryTypes: 0000000001000000
+  isLocked: 0
 --- !u!1001 &4811639668197407630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -259,3 +262,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc2729e2f6c74c749fe662e9202ce7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <DiscoverableTypes>k__BackingField: 

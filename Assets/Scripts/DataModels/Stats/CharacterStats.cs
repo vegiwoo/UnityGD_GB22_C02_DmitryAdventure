@@ -6,8 +6,11 @@ namespace DmitryAdventure.Stats
     public class CharacterStats : ScriptableObject
     {
         [field: Header("General stats")]
-        [field: SerializeField, Tooltip("Character name")] private string CharacterName { get; set; }
-        [field: SerializeField,Tooltip("Max hit points"), Range(50,150)] public float MaxHp { get; set; }
+        [field: SerializeField, Tooltip("Type of character")]
+        public CharacterType CharacterType { get; set; }
+
+        [field: SerializeField,Tooltip("Max hit points"), Range(50,150)] 
+        public float MaxHp { get; set; }
 
         [field: Header("Movement stats")]
         [field: SerializeField, Tooltip("Character base movement speed"), Range(1, 5)]

@@ -315,7 +315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80f319c2faa894025b1e2af1b2bcd052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <CharacterType>k__BackingField: 0
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
   playerStats: {fileID: 11400000, guid: 741fac13886274f589c10ca6347bc6df, type: 2}
@@ -375,7 +374,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93680c684287e4b8f8313ca9c23ae68c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderers: []
+  renderers:
+  - {fileID: 5901563001997911701}
+  - {fileID: 5901563000847378393}
 --- !u!1001 &8622243815050606251
 PrefabInstance:
   m_ObjectHideFlags: 0

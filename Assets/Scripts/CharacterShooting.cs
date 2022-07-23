@@ -40,25 +40,23 @@ namespace DmitryAdventure.Characters
             _camera = Camera.main;
             _character = gameObject.GetComponent<Character>();
 
-            if (_character.CharacterType == CharacterType.Player)
-            {
-                _characterInventory = gameObject.GetComponent<CharacterInventory>();
-                _playerInput = gameObject.GetComponent<PlayerInput>();
-                
-                _characterFireAction = _playerInput.actions["Fire"];
-                _characterMineAction = _playerInput.actions["Mine"];
-            }
+            if (_character.CharacterType != CharacterType.Player) return;
+            
+            _characterInventory = gameObject.GetComponent<CharacterInventory>();
+            _playerInput = gameObject.GetComponent<PlayerInput>();
         }
         
         private void Start()
         {
             _aimingPoint = Vector3.zero;
 
-            if (_character.CharacterType == CharacterType.Player)
-            {           
-                _characterFireAction.performed += ShootWeapon;
-                _characterMineAction.performed += MineActionOnPerformed;
-            }
+            if (_character.CharacterType != CharacterType.Player) return;
+            
+            _characterFireAction = _playerInput.actions["Fire"];
+            _characterFireAction.performed += ShootWeapon;
+            
+            _characterMineAction = _playerInput.actions["Mine"];
+            _characterMineAction.performed += MineActionOnPerformed;
         }
 
         private void Update()
@@ -143,7 +141,7 @@ namespace DmitryAdventure.Characters
                     var enemy = _character as Enemy;
                     if (enemy == null) return;
                     
-                    if (enemy.enemyState == EnemyState.Attack)
+                    if (enemy.CurrentEnemyState == EnemyState.Attack)
                     {
                         var enemyTransform = enemy.gameObject.transform;
                     

@@ -6,7 +6,7 @@ namespace DmitryAdventure
 {
     public enum PositionsRouteType
     {
-        Previous, Next
+        Previous, Current, Next
     }
     
     /// <summary>
@@ -19,9 +19,13 @@ namespace DmitryAdventure
         [field: SerializeField, Tooltip("Enemy route number")] 
         public int RouteNumber { get; set; }
 
+        [field: SerializeField, Tooltip("Looped route")]
+        private bool IsCircularRoute { get; set; }
+        
         [SerializeField] private Transform[] wayPoints;
 
-        [field:SerializeField, Tooltip("Maximum number of enemies on the route")] public int MaxNumberEnemies { get; set; }
+        [field:SerializeField, Tooltip("Maximum number of enemies on the route")] 
+        public int MaxNumberEnemies { get; set; }
 
         private const int RouteStartIndex = 0;
         private int RouteEndIndex => wayPoints.Length - 1;
@@ -45,6 +49,7 @@ namespace DmitryAdventure
                 return type switch
                 {
                     PositionsRouteType.Previous => wayPoints[i - 1].position,
+                    PositionsRouteType.Current => wayPoints[i].position,
                     PositionsRouteType.Next => wayPoints[i + 1].position,
                     _ => Vector3.zero
                 };
@@ -72,24 +77,20 @@ namespace DmitryAdventure
         /// Change destination waypoint and direction of moving.
         /// </summary>
         /// <param name="isMovingForward">Current direction of moving.</param>
-        /// <param name="oldWayPoint">Old waypoint.</param>
+        /// <param name="oldIndex">Old index of waypoint .</param>
         /// <returns>Calculation result.</returns>
-        public (bool isMovingForward, Vector3 currentWayPoint) ChangeWaypoint(bool isMovingForward, Vector3 oldWayPoint)
+        public (bool isMoveForward, int index) ChangeWaypoint(bool isMovingForward, int oldIndex)
         {
-            var i = Array.FindIndex(wayPoints,el =>
-            {
-                Vector3 position;
-                return (position = el.position).x.Equals(oldWayPoint.x) && position.z.Equals(oldWayPoint.z);
-            });
-            
+            const int step = 1;
+
             return isMovingForward switch
             {
-                true => oldWayPoint != LastWaypoint
-                    ? (true, this[PositionsRouteType.Next,i])
-                    : (false, this[PositionsRouteType.Previous, i]),
-                false => oldWayPoint != FirstWaypoint
-                    ? (false, this[PositionsRouteType.Previous, i])
-                    : (true, this[PositionsRouteType.Next,i])
+                true => oldIndex != RouteEndIndex
+                    ? (true, oldIndex + step)
+                    : (false, IsCircularRoute ? RouteStartIndex : oldIndex - step),
+                false => oldIndex != RouteStartIndex
+                    ? (false, oldIndex - step)
+                    : (true, oldIndex + step)
             };
         }
 
