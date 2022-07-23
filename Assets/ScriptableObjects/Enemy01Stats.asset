@@ -19,4 +19,4 @@ MonoBehaviour:
   <AttentionRadius>k__BackingField: 15
   <StopDistanceForWaypoints>k__BackingField: 0.15
   <MinAttackDistance>k__BackingField: 4.5
-  <DiscoveryTypes>k__BackingField: 00000000
+  <DiscoverableTypes>k__BackingField: 00000000
