@@ -10,15 +10,16 @@ namespace DmitryAdventure.Characters
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
-        [field:SerializeField, Tooltip("Type of personage")]
-        public CharacterType CharacterType { get; set; }
-        
+
+        protected internal CharacterType CharacterType { get; set; }
+
         [field: SerializeField, ReadonlyField, Tooltip("Current hit points.")]
         public float CurrentHp { get; protected set; }
         
         [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
         protected float CurrentSpeed { get;  set; }
-
+        
+        
         protected float MovementSpeedDelta => CurrentSpeed / 3;
 
         protected CharacterInventory CharacterInventory;

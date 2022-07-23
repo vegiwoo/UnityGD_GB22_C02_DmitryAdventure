@@ -66,6 +66,8 @@ namespace DmitryAdventure.Characters
             CurrentHp = playerStats.MaxHp;
 
             _therapyAction.performed += TherapyActionOnPerformed;
+
+            CharacterType = playerStats.CharacterType;
             
             Cursor.lockState = CursorLockMode.Locked;
         }

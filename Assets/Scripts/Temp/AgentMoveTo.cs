@@ -13,11 +13,13 @@ public class AgentMoveTo : MonoBehaviour
 {
     private NavMeshAgent agent;
 
+    // В роут
     public Transform[] goals;
 
+    // В роут
     [field: SerializeField] private bool IsCircularRoute { get; set; }
 
-    private int _currentGoal;
+    private int _currentGoalIndex;
 
     private AgentState State { get; set; }
 
@@ -43,7 +45,7 @@ public class AgentMoveTo : MonoBehaviour
         agent  = GetComponent<NavMeshAgent>();
         _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
 
-        _currentGoal = 0;
+        _currentGoalIndex = 0;
         _isMovingForward = true;
         _agentOnOffMeshLink = false;
 
@@ -56,8 +58,6 @@ public class AgentMoveTo : MonoBehaviour
 
     private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool entry)
     {
-        Debug.Log("Trigger!");
-        
         if (discoveryType != DiscoveryType.Player) return;
         
         _aimPoint = discoveryTransform.position;
@@ -81,45 +81,43 @@ public class AgentMoveTo : MonoBehaviour
 
     private IEnumerator PatrolCoroutine()
     {
-        Debug.Log("To patrol +");
-        
         while (true)
         {
-            agent.SetDestination(goals[_currentGoal].position);
+            agent.SetDestination(goals[_currentGoalIndex].position);
 
             // change point 
-            if (Math.Abs(transform.position.x - goals[_currentGoal].position.x) < 0.1f &&
-                Math.Abs(transform.position.z - goals[_currentGoal].position.z) < 0.1f)
+            if (Math.Abs(transform.position.x - goals[_currentGoalIndex].position.x) < 0.1f &&
+                Math.Abs(transform.position.z - goals[_currentGoalIndex].position.z) < 0.1f)
             {
                 if (_isMovingForward)
                 {
-                    if (_currentGoal != LastIndex)
+                    if (_currentGoalIndex != LastIndex)
                     {
-                        _currentGoal++;
+                        _currentGoalIndex++;
                     }
                     else
                     {
                         if (IsCircularRoute)
                         {
-                            _currentGoal = StartIndex;
+                            _currentGoalIndex = StartIndex;
                         }
                         else
                         {
                             _isMovingForward = !_isMovingForward;
-                            _currentGoal--;
+                            _currentGoalIndex--;
                         }
                     }
                 }
                 else
                 {
-                    if (_currentGoal != StartIndex)
+                    if (_currentGoalIndex != StartIndex)
                     {
-                        _currentGoal--;
+                        _currentGoalIndex--;
                     }
                     else
                     {
                         _isMovingForward = !_isMovingForward;
-                        _currentGoal++;
+                        _currentGoalIndex++;
                     }
                 }
             }

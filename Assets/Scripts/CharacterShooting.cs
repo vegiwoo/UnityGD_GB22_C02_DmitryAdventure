@@ -143,7 +143,7 @@ namespace DmitryAdventure.Characters
                     var enemy = _character as Enemy;
                     if (enemy == null) return;
                     
-                    if (enemy.enemyState == EnemyState.Attack)
+                    if (enemy.CurrentEnemyState == EnemyState.Attack)
                     {
                         var enemyTransform = enemy.gameObject.transform;
                     
