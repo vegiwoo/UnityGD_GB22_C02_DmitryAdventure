@@ -209,7 +209,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7661927029065131717}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.18, z: 0}
+  m_LocalPosition: {x: 0, y: -0.18, z: -0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -248,7 +248,6 @@ MonoBehaviour:
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
   enemyStats: {fileID: 11400000, guid: 218ed6bce7588421381b29a87eabad23, type: 2}
-  discoveryTypes: 00000000
   <CurrentEnemyState>k__BackingField: 0
 --- !u!114 &1131119205904769798
 MonoBehaviour:
@@ -315,7 +314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 27825488745646880, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: <DiscoverableTypes>k__BackingField.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_RootOrder
@@ -343,7 +342,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.48
+      value: 6.05
       objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_LocalRotation.w

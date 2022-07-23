@@ -3,7 +3,6 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using DmitryAdventure.Stats;
-using Unity.VisualScripting;
 using UnityEngine.AI;
 
 // ReSharper disable once CheckNamespace
@@ -23,8 +22,6 @@ namespace DmitryAdventure.Characters
         private Blinked _blinkEffect;
         
         [SerializeField] public EnemyStats enemyStats;
-        [SerializeField, Tooltip("Array of discoverable types for trigger")] 
-        public DiscoveryType [] discoveryTypes;
         public EnemyRoute Route { get; set; }
 
         /// <summary>
@@ -55,7 +52,6 @@ namespace DmitryAdventure.Characters
 
         private void Awake()
         {
-            //_enemyRigidbody = transform.GetComponent<Rigidbody>();
             _navMeshAgent = transform.GetComponent<NavMeshAgent>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _blinkEffect = GetComponent<Blinked>();
@@ -63,19 +59,18 @@ namespace DmitryAdventure.Characters
 
         private void Start()
         {
-            //_enemyRigidbody.mass = 30;
-            
             CharacterType = enemyStats.CharacterType;
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMoveSpeed;
 
+            _navMeshAgent.speed = enemyStats.BaseMoveSpeed;
+            _navMeshAgent.stoppingDistance = enemyStats.StopDistanceForWaypoints;
+            
             _isMovingForward = true;
-            _navMeshAgent.stoppingDistance = 0.1f;
             _currentWaypointIndex = 0;
-            //_currentWaypoint = Route[PositionsRouteType.Next, _currentWaypointIndex];
-
-            _discoveryTrigger.DiscoverableTypes = discoveryTypes;
-            _discoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerNotify;
+     
+            _discoveryTrigger.DiscoverableTypes = enemyStats.DiscoverableTypes;
+            _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
             
             ToggleEnemyState(EnemyState.Patrol);
         }
@@ -93,7 +88,7 @@ namespace DmitryAdventure.Characters
 
         private void OnDestroy()
         {
-            _discoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerNotify;
+            _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
         }
 
         #endregion
@@ -110,18 +105,15 @@ namespace DmitryAdventure.Characters
             
             while (true)
             {
-               var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
-               
-               Debug.Log($"Current WP {currentWaypoint}");
-               
-               _navMeshAgent.SetDestination(currentWaypoint);
+                var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
+
+                _navMeshAgent.SetDestination(currentWaypoint);
 
                var stopDistance = _navMeshAgent.stoppingDistance;
                
                if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
                {
-                   Debug.Log($"Change WP");
                    var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
                    _isMovingForward = result.isMoveForward;
                    _currentWaypointIndex = result.index;
@@ -133,7 +125,7 @@ namespace DmitryAdventure.Characters
                }
                else
                {
-                   Debug.Log($"Patrol coroutine +");
+                   Debug.Log($"Patrol coroutine -");
                    _enemyPatrolCoroutine = null;
                    yield break;
                }
@@ -147,19 +139,22 @@ namespace DmitryAdventure.Characters
         {
             while (CurrentEnemyState == EnemyState.Attack && _aimPoint != null)
             {
-                var distanceToTarget = Vector3.Distance(_navMeshAgent.transform.position, _aimPoint.position);
+                var distanceToTarget = Vector3.Distance(transform.position, _aimPoint.position);
 
-                var min = enemyStats.MinAttackDistance;
-                var max = enemyStats.AttentionRadius;
-
-                if (distanceToTarget < min && distanceToTarget > max)
+                if (distanceToTarget < enemyStats.AttentionRadius)
                 {
-                    _navMeshAgent.SetDestination(_aimPoint.position);
+                    if (distanceToTarget > enemyStats.MinAttackDistance)
+                    {
+                        _navMeshAgent.SetDestination(_aimPoint.position);
+                    }
+                    
                     yield return null;
                 }
                 else
                 {
+                    Debug.Log($"Attack coroutine -");
                     ToggleEnemyState(EnemyState.Patrol);
+                    
                     _enemyAttackCoroutine = null;
                     yield break;
                 }
@@ -172,9 +167,9 @@ namespace DmitryAdventure.Characters
         /// <summary>
         /// Moves enemy when attacking.
         /// </summary>
-        private void OnDiscoveryTriggerNotify(DiscoveryType type, Transform targetTransform, bool _)
+        private void DiscoveryTriggerHandler(DiscoveryType type, Transform targetTransform, bool _)
         {
-            if(!discoveryTypes.Contains(type)) return;
+            if(!enemyStats.DiscoverableTypes.Contains(type)) return;
             
             switch (type)
             {
@@ -190,12 +185,7 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Other methods
-
-        protected override void OnMovement()
-        {
-            // Do something...
-        }
-
+        
         /// <summary>
         /// Changes state of enemy.
         /// </summary>
@@ -209,17 +199,22 @@ namespace DmitryAdventure.Characters
                 case EnemyState.Patrol:
                     _aimPoint = null;
                     _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
-                    _discoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerNotify;
+                    _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
                     break;
                 case EnemyState.Attack:
                     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
-                    _discoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerNotify;
+                    _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
                     break;
                 default:
                     break;
             }
         }
-        
+
+        protected override void OnMovement()
+        {
+            // Do something
+        }
+
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;
