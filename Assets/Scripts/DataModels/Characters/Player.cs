@@ -17,7 +17,7 @@ namespace DmitryAdventure.Characters
     /// <summary>
     /// Represents main character.
     /// </summary>
-    [RequireComponent(typeof(PlayerInput), typeof(CharacterController), typeof(CharacterShooting))]
+    [RequireComponent(typeof(PlayerInput), typeof(CharacterController), typeof(PlayerShooting))]
     public class Player : Character
     {
         #region Сonstants, variables & properties

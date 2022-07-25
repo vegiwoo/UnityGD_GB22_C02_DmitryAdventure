@@ -11,7 +11,7 @@ namespace DmitryAdventure.Characters
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
-    [RequireComponent(typeof(CharacterShooting), typeof(Blinked))]
+    [RequireComponent(typeof(EnemyShooting), typeof(Blinked))]
     public class Enemy : Character
     {
         #region Сonstants, variables & properties
