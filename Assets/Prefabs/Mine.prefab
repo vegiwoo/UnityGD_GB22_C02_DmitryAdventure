@@ -7154,7 +7154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a4e7f205494141a479e44a29259b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AudioClipToPlay>k__BackingField: {fileID: 8300000, guid: 1bd4d30eed027450b9f90bcfaae7e271, type: 3}
+  <NegativeClipToPlay>k__BackingField: {fileID: 0}
+  <PositiveClipToPlay>k__BackingField: {fileID: 8300000, guid: 1bd4d30eed027450b9f90bcfaae7e271, type: 3}
 --- !u!1001 &7704238638130409688
 PrefabInstance:
   m_ObjectHideFlags: 0

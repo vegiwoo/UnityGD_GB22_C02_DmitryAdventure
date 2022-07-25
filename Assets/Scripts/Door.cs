@@ -9,16 +9,16 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents the door entity.
     /// </summary>
-    [RequireComponent(typeof(HingeJoint))]
+    [RequireComponent(typeof(HingeJoint)), RequireComponent(typeof(AudioIsPlaying))]
     public class Door : MonoBehaviour
     {
         #region Сonstants, variables & properties
 
         [SerializeField] private string objectName;
 
-        [field: SerializeField] private AudioClip lockedDoorSound;
-        [field: SerializeField] private AudioClip openLockedDoorSound;
-        
+        private Rigidbody DoorRigidbody { get; set; }
+        private AudioIsPlaying AudioIsPlaying { get; set; }
+
         /// <summary>
         /// An array of object types to discover.
         /// </summary>
@@ -26,9 +26,8 @@ namespace DmitryAdventure
         private DiscoveryTrigger _trigger;
         private HingeJoint _doorJoint;
 
-        private Rigidbody DoorRigidbody { get; set; }
-
-        [field: SerializeField, Tooltip("Determines if door is locked")] private bool isLocked;
+        [field: SerializeField, ReadonlyField, Tooltip("Determines if door is locked")] 
+        private bool isLocked;
         
         private bool _isOpen;
         
@@ -39,6 +38,7 @@ namespace DmitryAdventure
         private void Awake()
         {
             DoorRigidbody = GetComponent<Rigidbody>();
+            AudioIsPlaying = GetComponent<AudioIsPlaying>();
             
             _trigger = GetComponentInChildren<DiscoveryTrigger>();
             if (_trigger == null)
@@ -66,9 +66,7 @@ namespace DmitryAdventure
         #endregion
 
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
+    
 
         #region Event handlers
 
@@ -89,14 +87,15 @@ namespace DmitryAdventure
                 var key = character.FindItemInInventory(GameData.KeysKey);
                 if (key != null)
                 {
-                    AudioSource.PlayClipAtPoint(openLockedDoorSound, transform.position);
+                    AudioIsPlaying.PlaySound(SoundType.Positive);
+                    
                     OpenCloseDoor(discoveryTransform, isItemEnters);
                     DoorRigidbody.constraints = RigidbodyConstraints.None;
                     isLocked = false;
                 }
                 else
                 {
-                    AudioSource.PlayClipAtPoint(lockedDoorSound, transform.position);
+                    AudioIsPlaying.PlaySound(SoundType.Negative);
                 }
             }
             else

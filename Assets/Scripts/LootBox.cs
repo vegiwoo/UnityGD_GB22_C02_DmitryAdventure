@@ -10,17 +10,14 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents a loot box.
     /// </summary>
+    [RequireComponent(typeof(AudioIsPlaying))]
     public class LootBox : MonoBehaviour
     {
         #region Сonstants, variables & properties
 
         private DiscoveryTrigger _discoveryTrigger;
+        private AudioIsPlaying _audioIsPlaying;
 
-        [SerializeField]
-        private AudioClip openingSoundClip;
-
-        private AudioSource OpeningAudioSource { get; set; }
-        
         [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
         private int possibleCapacity = 2;
 
@@ -55,15 +52,12 @@ namespace DmitryAdventure
         private void Start()
         {
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
+            _audioIsPlaying = GetComponent<AudioIsPlaying>();
             
             _capacity = Random.Range(0, possibleCapacity);
             _objectsInBox = new List<GameValue>(_capacity);
             
             FillingBox();
-
-            var audioSource = gameObject.AddComponent<AudioSource>();
-            MakeAudio(in openingSoundClip, ref audioSource);
-            OpeningAudioSource = audioSource;
 
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
@@ -75,10 +69,7 @@ namespace DmitryAdventure
 
         #endregion
 
-        #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
+
 
         #region Event handlers
         /// <summary>
@@ -91,11 +82,7 @@ namespace DmitryAdventure
             switch (type)
             {
                 case DiscoveryType.Player:
-                    
-                    //AudioSource.PlayClipAtPoint(openingSoundClip, transform.position);
-                    
-                    OpeningAudioSource.Play();
-                    
+                    _audioIsPlaying.PlaySound(SoundType.Positive);
                     heroFoundValuesHandler.Invoke(_objectsInBox);
                     _objectsInBox = null;
                     IsBoxEmpty = true;
@@ -125,19 +112,6 @@ namespace DmitryAdventure
             IsBoxEmpty = false;
         }
 
-        private static void MakeAudio(in AudioClip clip, ref AudioSource audioSource)
-        {
-            audioSource.clip = clip;
-            audioSource.playOnAwake = false;
-            audioSource.pitch = Random.Range(0.85f, 1.0f);
-            audioSource.panStereo = audioSource.spatialBlend = audioSource.spread = 0;
-            audioSource.volume = audioSource.reverbZoneMix = audioSource.dopplerLevel = 1;
-            audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
-            audioSource.minDistance = 1;
-            audioSource.maxDistance = 500;
-        }
-        
-        #endregion
         #endregion
     }
 }

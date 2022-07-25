@@ -126,7 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a4e7f205494141a479e44a29259b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AudioClipToPlay>k__BackingField: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}
+  <NegativeClipToPlay>k__BackingField: {fileID: 0}
+  <PositiveClipToPlay>k__BackingField: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}
 --- !u!1 &9103373559611152851
 GameObject:
   m_ObjectHideFlags: 0

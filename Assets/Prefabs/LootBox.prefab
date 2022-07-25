@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3706451736574437540}
   - component: {fileID: 2507111794014044582}
   - component: {fileID: 4621835473882942253}
+  - component: {fileID: 2919532564272855597}
   m_Layer: 6
   m_Name: LootBox
   m_TagString: Untagged
@@ -48,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcabb74e7f7204230835993de159675b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openingSoundClip: {fileID: 8300000, guid: b993ce3da374c45a48e254a08e63f41c, type: 3}
   possibleCapacity: 2
   rarityLevels: 0000000001000000
   heroFoundValuesHandler:
@@ -95,6 +95,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &2919532564272855597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048470831198127523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3a4e7f205494141a479e44a29259b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <NegativeClipToPlay>k__BackingField: {fileID: 0}
+  <PositiveClipToPlay>k__BackingField: {fileID: 8300000, guid: b993ce3da374c45a48e254a08e63f41c, type: 3}
 --- !u!1001 &2708059826121880681
 PrefabInstance:
   m_ObjectHideFlags: 0

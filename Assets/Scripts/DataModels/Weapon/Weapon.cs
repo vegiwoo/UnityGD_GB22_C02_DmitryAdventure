@@ -75,7 +75,7 @@ namespace DmitryAdventure.Armament
             newBullet.SetParams(ShotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
                 weaponStats.DamagePerShot);
             
-            Audio.PlaySound();
+            Audio.PlaySound(SoundType.Positive);
             
             _shotDelayTimer = weaponStats.ShotDelay;
         }

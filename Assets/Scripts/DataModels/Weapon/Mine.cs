@@ -55,7 +55,6 @@ namespace DmitryAdventure.Armament
             if (isAudioPlayed)
             {
                 Destroy(gameObject);
-                Debug.Log("Mine destroy");
             }
         }
 
@@ -76,7 +75,7 @@ namespace DmitryAdventure.Armament
                 Destroy(model);
             }
 
-            _audioIsPlaying.PlaySound();
+            _audioIsPlaying.PlaySound(SoundType.Positive);
         }
         
         #endregion

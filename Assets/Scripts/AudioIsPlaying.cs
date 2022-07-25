@@ -1,9 +1,24 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace DmitryAdventure
 {
+    public enum SoundType
+    {
+        /// <summary>
+        /// Sound is played on failure.
+        /// </summary>
+        Negative,  
+        /// <summary>
+        /// Sound is played on success or a neutral situation.
+        /// </summary>
+        Positive
+    }
+    
+    
+    
     /// <summary>
     /// Represents an entity that plays audio
     /// </summary>
@@ -11,8 +26,10 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        [field: SerializeField] private AudioClip AudioClipToPlay { get; set; }
-        private AudioSource AudioSourceToPlay { get; set; }
+        [field: SerializeField] private AudioClip NegativeClipToPlay { get; set; }
+        [field: SerializeField] private AudioClip PositiveClipToPlay { get; set; }
+        private AudioSource NegativeSourceToPlay { get; set; }
+        private AudioSource PositiveSourceToPlay { get; set; }
 
         public delegate void AudioTriggerHandler(bool isSoundPlayed);  
         public event AudioTriggerHandler? AudioTriggerNotify;
@@ -25,18 +42,40 @@ namespace DmitryAdventure
 
         private void Start()
         {
-            var sourceToPlay = gameObject.AddComponent<AudioSource>();
-            MakeAudio(AudioClipToPlay, ref sourceToPlay);
-            AudioSourceToPlay = sourceToPlay;
+            if (NegativeClipToPlay != null)
+            {
+                var sourceToPlay = gameObject.AddComponent<AudioSource>();
+                MakeAudio(NegativeClipToPlay, ref sourceToPlay);
+                NegativeSourceToPlay = sourceToPlay;
+            }
+            
+            if (PositiveClipToPlay != null)
+            {
+                var sourceToPlay = gameObject.AddComponent<AudioSource>();
+                MakeAudio(PositiveClipToPlay, ref sourceToPlay);
+                PositiveSourceToPlay = sourceToPlay;
+            }
+  
         }
         #endregion
         
         #region Coroutines
 
-        private IEnumerator PlayCoroutine()
+        private IEnumerator PlayCoroutine(SoundType type,  float volume)
         {
-            AudioSourceToPlay.Play();
-            yield return new WaitWhile (()=> AudioSourceToPlay.isPlaying);
+            switch (type)
+            {
+                case SoundType.Negative:
+                    NegativeSourceToPlay.volume = volume;
+                    NegativeSourceToPlay.Play();
+                    yield return new WaitWhile (()=> NegativeSourceToPlay.isPlaying);
+                    break;
+                case SoundType.Positive:
+                    PositiveSourceToPlay.volume = volume;
+                    PositiveSourceToPlay.Play();
+                    yield return new WaitWhile (()=> PositiveSourceToPlay.isPlaying);
+                    break;
+            }
             AudioTriggerNotify?.Invoke(true);
         }
         #endregion
@@ -63,9 +102,9 @@ namespace DmitryAdventure
         /// <summary>
         /// Starts audio playback.
         /// </summary>
-        public void PlaySound()
+        public void PlaySound(SoundType type, float volume = 1.0f)
         {
-            playCoroutine = StartCoroutine(PlayCoroutine());
+            playCoroutine = StartCoroutine(PlayCoroutine(type, volume));
         }
 
         #endregion
