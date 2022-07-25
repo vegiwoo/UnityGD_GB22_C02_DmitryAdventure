@@ -64,7 +64,6 @@ namespace DmitryAdventure.Managers
             if (killed > 0)
             {
                 killedEnemiesEvent.Invoke(killed);
-                Debug.Log("Invoke killed");
             }
             
             for (var i = 0; i < routes.Length; i++)

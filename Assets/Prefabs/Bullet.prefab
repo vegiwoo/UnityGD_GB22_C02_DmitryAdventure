@@ -128,5 +128,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 1332399844379766, guid: d5a42f6bd9584fe4ab47d227092cebdf, type: 3}
-  effectSoundClip: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}
   <Damage>k__BackingField: 10

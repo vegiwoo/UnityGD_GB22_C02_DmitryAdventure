@@ -52,7 +52,7 @@ namespace DmitryAdventure.Characters
 
         private void Awake()
         {
-            _navMeshAgent = transform.GetComponent<NavMeshAgent>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _blinkEffect = GetComponent<Blinked>();
         }
@@ -71,6 +71,8 @@ namespace DmitryAdventure.Characters
      
             _discoveryTrigger.DiscoverableTypes = enemyStats.DiscoverableTypes;
             _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
+
+            gameObject.tag = GameData.EnemyTag;
             
             ToggleEnemyState(EnemyState.Patrol);
         }
@@ -88,6 +90,7 @@ namespace DmitryAdventure.Characters
 
         private void OnDestroy()
         {
+            StopAllCoroutines();
             _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
         }
 
@@ -101,14 +104,16 @@ namespace DmitryAdventure.Characters
         /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
-
             while (true)
             {
                 var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
 
-                _navMeshAgent.SetDestination(currentWaypoint);
+                if (gameObject != null && _navMeshAgent.isActiveAndEnabled)
+                {
+                    _navMeshAgent.SetDestination(currentWaypoint);
+                }
 
-               var stopDistance = _navMeshAgent.stoppingDistance;
+                var stopDistance = _navMeshAgent.stoppingDistance;
                
                if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
@@ -139,7 +144,7 @@ namespace DmitryAdventure.Characters
             {
                 var distanceToTarget = Vector3.Distance(transform.position, _aimPoint.position);
 
-                if (distanceToTarget < enemyStats.AttentionRadius)
+                if (distanceToTarget < enemyStats.AttentionRadius && gameObject != null && _navMeshAgent.isActiveAndEnabled)
                 {
                     if (distanceToTarget > enemyStats.MinAttackDistance)
                     {

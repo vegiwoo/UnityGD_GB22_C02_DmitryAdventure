@@ -19,7 +19,7 @@ namespace DmitryAdventure
         [SerializeField]
         private AudioClip openingSoundClip;
 
-        private AudioSource openingAudioSource { get; set; }
+        private AudioSource OpeningAudioSource { get; set; }
         
         [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
         private int possibleCapacity = 2;
@@ -63,7 +63,7 @@ namespace DmitryAdventure
 
             var audioSource = gameObject.AddComponent<AudioSource>();
             MakeAudio(in openingSoundClip, ref audioSource);
-            openingAudioSource = audioSource;
+            OpeningAudioSource = audioSource;
 
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
@@ -94,7 +94,7 @@ namespace DmitryAdventure
                     
                     //AudioSource.PlayClipAtPoint(openingSoundClip, transform.position);
                     
-                    openingAudioSource.Play();
+                    OpeningAudioSource.Play();
                     
                     heroFoundValuesHandler.Invoke(_objectsInBox);
                     _objectsInBox = null;

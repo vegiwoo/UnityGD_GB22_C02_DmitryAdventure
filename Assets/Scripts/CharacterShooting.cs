@@ -74,22 +74,16 @@ namespace DmitryAdventure.Characters
 
         private void OnDestroy()
         {
-           
-            if (_character.CharacterType == CharacterType.Player)
-            {           
-                _characterFireAction.performed -= ShootWeapon;
-                _characterMineAction.performed -= MineActionOnPerformed;
-            }
+            if (_character.CharacterType != CharacterType.Player) return;
+            
+            _characterFireAction.performed -= ShootWeapon;
+            _characterMineAction.performed -= MineActionOnPerformed;
         }
 
         #endregion
 
-        #region Functionality
-        #region Coroutines
+      
 
-        // ...
-
-        #endregion
 
         #region Event handlers
 
@@ -101,7 +95,7 @@ namespace DmitryAdventure.Characters
         {
             if(_characterInventory == null) return;
             
-            var popMine = _characterInventory.PopFromInventory(GameData.MineLabelText);
+            var popMine = _characterInventory.PopFromInventory(GameData.MineKey);
             if (popMine == null) return;
 
             Instantiate(minePrefab, new Vector3(_aimingPoint.x,_aimingPoint.y + 0.2f,_aimingPoint.z), Quaternion.identity);
@@ -143,14 +137,17 @@ namespace DmitryAdventure.Characters
                     
                     if (enemy.CurrentEnemyState == EnemyState.Attack)
                     {
-                        var enemyTransform = enemy.gameObject.transform;
-                    
+                        var eObject = enemy.gameObject;
+                        var ePosition = eObject.transform.position;
+                        var eForward = eObject.transform.forward;
+                        var layerMask = GameData.PlayerLayerMask;
+                        
                         if (Physics.Raycast(
-                                enemyTransform.position,
-                                enemyTransform.forward,
+                                ePosition,
+                                eForward,
                                 out var playerHit,
                                 enemy.enemyStats.AttentionRadius,
-                                GameData.PlayerLayerMask))
+                                layerMask))
                         {
                             var bounds = playerHit.collider.bounds;
                             
@@ -187,6 +184,6 @@ namespace DmitryAdventure.Characters
         }
 
         #endregion
-        #endregion
+  
     }
 }

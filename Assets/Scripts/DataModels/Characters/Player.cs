@@ -94,7 +94,7 @@ namespace DmitryAdventure.Characters
         /// <param name="context">CallbackContext for more info.</param>
         private void TherapyActionOnPerformed(InputAction.CallbackContext context)
         {
-            var medicine = FindItemInInventory(GameData.MedicineLabelText);
+            var medicine = FindItemInInventory(GameData.MedicineKey);
             if (medicine == null)
             {
                 AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);

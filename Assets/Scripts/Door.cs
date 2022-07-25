@@ -86,7 +86,7 @@ namespace DmitryAdventure
             
             if (isLocked)
             {
-                var key = character.FindItemInInventory(GameData.KeyLabelText);
+                var key = character.FindItemInInventory(GameData.KeysKey);
                 if (key != null)
                 {
                     AudioSource.PlayClipAtPoint(openLockedDoorSound, transform.position);
