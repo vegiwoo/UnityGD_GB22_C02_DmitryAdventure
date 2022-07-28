@@ -26,8 +26,8 @@ namespace DmitryAdventure
         private void Start()
         {
             // HACK: Hardcode!
-            var mine = new GameValue(GameData.MineLabelText, "Enemies on this mine fly up like crazy frogs",
-                GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100f);
+            var mine = new GameValue(GameData.MineKey, "Enemies on this mine fly up like crazy frogs",
+                GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100f, valueKey: GameData.MineKey);
             PushInInventory(new []{mine, mine, mine});
             
             //updateEvent.Invoke(GetInventoryContent());

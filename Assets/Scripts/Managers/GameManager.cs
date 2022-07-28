@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DmitryAdventure.Characters;
+using JetBrains.Annotations;
+using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -17,33 +19,23 @@ namespace DmitryAdventure.Managers
         [SerializeField, Range(1,20)] private int goalToKillEnemiesCount = 1;
         private int _currentKillEnemiesCount;
         
-        [Header("UI")] 
-        [SerializeField] private Slider hpBar;
-        [SerializeField] private Text enemiesLabel;
-        [SerializeField] private Text keyLabel;
-        [SerializeField] private Text mineLabel;
-        [SerializeField] private Text medicineLabel;
-        
         [Header("Links")] 
         [SerializeField] private Player player;
+
+        public UnityEvent<UIManagerArgs> uiUpdateEventNotify;
         
         #endregion
 
         #region Monobehavior methods
         private void Start()
         {
-            hpBar.minValue = 0;
-            hpBar.maxValue = player.playerStats.MaxHp;
-            hpBar.value = player.CurrentHp;
-
-            enemiesLabel.text = $"{GameData.EnemiesLabelText}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
-
-            player.CharacterNotify += PlayerOnCharacterHandler;
+            player.CharacterNotify += OnCharacterHandler;
+            GameValuesUpdateEvent();
         }
 
         private void OnDestroy()
         {
-            player.CharacterNotify -= PlayerOnCharacterHandler;
+            player.CharacterNotify -= OnCharacterHandler;
         }
 
         #endregion
@@ -58,57 +50,60 @@ namespace DmitryAdventure.Managers
         /// Receives an event from Player.
         /// </summary>
         /// <param name="e">Event arguments.</param>
-        private void PlayerOnCharacterHandler(CharacterEventArgs e)
+        private void OnCharacterHandler(CharacterEventArgs e)
         {
-            if (e.Die)
-            {
-                hpBar.value = 0;
-                Debug.Log(GameData.LoseMessage);
-                UnityEditor.EditorApplication.isPaused = true;
-            }
+            GameValuesUpdateEvent();
+
+            if (!e.Die) return;
             
-            hpBar.value = e.CurrentHp;
+            Debug.Log(GameData.LoseMessage);
+            UnityEditor.EditorApplication.isPaused = true;
         }
 
         /// <summary>
         /// Handles an event about killed enemies.
         /// </summary>
         /// <param name="numberKilled">Number of enemies killed.</param>
-        public void OnKilledEnemies(int numberKilled)
+        public void OnKilledEnemiesHandler(int numberKilled)
         {
             _currentKillEnemiesCount += numberKilled;
-            enemiesLabel.text = $"{GameData.EnemiesLabelText}: {_currentKillEnemiesCount:00} / {goalToKillEnemiesCount: 00}";
-
+            
+            GameValuesUpdateEvent();
+            
             if (_currentKillEnemiesCount < goalToKillEnemiesCount) return;
             
             Debug.Log(GameData.WinMessage);
             UnityEditor.EditorApplication.isPaused = true;
         }
 
-        public void OnInventoryContent(List<(GameValue value, int count)> items)
+        /// <summary>
+        /// Handles user inventory update event.
+        /// </summary>
+        /// <param name="items"></param>
+        public void OnInventoryUpdateHandler(List<(GameValue value, int count)> items)
         {
-            foreach (var item in items)
-            {
-                switch (item.value.Name)
-                {
-                    case GameData.KeyLabelText:
-                        keyLabel.text = $"KEYS: {item.count:00}";
-                        break;
-                    case GameData.MineLabelText:
-                        mineLabel.text = $"MINES: {item.count:00}";
-                        break;
-                    case GameData.MedicineLabelText:
-                        medicineLabel.text = $"MEDICINE: {item.count:00}";
-                        break;
-                }
-            }
+            GameValuesUpdateEvent(items);
         }
-        
+
+        /// <summary>
+        /// Forms UI update arguments and dispatches an event.
+        /// </summary>
+        /// <param name="items">Collection of game values.</param>
+        private void GameValuesUpdateEvent([CanBeNull] List<(GameValue value, int count)> items = null)
+        {
+            var args = new UIManagerArgs(
+                player.playerStats.MaxHp, 
+                player.CurrentHp, 
+                goalToKillEnemiesCount,
+                _currentKillEnemiesCount, 
+                items);
+            uiUpdateEventNotify.Invoke(args);
+        }
         #endregion
 
         #region Other methods
-        #endregion
         // ...
+        #endregion
         #endregion
     }
 }

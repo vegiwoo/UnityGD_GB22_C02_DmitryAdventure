@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1409296733611048853}
   - component: {fileID: 5107075939744987999}
   - component: {fileID: 6378564384715130769}
+  - component: {fileID: 6841596618312162431}
   m_Layer: 0
   m_Name: WeaponType01
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33142460980013606}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.3074675, z: 0, w: 0.9515586}
   m_LocalPosition: {x: 55.751, y: 15.3, z: 303.886}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.9}
   m_ConstrainProportionsScale: 0
@@ -113,6 +114,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponStats: {fileID: 11400000, guid: f4f7baaa6f1b943c2bf167f1a002a74d, type: 2}
   <ShotPoint>k__BackingField: {fileID: 4579685521737403416}
+--- !u!114 &6841596618312162431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33142460980013606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3a4e7f205494141a479e44a29259b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <NegativeClipToPlay>k__BackingField: {fileID: 0}
+  <PositiveClipToPlay>k__BackingField: {fileID: 8300000, guid: 7b110980400754cc79376198ed73fa46, type: 3}
 --- !u!1 &9103373559611152851
 GameObject:
   m_ObjectHideFlags: 0

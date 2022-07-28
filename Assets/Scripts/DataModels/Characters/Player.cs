@@ -17,7 +17,7 @@ namespace DmitryAdventure.Characters
     /// <summary>
     /// Represents main character.
     /// </summary>
-    [RequireComponent(typeof(PlayerInput), typeof(CharacterController), typeof(CharacterShooting))]
+    [RequireComponent(typeof(PlayerInput), typeof(CharacterController), typeof(PlayerShooting))]
     public class Player : Character
     {
         #region Сonstants, variables & properties
@@ -28,8 +28,6 @@ namespace DmitryAdventure.Characters
         private PlayerInput _playerInput;
         private Vector3 _playerVelocity;
         private bool _groundedPlayer;
-        
-        private CharacterInventory _characterInventory;
 
         private InputAction _moveAction;
         private InputAction _jumpAction;
@@ -51,7 +49,7 @@ namespace DmitryAdventure.Characters
         {
             _controller = gameObject.GetComponent<CharacterController>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
-            _characterInventory = gameObject.GetComponent<CharacterInventory>();
+            CharacterInventory = gameObject.GetComponent<CharacterInventory>();
             
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
@@ -68,6 +66,8 @@ namespace DmitryAdventure.Characters
             CurrentHp = playerStats.MaxHp;
 
             _therapyAction.performed += TherapyActionOnPerformed;
+
+            CharacterType = playerStats.CharacterType;
             
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -94,16 +94,17 @@ namespace DmitryAdventure.Characters
         /// <param name="context">CallbackContext for more info.</param>
         private void TherapyActionOnPerformed(InputAction.CallbackContext context)
         {
-            if(_characterInventory == null) return;
-            
-            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
-            if (popMedicine == null)
+            var medicine = FindItemInInventory(GameData.MedicineKey);
+            if (medicine == null)
             {
                 AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
             }
             else
             {
-                CurrentHp += popMedicine.HpBoostRate;
+                CurrentHp = CurrentHp + medicine.HpBoostRate <= playerStats.MaxHp
+                    ? CurrentHp += medicine.HpBoostRate
+                    : playerStats.MaxHp;
+                
                 AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
 
                 var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
@@ -162,33 +163,6 @@ namespace DmitryAdventure.Characters
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
             OnCharacterNotify(args);
         }
-        
-        /// <summary>
-        /// Handler for selecting a mine from inventory.
-        /// </summary>
-        [CanBeNull]
-        private GameValue LookingForKeyInInventory()
-        {
-            if(_characterInventory == null) return null;
-            
-            var popMedicine = _characterInventory.PopFromInventory(GameData.MedicineLabelText);
-            if (popMedicine == null)
-            {
-                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
-            }
-            else
-            {
-                CurrentHp += popMedicine.HpBoostRate;
-                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
-
-                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
-                OnCharacterNotify(args);
-            }
-            
-            // Dummy
-            return null;
-        }
-        
         
         #endregion
         #endregion

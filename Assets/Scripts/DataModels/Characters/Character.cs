@@ -3,23 +3,27 @@ using UnityEngine;
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Characters
 {
+
     /// <summary>
     /// Essence of playable or non-playable character.
     /// </summary>
     public abstract class Character : MonoBehaviour
     {
         #region Сonstants, variables & properties
-        [field:SerializeField, Tooltip("Type of personage")]
-        public CharacterType CharacterType { get; set; }
-        
+
+        protected internal CharacterType CharacterType { get; set; }
+
         [field: SerializeField, ReadonlyField, Tooltip("Current hit points.")]
         public float CurrentHp { get; protected set; }
         
         [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
         protected float CurrentSpeed { get;  set; }
-
+        
+        
         protected float MovementSpeedDelta => CurrentSpeed / 3;
 
+        protected CharacterInventory CharacterInventory;
+        
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
         public event CharacterHandler CharacterNotify;
@@ -27,6 +31,11 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Monobehavior methods
+
+        private void Start()
+        {
+            CharacterInventory = GetComponent<CharacterInventory>();
+        }
 
         protected virtual void Update()
         {
@@ -46,7 +55,14 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Event handlers
-        // ...
+        /// <summary>
+        /// Character event for interested subscribers.
+        /// </summary>
+        /// <param name="e">Notification arguments.</param>
+        protected void OnCharacterNotify(CharacterEventArgs e)
+        {
+            CharacterNotify?.Invoke(e);
+        }
         #endregion
 
         #region Other methods
@@ -63,16 +79,17 @@ namespace DmitryAdventure.Characters
         /// <returns></returns>
         public abstract void OnHit(float damage);
         
-        #endregion
-        #endregion
-
         /// <summary>
-        /// Character event for interested subscribers.
+        /// Finds an in-game value in character's inventory.
         /// </summary>
-        /// <param name="e">Notification arguments.</param>
-        protected void OnCharacterNotify(CharacterEventArgs e)
+        /// <param name="nameKey">Game value name as a search key.</param>
+        /// <returns>Found game value or null.</returns>
+        public GameValue FindItemInInventory(string nameKey)
         {
-            CharacterNotify?.Invoke(e);
+            return CharacterInventory == null ? null : CharacterInventory.PopFromInventory(nameKey);
         }
+        
+        #endregion
+        #endregion
     }
 }

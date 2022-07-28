@@ -19,22 +19,22 @@ namespace DmitryAdventure
 
         public static readonly float Gravity = Physics.gravity.y;
         
-        public readonly Dictionary<GUI, GameValue> GameValues = new Dictionary<GUI, GameValue>
+        public readonly Dictionary<GUI, GameValue> GameValues = new()
         {
             {
                 new GUI(), 
-                new GameValue(MedicineLabelText, "Easily restore lost health", 
-                    GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f, hpBoostRate:25.0f)
+                new GameValue(MedicineKey, "Easily restore lost health", 
+                    GameValueType.Resource, RarityLevel.Ordinary, 0, 0.20f, hpBoostRate:25.0f, valueKey: MedicineKey)
             },
             {
                 new GUI(), 
-                new GameValue(KeyLabelText, "Every rusty key opens something", 
-                    GameValueType.Item, RarityLevel.Rare, 0, 0.15f, hpBoostRate:0)
+                new GameValue(KeysKey, "Every rusty key opens something", 
+                    GameValueType.Item, RarityLevel.Rare, 0, 0.15f, hpBoostRate:0, valueKey: KeysKey)
             },
             {
                 new GUI(), 
-                new GameValue(MineLabelText, "Enemies on this mine fly up like crazy frogs", 
-                    GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate:-100.0f)
+                new GameValue(MineKey, "Enemies on this mine fly up like crazy frogs", 
+                    GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate:-100.0f, valueKey: MineKey)
             }
         };
         
@@ -45,10 +45,10 @@ namespace DmitryAdventure
         // Layer masks
         public static readonly LayerMask PlayerLayerMask = LayerMask.GetMask($"Player");
 
-        public const string EnemiesLabelText = "ENEMIES";
-        public const string MedicineLabelText = "MEDICINES";
-        public const string KeyLabelText = "KEYS";
-        public const string MineLabelText = "MINES";
+        public const string EnemiesKey = "ENEMIES";
+        public const string MedicineKey = "MEDICINES";
+        public const string KeysKey = "KEYS";
+        public const string MineKey = "MINES";
 
         public const string WinMessage = "You win :)";
         public const string LoseMessage = "You lose :(";

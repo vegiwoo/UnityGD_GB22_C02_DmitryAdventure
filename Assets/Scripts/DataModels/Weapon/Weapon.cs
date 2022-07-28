@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DmitryAdventure.Stats;
 
@@ -7,6 +8,7 @@ namespace DmitryAdventure.Armament
     /// <summary>
     /// Represents general type of weapon.
     /// </summary>
+    [RequireComponent(typeof(AudioIsPlaying))]
     public sealed class Weapon : MonoBehaviour
     {
         #region Сonstants, variables & properties
@@ -20,10 +22,17 @@ namespace DmitryAdventure.Armament
         /// A timer counting down time until next shot is possible.
         /// </summary>
         private float _shotDelayTimer;
+
+        private AudioIsPlaying Audio;
         
         #endregion
 
         #region Monobehavior methods
+
+        private void Awake()
+        {
+            Audio = GetComponent<AudioIsPlaying>();
+        }
 
         private void Start()
         {
@@ -60,11 +69,13 @@ namespace DmitryAdventure.Armament
         public void Fire(Vector3 targetPosition)
         {
             if (_shotDelayTimer > 0) return;
-
+            
             // TODO: Implement as object pool
             var newBullet = Instantiate(weaponStats.BulletPrefab, ShotPoint.position, ShotPoint.rotation);
             newBullet.SetParams(ShotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
                 weaponStats.DamagePerShot);
+            
+            Audio.PlaySound(SoundType.Positive);
             
             _shotDelayTimer = weaponStats.ShotDelay;
         }

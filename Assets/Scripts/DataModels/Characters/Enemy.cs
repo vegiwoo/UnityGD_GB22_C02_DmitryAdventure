@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using DmitryAdventure.Stats;
+using UnityEngine.AI;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Characters
@@ -8,67 +11,87 @@ namespace DmitryAdventure.Characters
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
-    [RequireComponent(typeof(Blinked), typeof(CharacterShooting))]
+    [RequireComponent(typeof(EnemyShooting), typeof(Blinked))]
     public class Enemy : Character
     {
         #region Сonstants, variables & properties
 
+        //private Rigidbody _enemyRigidbody;
+        private NavMeshAgent _navMeshAgent;
+        private DiscoveryTrigger _discoveryTrigger;
+        private Blinked _blinkEffect;
+        
         [SerializeField] public EnemyStats enemyStats;
-        [SerializeField, Tooltip("Array of discoverable types for trigger")] 
-        public DiscoveryType [] discoveryTypes;
         public EnemyRoute Route { get; set; }
 
         /// <summary>
-        /// Current destination of route.
+        /// Index of current waypoint.
         /// </summary>
-        private Vector3 _currentWaypoint;
+        private int _currentWaypointIndex;
 
         /// <summary>
         /// Flag of enemy's movement forward along route.
         /// </summary>
-        private bool _isMovingForward = true;
+        private bool _isMovingForward;
+    
+        /// <summary>
+        /// Flag that determines begin and end of agent's movement through OffMeshLink.
+        /// </summary>
+        private bool _agentOnOffMeshLink;
         
-        private Rigidbody _enemyRigidbody;
-        private DiscoveryTrigger _discoveryTrigger;
-
+        [field: SerializeField, Tooltip("Current state of enemy"), ReadonlyField] 
+        public EnemyState CurrentEnemyState { get; private set; }
+        
         private Coroutine _enemyPatrolCoroutine;
         private Coroutine _enemyAttackCoroutine;
-
-        public EnemyState enemyState;
-        private Transform _discoveryTarget;
-
-        private Blinked _blinkEffect;
         
+        private Transform _aimPoint;
         #endregion
 
         #region Monobehavior methods
 
         private void Awake()
         {
-            _enemyRigidbody = transform.GetComponent<Rigidbody>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _blinkEffect = GetComponent<Blinked>();
         }
 
         private void Start()
         {
-            CharacterType = CharacterType.EnemyType01;
+            CharacterType = enemyStats.CharacterType;
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMoveSpeed;
-            _enemyRigidbody.mass = 30;
-            _currentWaypoint = Route[PositionsRouteType.Next, 0];
 
-            _discoveryTrigger.DiscoverableTypes = discoveryTypes;
-            _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
+            _navMeshAgent.speed = enemyStats.BaseMoveSpeed;
+            _navMeshAgent.stoppingDistance = enemyStats.StopDistanceForWaypoints;
+            
+            _isMovingForward = true;
+            _currentWaypointIndex = 0;
+     
+            _discoveryTrigger.DiscoverableTypes = enemyStats.DiscoverableTypes;
+            _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
+
+            gameObject.tag = GameData.EnemyTag;
             
             ToggleEnemyState(EnemyState.Patrol);
-            
-            // TODO: Weapon for enemy!
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            _agentOnOffMeshLink = _navMeshAgent.isOnOffMeshLink switch
+            {
+                true when !_agentOnOffMeshLink => true,
+                false when _agentOnOffMeshLink => false,
+                _ => _agentOnOffMeshLink
+            };
         }
 
         private void OnDestroy()
         {
-            _discoveryTrigger.DiscoveryTriggerNotify -= OnFindingTarget;
+            StopAllCoroutines();
+            _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
         }
 
         #endregion
@@ -81,35 +104,34 @@ namespace DmitryAdventure.Characters
         /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
-            while (enemyState == EnemyState.Patrol)
+            while (true)
             {
-                if (Vector3.Distance(transform.position, _currentWaypoint) > enemyStats.PointContactDistance)
+                var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
+
+                if (gameObject != null && _navMeshAgent.isActiveAndEnabled)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
-                        _currentWaypoint, MovementSpeedDelta * Time.deltaTime);
-                    
-                    var rotateDir = _currentWaypoint - transform.position;
-                    var rotation = Vector3.RotateTowards(transform.forward,
-                        new Vector3(rotateDir.x, 0, rotateDir.z),
-                        enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
-                    transform.rotation = Quaternion.LookRotation(rotation);
-                }
-                else
-                {
-                    var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypoint);
-                    _isMovingForward = result.isMovingForward;
-                    _currentWaypoint = result.currentWayPoint;
+                    _navMeshAgent.SetDestination(currentWaypoint);
                 }
 
-                if (enemyState == EnemyState.Patrol)
-                {
-                    yield return null;
-                }
-                else
-                {          
-                    _enemyPatrolCoroutine = null;
-                    yield break;
-                }
+                var stopDistance = _navMeshAgent.stoppingDistance;
+               
+               if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
+                   Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
+               {
+                   var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
+                   _isMovingForward = result.isMoveForward;
+                   _currentWaypointIndex = result.index;
+               }
+               
+               if (CurrentEnemyState == EnemyState.Patrol)
+               {
+                   yield return null;
+               }
+               else
+               {
+                   _enemyPatrolCoroutine = null;
+                   yield break;
+               }
             }
         }
 
@@ -118,27 +140,23 @@ namespace DmitryAdventure.Characters
         /// </summary>
         private IEnumerator EnemyAttackCoroutine()
         {
-            while (enemyState == EnemyState.Attack && _discoveryTarget != null)
+            while (CurrentEnemyState == EnemyState.Attack && _aimPoint != null)
             {
-                var distanceToTarget = Vector3.Distance(transform.position, _discoveryTarget.position);
-                if (distanceToTarget <= enemyStats.AttentionRadius)
-                {
-                    var rotateDir = _discoveryTarget.position - transform.position;
-                    var rotation = Vector3.RotateTowards(transform.forward,
-                        new Vector3(rotateDir.x, 0, rotateDir.z),
-                        enemyStats.RotationAngleDelta * Time.deltaTime, 0f);
-                    transform.rotation = Quaternion.LookRotation(rotation);
+                var distanceToTarget = Vector3.Distance(transform.position, _aimPoint.position);
 
+                if (distanceToTarget < enemyStats.AttentionRadius && gameObject != null && _navMeshAgent.isActiveAndEnabled)
+                {
                     if (distanceToTarget > enemyStats.MinAttackDistance)
                     {
-                        transform.position = Vector3.MoveTowards(transform.position,
-                            _discoveryTarget.position, (MovementSpeedDelta / 2 * Time.deltaTime));
+                        _navMeshAgent.SetDestination(_aimPoint.position);
                     }
+                    
                     yield return null;
-                } 
+                }
                 else
-                {          
+                { ;
                     ToggleEnemyState(EnemyState.Patrol);
+                    
                     _enemyAttackCoroutine = null;
                     yield break;
                 }
@@ -151,13 +169,14 @@ namespace DmitryAdventure.Characters
         /// <summary>
         /// Moves enemy when attacking.
         /// </summary>
-        private void OnFindingTarget(DiscoveryType type, Transform targetTransform, bool _)
+        private void DiscoveryTriggerHandler(DiscoveryType type, Transform targetTransform, bool _)
         {
-            _discoveryTarget = targetTransform;
+            if(!enemyStats.DiscoverableTypes.Contains(type)) return;
             
             switch (type)
             {
                 case DiscoveryType.Player:
+                    _aimPoint = targetTransform;
                     ToggleEnemyState(EnemyState.Attack);
                     break;
                 default:
@@ -168,36 +187,36 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Other methods
-
-        protected override void OnMovement()
-        {
-            // Do something...
-        }
-
+        
         /// <summary>
         /// Changes state of enemy.
         /// </summary>
         /// <param name="state">New state of enemy.</param>
         private void ToggleEnemyState(EnemyState state)
         {
-            enemyState = state;
+            CurrentEnemyState = state;
 
-            switch (enemyState)
+            switch (CurrentEnemyState)
             {
                 case EnemyState.Patrol:
-                    _discoveryTarget = null;
+                    _aimPoint = null;
                     _enemyPatrolCoroutine = StartCoroutine(EnemyPatrolCoroutine());
-                    _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
+                    _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
                     break;
                 case EnemyState.Attack:
                     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
-                    _discoveryTrigger.DiscoveryTriggerNotify -= OnFindingTarget;
+                    _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
                     break;
                 default:
                     break;
             }
         }
-        
+
+        protected override void OnMovement()
+        {
+            // Do something
+        }
+
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;

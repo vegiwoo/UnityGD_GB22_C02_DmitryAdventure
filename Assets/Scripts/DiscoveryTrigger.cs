@@ -1,4 +1,3 @@
-#nullable enable
 using System.Linq;
 using UnityEngine;
 
@@ -12,12 +11,16 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
+        public DiscoveryTrigger(DiscoveryType[] discoverableTypes)
+        {
+            DiscoverableTypes = discoverableTypes;
+        }
+
         [field:SerializeField, Tooltip("Discoverable types for trigger")]
         public DiscoveryType[] DiscoverableTypes { get; set;}
 
-        public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoverableTransform, bool entry);  
+        public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType,  Transform discoveryTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
-
         
         #endregion
 
@@ -25,16 +28,19 @@ namespace DmitryAdventure
 
         private void OnTriggerEnter(Collider other)
         {
-            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
+            if (DiscoverableTypes is null || DiscoverableTypes.Length == 0) return;
 
+            var discoveryTransform = other.gameObject.transform;
+            const bool isItemEnters = true;
+            
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, true);
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
             }
 
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, true);
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
             }
         }
 
@@ -42,14 +48,17 @@ namespace DmitryAdventure
         {
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
+            var discoveryTransform = other.gameObject.transform;
+            const bool isItemEnters = false;
+            
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, other.gameObject.transform, false);
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
             }
             
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, other.gameObject.transform, false);
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
             }
         }
 
@@ -63,9 +72,15 @@ namespace DmitryAdventure
 
         #region Event handlers
 
-        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoverableTransform, bool entry)
+        /// <summary>
+        /// Raises an event if object enters or exits the trigger.
+        /// </summary>
+        /// <param name="discoveryType">Type of detected object.</param>
+        /// <param name="discoveryTransform">Transform of object..</param>
+        /// <param name="isItemEnters">Object enters or exits trigger.</param>
+        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isItemEnters)
         {
-            DiscoveryTriggerNotify?.Invoke(discoveryType, discoverableTransform, entry);
+            DiscoveryTriggerNotify?.Invoke(discoveryType, discoveryTransform, isItemEnters);
         }
 
         #endregion

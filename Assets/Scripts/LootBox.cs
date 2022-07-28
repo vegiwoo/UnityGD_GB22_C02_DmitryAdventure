@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,15 +10,14 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents a loot box.
     /// </summary>
+    [RequireComponent(typeof(AudioIsPlaying))]
     public class LootBox : MonoBehaviour
     {
         #region Сonstants, variables & properties
 
         private DiscoveryTrigger _discoveryTrigger;
+        private AudioIsPlaying _audioIsPlaying;
 
-        [SerializeField]
-        private AudioClip openingSound;
-        
         [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
         private int possibleCapacity = 2;
 
@@ -54,12 +52,13 @@ namespace DmitryAdventure
         private void Start()
         {
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
+            _audioIsPlaying = GetComponent<AudioIsPlaying>();
             
             _capacity = Random.Range(0, possibleCapacity);
             _objectsInBox = new List<GameValue>(_capacity);
             
             FillingBox();
-            
+
             _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
 
@@ -70,10 +69,7 @@ namespace DmitryAdventure
 
         #endregion
 
-        #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
+
 
         #region Event handlers
         /// <summary>
@@ -86,7 +82,7 @@ namespace DmitryAdventure
             switch (type)
             {
                 case DiscoveryType.Player:
-                    AudioSource.PlayClipAtPoint(openingSound, transform.position);
+                    _audioIsPlaying.PlaySound(SoundType.Positive);
                     heroFoundValuesHandler.Invoke(_objectsInBox);
                     _objectsInBox = null;
                     IsBoxEmpty = true;
@@ -116,7 +112,6 @@ namespace DmitryAdventure
             IsBoxEmpty = false;
         }
 
-        #endregion
         #endregion
     }
 }
