@@ -57,13 +57,15 @@ namespace DmitryAdventure
         protected override void OnTakeAim()
         {
             var camTransform = _camera.transform;
-            if (!Physics.Raycast(camTransform.position, camTransform.forward, out var hit)) 
-                return;
+
+            var hit = AimingRaycast(camTransform.position, camTransform.forward, RaycastLayerType.Ignorance);
+            var point = hit.point;
+            if(point == default) return;
             
-            var targetDistance = Vector3.Distance( CurrentWeapon.ShotPoint.position, hit.point);
+            var targetDistance = Vector3.Distance( CurrentWeapon.ShotPoint.position, point);
             if (targetDistance < CurrentWeapon.weaponStats.ShotRange)
             {
-                AimPoint = hit.point;
+                AimPoint = point;
             }
             else
             {

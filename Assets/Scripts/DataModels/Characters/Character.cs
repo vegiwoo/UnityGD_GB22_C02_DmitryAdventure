@@ -19,11 +19,10 @@ namespace DmitryAdventure.Characters
         [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
         protected float CurrentSpeed { get;  set; }
         
-        
-        protected float MovementSpeedDelta => CurrentSpeed / 3;
+        //protected float MovementSpeedDelta => CurrentSpeed / 3;
 
         protected CharacterInventory CharacterInventory;
-        
+
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
         public event CharacterHandler CharacterNotify;

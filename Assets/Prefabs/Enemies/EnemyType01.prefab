@@ -299,6 +299,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <CurrentWeapon>k__BackingField: {fileID: 6378564384715130769, guid: 5a5bb90417dae4efd87d1426a0dd1449, type: 3}
+  <LayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 64
   <AimColor>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &7157669485824485709
 PrefabInstance:

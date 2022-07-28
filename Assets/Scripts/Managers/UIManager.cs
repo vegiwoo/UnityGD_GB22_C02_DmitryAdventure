@@ -20,7 +20,7 @@ namespace DmitryAdventure
         [SerializeField] private Text mineLabel;
         [SerializeField] private Text medicineLabel;
 
-        private Dictionary<string, Text> uiMarkers = new();
+        private readonly Dictionary<string, Text> uiMarkers = new();
 
         #endregion
 
