@@ -1,6 +1,6 @@
 using System;
 
-namespace DmitryAdventure
+namespace DmitryAdventure.Args
 {
     /// <summary>
     /// Arguments for character event.
@@ -9,8 +9,8 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        public readonly CharacterType CharacterType;
-        public readonly float CurrentHp;
+        private readonly CharacterType _characterType;
+        private readonly float _currentHp;
         public readonly bool Die;
 
         #endregion
@@ -19,22 +19,10 @@ namespace DmitryAdventure
 
         public CharacterEventArgs(CharacterType characterType, float currentHp)
         {
-            CharacterType = characterType;
-            CurrentHp = currentHp;
-            Die = CurrentHp <= 0;
+            _characterType = characterType;
+            _currentHp = currentHp;
+            Die = _currentHp <= 0;
         }
-
-        #endregion
-
-        #region Functionality
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
-        // ...
-        #endregion
 
         #endregion
     }

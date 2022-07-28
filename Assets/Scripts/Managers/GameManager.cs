@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using DmitryAdventure.Characters;
 using JetBrains.Annotations;
 using UnityEngine.Events;
+using DmitryAdventure.Characters;
+using DmitryAdventure.Args;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -29,6 +29,7 @@ namespace DmitryAdventure.Managers
         #region Monobehavior methods
         private void Start()
         {
+            _currentKillEnemiesCount = 0;
             player.CharacterNotify += OnCharacterHandler;
             GameValuesUpdateEvent();
         }

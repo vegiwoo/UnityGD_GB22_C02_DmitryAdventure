@@ -1,9 +1,9 @@
 using UnityEngine;
+using DmitryAdventure.Args;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Characters
 {
-
     /// <summary>
     /// Essence of playable or non-playable character.
     /// </summary>

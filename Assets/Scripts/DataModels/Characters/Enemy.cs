@@ -77,17 +77,6 @@ namespace DmitryAdventure.Characters
             ToggleEnemyState(EnemyState.Patrol);
         }
 
-        protected override void Update()
-        {
-            base.Update();
-            _agentOnOffMeshLink = _navMeshAgent.isOnOffMeshLink switch
-            {
-                true when !_agentOnOffMeshLink => true,
-                false when _agentOnOffMeshLink => false,
-                _ => _agentOnOffMeshLink
-            };
-        }
-
         private void OnDestroy()
         {
             StopAllCoroutines();
@@ -95,8 +84,7 @@ namespace DmitryAdventure.Characters
         }
 
         #endregion
-
-        #region Functionality
+        
         #region Coroutines
         
         /// <summary>
@@ -115,6 +103,7 @@ namespace DmitryAdventure.Characters
 
                 var stopDistance = _navMeshAgent.stoppingDistance;
                
+                // Change waypoint
                if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
                {
@@ -223,7 +212,6 @@ namespace DmitryAdventure.Characters
             _blinkEffect.StartBlink();
         }
         
-        #endregion
         #endregion
     }
 }
