@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5901563000847378374}
   - component: {fileID: 5901563000847378392}
   - component: {fileID: 5901563000847378393}
+  - component: {fileID: 8469655896314419828}
   m_Layer: 6
   m_Name: Head
   m_TagString: Player
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8469655896314419828
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5901563000847378375}
+  m_Material: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.99999994, z: 0.99999994}
+  m_Center: {x: 0, y: 0.0000076293945, z: 0.00012207031}
 --- !u!1 &5901563000930201701
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +139,7 @@ GameObject:
   - component: {fileID: 5901563001997911699}
   - component: {fileID: 5901563001997911700}
   - component: {fileID: 5901563001997911701}
+  - component: {fileID: 3617386439012196709}
   m_Layer: 6
   m_Name: Body
   m_TagString: Player
@@ -197,6 +212,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3617386439012196709
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5901563001997911696}
+  m_Material: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.98485565, y: 1.9999999, z: 1.0000002}
+  m_Center: {x: 0.0000038146973, y: 0, z: -0.00000011920929}
 --- !u!1 &5901563002306245253
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +403,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <CurrentWeapon>k__BackingField: {fileID: 6378564384715130769, guid: 5a5bb90417dae4efd87d1426a0dd1449, type: 3}
+  <LayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0
   <AimColor>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
   minePrefab: {fileID: 7394722670251870173, guid: c87cd4df3d27240aa986a9cdcc999485, type: 3}
 --- !u!1001 &8622243815050606251
