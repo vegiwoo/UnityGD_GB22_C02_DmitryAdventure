@@ -46,6 +46,9 @@ namespace DmitryAdventure.Characters
         private Coroutine _enemyAttackCoroutine;
         
         private Transform _aimPoint;
+        
+        private float waitTimer;
+
         #endregion
 
         #region Monobehavior methods
@@ -73,8 +76,19 @@ namespace DmitryAdventure.Characters
             _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
 
             gameObject.tag = GameData.EnemyTag;
+
+            waitTimer = 0;
             
             ToggleEnemyState(EnemyState.Patrol);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (waitTimer > 0)
+            {
+                waitTimer -= Time.deltaTime;
+            }
         }
 
         private void OnDestroy()
@@ -108,6 +122,14 @@ namespace DmitryAdventure.Characters
                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
                {
                    var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
+                   
+                   // Waiting if point is checkpoint
+                   if (result.isControlPoint)
+                   {
+                       waitTimer = Route.WaitTime;
+                       yield return StartCoroutine(WaitingCoroutine(true));
+                   }
+                   
                    _isMovingForward = result.isMoveForward;
                    _currentWaypointIndex = result.index;
                }
@@ -151,6 +173,31 @@ namespace DmitryAdventure.Characters
                 }
             }
         }
+
+        private IEnumerator WaitingCoroutine(bool changeSizeOfDiscoveryTrigger)
+        {
+            if (changeSizeOfDiscoveryTrigger)
+            {
+                ChangeSizeOfDiscoveryTrigger(true);
+            }
+
+            yield return new WaitWhile(() => waitTimer > 0);
+            
+            if (changeSizeOfDiscoveryTrigger)
+            {
+                ChangeSizeOfDiscoveryTrigger(false);
+            }
+            
+            waitTimer = 0;
+        }
+
+        private void ChangeSizeOfDiscoveryTrigger(bool increase)
+        {
+            var coeff = 1.5f;
+            var currentScale = _discoveryTrigger.transform.localScale;
+            _discoveryTrigger.transform.localScale = increase ? currentScale * coeff : currentScale / coeff;
+        }
+
         #endregion
 
         #region Event handlers

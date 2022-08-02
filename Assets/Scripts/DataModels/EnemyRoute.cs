@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -22,8 +23,15 @@ namespace DmitryAdventure
         [field: SerializeField, Tooltip("Looped route")]
         private bool IsCircularRoute { get; set; }
         
-        [SerializeField] private Transform[] wayPoints;
-
+        [field:SerializeField, Tooltip("Character waiting time at checkpoints, sec")]
+        public float WaitTime { get; set; }
+        
+        [SerializeField] 
+        private Transform[] wayPoints;
+        
+        [SerializeField, Tooltip("Points where character stops and waits")] 
+        private Transform[] checkPoints;
+        
         [field:SerializeField, Tooltip("Maximum number of enemies on the route")] 
         public int MaxNumberEnemies { get; set; }
 
@@ -31,9 +39,7 @@ namespace DmitryAdventure
         private int RouteEndIndex => wayPoints.Length - 1;
         
         public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].position;
-        
-        private Vector3 LastWaypoint => wayPoints[RouteEndIndex].position;
-      
+
         /// <summary>
         /// Returns requested route positions.
         /// </summary>
@@ -58,20 +64,7 @@ namespace DmitryAdventure
 
         #endregion
 
-        #region Monobehavior methods
-        // ...
-        #endregion
-
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
         
         /// <summary>
         /// Change destination waypoint and direction of moving.
@@ -79,22 +72,22 @@ namespace DmitryAdventure
         /// <param name="isMovingForward">Current direction of moving.</param>
         /// <param name="oldIndex">Old index of waypoint .</param>
         /// <returns>Calculation result.</returns>
-        public (bool isMoveForward, int index) ChangeWaypoint(bool isMovingForward, int oldIndex)
+        public (bool isMoveForward, int index, bool isControlPoint) ChangeWaypoint(bool isMovingForward, in int oldIndex)
         {
             const int step = 1;
+            var isCurrentControlPoint = checkPoints.Contains(wayPoints[oldIndex]);
 
             return isMovingForward switch
             {
                 true => oldIndex != RouteEndIndex
-                    ? (true, oldIndex + step)
-                    : (false, IsCircularRoute ? RouteStartIndex : oldIndex - step),
+                    ? (true, oldIndex + step, isCurrentControlPoint)
+                    : (false, IsCircularRoute ? RouteStartIndex : oldIndex - step, isCurrentControlPoint),
                 false => oldIndex != RouteStartIndex
-                    ? (false, oldIndex - step)
-                    : (true, oldIndex + step)
+                    ? (false, oldIndex - step, isCurrentControlPoint)
+                    : (true, oldIndex + step, isCurrentControlPoint)
             };
         }
 
-        #endregion
         #endregion
     }
 }

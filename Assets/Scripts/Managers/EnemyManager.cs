@@ -44,15 +44,6 @@ namespace DmitryAdventure.Managers
         #endregion
 
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
 
         /// <summary>
         /// Checks number of active enemies on route.
@@ -77,7 +68,7 @@ namespace DmitryAdventure.Managers
                 _enemies.Add(newEnemy);
             }
         }
-        #endregion
+
         #endregion
     }
 }
