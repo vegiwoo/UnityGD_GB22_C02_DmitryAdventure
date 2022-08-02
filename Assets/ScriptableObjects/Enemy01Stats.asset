@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <CharacterType>k__BackingField: 1
   <MaxHp>k__BackingField: 85
-  <BaseMoveSpeed>k__BackingField: 3
+  <BaseMoveSpeed>k__BackingField: 2
   <BaseRotationSpeed>k__BackingField: 3
   <AttentionRadius>k__BackingField: 15
   <StopDistanceForWaypoints>k__BackingField: 0.15
