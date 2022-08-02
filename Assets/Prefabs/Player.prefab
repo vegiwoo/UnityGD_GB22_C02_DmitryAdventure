@@ -405,8 +405,8 @@ MonoBehaviour:
   <CurrentWeapon>k__BackingField: {fileID: 6378564384715130769, guid: 5a5bb90417dae4efd87d1426a0dd1449, type: 3}
   <LayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
-  <AimColor>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
+    m_Bits: 128
+  <AimColor>k__BackingField: {r: 0.042452812, g: 0.1910646, b: 1, a: 0}
   minePrefab: {fileID: 7394722670251870173, guid: c87cd4df3d27240aa986a9cdcc999485, type: 3}
 --- !u!1001 &8622243815050606251
 PrefabInstance:
@@ -471,6 +471,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.866
       objectReference: {fileID: 0}
+    - target: {fileID: 5107075939744987999, guid: 5a5bb90417dae4efd87d1426a0dd1449, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
     - target: {fileID: 9103373559611152851, guid: 5a5bb90417dae4efd87d1426a0dd1449, type: 3}
       propertyPath: m_Layer
       value: 6
