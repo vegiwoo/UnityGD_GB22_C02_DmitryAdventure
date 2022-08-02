@@ -45,8 +45,14 @@ namespace DmitryAdventure.Characters
         private Coroutine _enemyPatrolCoroutine;
         private Coroutine _enemyAttackCoroutine;
         
+        /// <summary>
+        /// Character aiming point.
+        /// </summary>
         private Transform _aimPoint;
         
+        /// <summary>
+        /// Character wait timer at checkpoint.
+        /// </summary>
         private float waitTimer;
 
         #endregion
@@ -127,7 +133,7 @@ namespace DmitryAdventure.Characters
                    if (result.isControlPoint)
                    {
                        waitTimer = Route.WaitTime;
-                       yield return StartCoroutine(WaitingCoroutine(true));
+                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased));
                    }
                    
                    _isMovingForward = result.isMoveForward;
@@ -174,30 +180,29 @@ namespace DmitryAdventure.Characters
             }
         }
 
+        /// <summary>
+        /// Coroutine waiting for enemy at point.
+        /// </summary>
+        /// <param name="changeSizeOfDiscoveryTrigger">Need to change size of discovery trigger.</param>
+        /// <returns></returns>
         private IEnumerator WaitingCoroutine(bool changeSizeOfDiscoveryTrigger)
         {
             if (changeSizeOfDiscoveryTrigger)
             {
-                ChangeSizeOfDiscoveryTrigger(true);
+                _discoveryTrigger.ChangeSizeOfDiscoveryTrigger(true, Route.attentionIncreaseFactor);
             }
 
             yield return new WaitWhile(() => waitTimer > 0);
             
             if (changeSizeOfDiscoveryTrigger)
             {
-                ChangeSizeOfDiscoveryTrigger(false);
+                _discoveryTrigger.ChangeSizeOfDiscoveryTrigger(false);
             }
             
             waitTimer = 0;
         }
 
-        private void ChangeSizeOfDiscoveryTrigger(bool increase)
-        {
-            var coeff = 1.5f;
-            var currentScale = _discoveryTrigger.transform.localScale;
-            _discoveryTrigger.transform.localScale = increase ? currentScale * coeff : currentScale / coeff;
-        }
-
+  
         #endregion
 
         #region Event handlers

@@ -26,11 +26,7 @@ namespace DmitryAdventure
         [field:SerializeField, Tooltip("Character waiting time at checkpoints, sec")]
         public float WaitTime { get; set; }
         
-        [SerializeField] 
-        private Transform[] wayPoints;
-        
-        [SerializeField, Tooltip("Points where character stops and waits")] 
-        private Transform[] checkPoints;
+        [SerializeField] private WayPoint[] wayPoints;
         
         [field:SerializeField, Tooltip("Maximum number of enemies on the route")] 
         public int MaxNumberEnemies { get; set; }
@@ -38,7 +34,10 @@ namespace DmitryAdventure
         private const int RouteStartIndex = 0;
         private int RouteEndIndex => wayPoints.Length - 1;
         
-        public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].position;
+        public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].point.position;
+
+        [SerializeField, Tooltip("Attention trigger size increase factor on checkpoints")] 
+        public float attentionIncreaseFactor;
 
         /// <summary>
         /// Returns requested route positions.
@@ -54,12 +53,21 @@ namespace DmitryAdventure
             {
                 return type switch
                 {
-                    PositionsRouteType.Previous => wayPoints[i - 1].position,
-                    PositionsRouteType.Current => wayPoints[i].position,
-                    PositionsRouteType.Next => wayPoints[i + 1].position,
+                    PositionsRouteType.Previous => wayPoints[i - 1].point.position,
+                    PositionsRouteType.Current => wayPoints[i].point.position,
+                    PositionsRouteType.Next => wayPoints[i + 1].point.position,
                     _ => Vector3.zero
                 };
             }
+        }
+
+        #endregion
+
+        #region Monobehavior methods
+
+        private void Start()
+        {
+            attentionIncreaseFactor = 1.5f;
         }
 
         #endregion
@@ -72,22 +80,23 @@ namespace DmitryAdventure
         /// <param name="isMovingForward">Current direction of moving.</param>
         /// <param name="oldIndex">Old index of waypoint .</param>
         /// <returns>Calculation result.</returns>
-        public (bool isMoveForward, int index, bool isControlPoint) ChangeWaypoint(bool isMovingForward, in int oldIndex)
+        public (bool isMoveForward, int index, bool isControlPoint, bool isAttentionIsIncreased) ChangeWaypoint(bool isMovingForward, in int oldIndex)
         {
             const int step = 1;
-            var isCurrentControlPoint = checkPoints.Contains(wayPoints[oldIndex]);
+            var isCurrentControlPoint = wayPoints[oldIndex].isCheckPoint;
+            var isAttentionIsIncreased = wayPoints[oldIndex].isIncreaseAttention;
 
             return isMovingForward switch
             {
                 true => oldIndex != RouteEndIndex
-                    ? (true, oldIndex + step, isCurrentControlPoint)
-                    : (false, IsCircularRoute ? RouteStartIndex : oldIndex - step, isCurrentControlPoint),
+                    ? (true, oldIndex + step, isCurrentControlPoint, isAttentionIsIncreased)
+                    : (false, IsCircularRoute ? RouteStartIndex : oldIndex - step, isCurrentControlPoint, isAttentionIsIncreased),
                 false => oldIndex != RouteStartIndex
-                    ? (false, oldIndex - step, isCurrentControlPoint)
-                    : (true, oldIndex + step, isCurrentControlPoint)
+                    ? (false, oldIndex - step, isCurrentControlPoint, isAttentionIsIncreased)
+                    : (true, oldIndex + step, isCurrentControlPoint, isAttentionIsIncreased)
             };
         }
-
+        
         #endregion
     }
 }

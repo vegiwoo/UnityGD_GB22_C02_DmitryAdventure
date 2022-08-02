@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -19,12 +20,20 @@ namespace DmitryAdventure
         [field:SerializeField, Tooltip("Discoverable types for trigger")]
         public DiscoveryType[] DiscoverableTypes { get; set;}
 
+        private Vector3 originalSize;
+        
+        
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType,  Transform discoveryTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
         
         #endregion
 
         #region Monobehavior methods
+
+        private void Start()
+        {
+            originalSize = transform.localScale;
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -86,7 +95,25 @@ namespace DmitryAdventure
         #endregion
 
         #region Other methods
-        // ...
+
+        /// <summary>
+        /// Changes size of the discovery trigger.
+        /// </summary>
+        /// <param name="increase">Trigger increment/decrement flag.</param>
+        /// <param name="factor">Magnification multiplier.</param>
+        public void ChangeSizeOfDiscoveryTrigger(bool increase, float? factor = null)
+        {
+            var currentScale = transform.localScale;
+            if (increase && factor != null)
+            {
+                transform.localScale = (Vector3)(currentScale * factor);
+            }
+            else
+            {
+                transform.localScale = originalSize;
+            }
+        }
+
         #endregion
 
         #endregion
