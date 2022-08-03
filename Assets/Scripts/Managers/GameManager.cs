@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using JetBrains.Annotations;
 using UnityEngine.Events;
@@ -64,9 +65,11 @@ namespace DmitryAdventure.Managers
         /// <summary>
         /// Handles an event about killed enemies.
         /// </summary>
-        /// <param name="numberKilled">Number of enemies killed.</param>
-        public void OnKilledEnemiesHandler(int numberKilled)
+        /// <param name="killed">Dictionary of killed enemies (key - route number, value - number of killed).</param>
+        public void OnKilledEnemiesHandler(Dictionary<int, int> killed)
         {
+            var numberKilled = killed.Select(el => el.Value).Sum();
+
             _currentKillEnemiesCount += numberKilled;
             
             GameValuesUpdateEvent();

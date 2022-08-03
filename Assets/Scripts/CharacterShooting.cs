@@ -75,9 +75,14 @@ namespace DmitryAdventure.Characters
         protected RaycastHit AimingRaycast(Vector3 origin, Vector3 direction, RaycastLayerType layerType,
             float maxDistance = Mathf.Infinity)
         {
-            Physics.Raycast(origin, direction, out var hit, maxDistance, layerType == RaycastLayerType.Ignorance ? 
-                ~LayerMask : 
-                LayerMask);
+            Physics.Raycast(
+                origin, 
+                direction, 
+                out var hit, 
+                maxDistance, 
+                layerType == RaycastLayerType.Ignorance ? ~LayerMask : LayerMask
+                );
+            
             return hit;
         }
 

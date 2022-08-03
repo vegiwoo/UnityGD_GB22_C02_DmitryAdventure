@@ -38,8 +38,7 @@ namespace DmitryAdventure
 
             AmmunitionRigidbody.velocity = (TargetPosition - PointOfShoot.position) * BulletSpeed / 2;
         }
-
-
+        
         private void OnCollisionEnter(Collision collision)
         {
             var character = collision.gameObject.GetComponent<Character>();
