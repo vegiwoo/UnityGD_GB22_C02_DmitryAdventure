@@ -14,8 +14,8 @@ namespace DmitryAdventure.Stats
 
         [field:Header("Type")] 
         [field:SerializeField] public WeaponType WeaponType { get; set; }
-        
-        [field:Header("Weapon stats")] 
+
+        [field:Header("Weapon stats")]
         [field:SerializeField, Tooltip("Shot range in meters"), Range(20f,50f)]
         public float ShotRange { get; set; }
 

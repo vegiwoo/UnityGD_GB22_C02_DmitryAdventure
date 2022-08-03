@@ -13,7 +13,13 @@ namespace DmitryAdventure.Armament
     {
         #region Сonstants, variables & properties
 
-        [SerializeField] public WeaponStats weaponStats;
+        [SerializeField] 
+        public WeaponStats weaponStats;
+
+        [SerializeField] 
+        public CharacterType targetCharacterType;
+        
+        private string _targetTag;
         
         [field:SerializeField, Tooltip("Firing point at end of gun barrel")] 
         public Transform ShotPoint { get; set; }
@@ -36,6 +42,18 @@ namespace DmitryAdventure.Armament
 
         private void Start()
         {
+            switch (targetCharacterType)
+            {
+                case CharacterType.Player:
+                    _targetTag = GameData.PlayerTag;
+                    break;
+                case CharacterType.EnemyType01:
+                    _targetTag = GameData.EnemyTag;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             _shotDelayTimer = 0f;
         }
 
@@ -52,16 +70,7 @@ namespace DmitryAdventure.Armament
         #endregion
 
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ..
-        #endregion
-
-        #region Other methods
-
+        
         /// <summary>
         /// Gets command to fire weapon.
         /// </summary>
@@ -72,7 +81,8 @@ namespace DmitryAdventure.Armament
             
             // TODO: Implement as object pool
             var newBullet = Instantiate(weaponStats.BulletPrefab, ShotPoint.position, ShotPoint.rotation);
-            newBullet.SetParams(ShotPoint, targetPosition, CalculateBulletSpeed(targetPosition), weaponStats.ShotRange,
+            var bulletSpeed = CalculateBulletSpeed(targetPosition);
+            newBullet.Init(_targetTag, ShotPoint, targetPosition, bulletSpeed, weaponStats.ShotRange,
                 weaponStats.DamagePerShot);
             
             Audio.PlaySound(SoundType.Positive);
@@ -100,8 +110,7 @@ namespace DmitryAdventure.Armament
                      (2 * (y - Mathf.Tan(angleInRadians) * x) * Mathf.Pow(Mathf.Cos(angleInRadians), 2));
             return Mathf.Sqrt(Mathf.Abs(v2));
         }
-
-        #endregion
+        
         #endregion
     }
 }

@@ -16,6 +16,8 @@ namespace DmitryAdventure
         private Transform PointOfShoot { get; set; }
         private Vector3 TargetPosition { get; set; }
 
+        private string _targetTag;
+        
         #endregion
 
         #region Monobehavior methods
@@ -41,7 +43,9 @@ namespace DmitryAdventure
         private void OnCollisionEnter(Collision collision)
         {
             var character = collision.gameObject.GetComponent<Character>();
-            if (character != null)
+            if (character == null) return;
+  
+            if (character.gameObject.CompareTag(_targetTag))
             {
                 character.OnHit(Damage);
             }
@@ -61,9 +65,10 @@ namespace DmitryAdventure
         /// <summary>
         /// Assigning parameters for a bullet from a weapon.
         /// </summary>
-        public void SetParams(Transform pointOfShoot, Vector3 targetPosition, float bulletSpeed, float bulletRange,
+        public void Init(string targetTag, Transform pointOfShoot, Vector3 targetPosition, float bulletSpeed, float bulletRange,
             int damage)
         {
+            _targetTag = targetTag;
             PointOfShoot = pointOfShoot;
             TargetPosition = targetPosition;
             BulletSpeed = bulletSpeed;
