@@ -1,15 +1,11 @@
-using System;
 using System.Linq;
 using DmitryAdventure.Characters;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
-namespace DmitryAdventure
+namespace DmitryAdventure.Props
 {
-    public enum LockedDoorType
-    {
-        None, Key, Secret
-    }
+
     
     /// <summary>
     /// Represents the door entity.
@@ -38,6 +34,11 @@ namespace DmitryAdventure
         private DiscoveryTrigger _discoveryTrigger;
         private AudioIsPlaying _audioIsPlaying;
 
+        /// <summary>
+        /// Tolerance angle for opening door.
+        /// </summary>
+        private const int ToleranceAngle = 65;
+        
         private bool _isOpen;
         
         #endregion
@@ -98,18 +99,18 @@ namespace DmitryAdventure
             if (!discoveryTypes.Contains(discoveryType)) return;
 
             var character = discoveryTransform.gameObject.GetComponent<Character>();
-            
+
             if (lockedDoorType == LockedDoorType.Key && !_isOpen)
             {
-                    var key = character.FindItemInInventory(GameData.KeysKey);
-                    if (key != null) 
-                    {
-                        OpenCloseDoor(discoveryTransform, isCharacterEnters);
-                    }
-                    else
-                    {
-                        _audioIsPlaying.PlaySound(SoundType.Negative);
-                    }
+                var key = character.FindItemInInventory(GameData.KeysKey);
+                if (key != null)
+                {
+                    OpenCloseDoor(discoveryTransform, isCharacterEnters);
+                }
+                else
+                {
+                    _audioIsPlaying.PlaySound(SoundType.Negative);
+                }
             }
             else
             {
@@ -128,13 +129,9 @@ namespace DmitryAdventure
             var doorsTransform = _discoveryTrigger.transform;
             var characterPosition = discoveryTransform.position;
 
-            // var a = doorsForward.normalized;
-            // var b = characterForward.normalized;
-            // var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.45f;
-
             var targetDir = doorsTransform.position - characterPosition;
             var angle = Vector3.Angle(targetDir, doorsTransform.forward);
-            var collinearity = angle < 65;
+            var collinearity = angle < ToleranceAngle;
             
             var door001JointSpring = hingeJoints[0].spring;
 
@@ -169,109 +166,3 @@ namespace DmitryAdventure
         #endregion
     }
 }
-
-
-//         private Rigidbody DoorRigidbody { get; set; }
-//         private HingeJoint _doorJoint;
-
-//
-//         #region Monobehavior methods
-//
-//         private void Awake()
-//         {
-//             DoorRigidbody = GetComponent<Rigidbody>();
-//             _doorJoint = GetComponent<HingeJoint>();
-//         }
-//
-//         private void Start()
-//         {
-//             DoorRigidbody.constraints = RigidbodyConstraints.FreezeAll;
-//         }
-//
-//         #endregion
-
-//         #region Event handlers
-//
-//         /// <summary>
-//         /// Handles DiscoveryTrigger fire event.
-//         /// </summary>
-//         /// <param name="discoveryType">Type of detected object.</param>
-//         /// <param name="discoveryTransform">Transform of object..</param>
-//         /// <param name="isItemEnters">Object enters or exits trigger.</param>
-//         private void OnTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isItemEnters)
-//         {
-//             if (!discoveryTypes.Contains(discoveryType)) return;
-//
-//             var character = discoveryTransform.gameObject.GetComponent<Character>();
-//             
-//             if (isLocked)
-//             {
-//                 var key = character.FindItemInInventory(GameData.KeysKey);
-//                 if (key != null)
-//                 {
-//                     AudioIsPlaying.PlaySound(SoundType.Positive);
-//                     
-//                     OpenCloseDoor(discoveryTransform, isItemEnters);
-//                     DoorRigidbody.constraints = RigidbodyConstraints.None;
-//                     isLocked = false;
-//                 }
-//                 else
-//                 {
-//                     AudioIsPlaying.PlaySound(SoundType.Negative);
-//                 }
-//             }
-//             else
-//             {
-//                 OpenCloseDoor(discoveryTransform, isItemEnters);
-//             }
-//         }
-//
-//         /// <summary>
-//         /// Opens or closes door.
-//         /// </summary>
-//         /// <param name="discoveryTransform">Position of the entity detected by trigger to calculate the direction</param>
-//         /// <param name="entry"></param>
-//         private void OpenCloseDoor(Transform discoveryTransform, bool entry)
-//         {
-//             var jointSpring = _doorJoint.spring;
-//             var forward = discoveryTransform.forward;
-//
-//             switch (entry)
-//             {
-//                 case true when forward != Vector3.zero && !_isOpen:
-//                 {
-//                     var a = forward.normalized;
-//                     var b = transform.forward.normalized;
-//
-//                     var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
-//
-//                     if (collinearity)
-//                     {
-//                         jointSpring.targetPosition = -90;
-//                     }
-//                     else
-//                     {
-//                         jointSpring.targetPosition = 90;
-//                     }
-//
-//                     _isOpen = true;
-//                     break;
-//                 }
-//                 case false when forward != Vector3.zero && _isOpen:
-//                     jointSpring.targetPosition = 0;
-//                     _isOpen = false;
-//                     break;
-//             }
-//
-//             _doorJoint.spring = jointSpring;
-//         }
-//
-//         #endregion
-//
-//         #region Other methods
-//         // ...
-//         #endregion
-//
-//         #endregion
-//     }
-// }

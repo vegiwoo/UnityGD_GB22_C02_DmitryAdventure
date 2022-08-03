@@ -21,8 +21,6 @@ namespace DmitryAdventure.Managers
         /// Inner collection of enemies.
         /// </summary>
         private List<Enemy> _enemies;
-        
-        private Coroutine _walkingEnemiesCoroutine;
 
         // Events 
         public UnityEvent<int> killedEnemiesEvent;
@@ -57,13 +55,15 @@ namespace DmitryAdventure.Managers
                 killedEnemiesEvent.Invoke(killed);
             }
             
-            for (var i = 0; i < routes.Length; i++)
+            foreach (var route in routes)
             {
-                if (_enemies.Count(en => en.Route.RouteNumber == i) == routes[i].MaxNumberEnemies) continue;
+                var enemiesOnRouteCount = _enemies.Count(en => en.Route == route);
+                
+                if (enemiesOnRouteCount == route.MaxNumberEnemies) continue;
 
-                var spawnPoint = routes[i].FirstWaypoint;
+                var spawnPoint = route.FirstWaypoint;
                 var newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-                newEnemy.Route = routes[i];
+                newEnemy.Route = route;
 
                 _enemies.Add(newEnemy);
             }
