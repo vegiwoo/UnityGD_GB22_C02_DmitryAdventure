@@ -93,7 +93,7 @@ namespace DmitryAdventure
             }
         }
         
-        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isItemEnters)
+        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isCharacterEnters)
         {
             if (!discoveryTypes.Contains(discoveryType)) return;
 
@@ -104,7 +104,7 @@ namespace DmitryAdventure
                     var key = character.FindItemInInventory(GameData.KeysKey);
                     if (key != null) 
                     {
-                        
+                        OpenCloseDoor(discoveryTransform, isCharacterEnters);
                     }
                     else
                     {
@@ -113,7 +113,7 @@ namespace DmitryAdventure
             }
             else
             {
-                OpenCloseDoor(discoveryTransform, isItemEnters);
+                OpenCloseDoor(discoveryTransform, isCharacterEnters);
             }
         }
 
@@ -125,15 +125,19 @@ namespace DmitryAdventure
         {
             if(hingeJoints.Length == 0) return;
 
-            var doorsForward = _discoveryTrigger.transform.forward;
-            var characterForward = discoveryTransform.forward;
+            var doorsTransform = _discoveryTrigger.transform;
+            var characterPosition = discoveryTransform.position;
 
-            var a = doorsForward.normalized;
-            var b = characterForward.normalized;
-            var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.00001f;
+            // var a = doorsForward.normalized;
+            // var b = characterForward.normalized;
+            // var collinearity = Math.Abs(Vector3.Dot(a, b) - 1) < 0.45f;
 
-            var door001JointSpring = hingeJoints[0].spring;
+            var targetDir = doorsTransform.position - characterPosition;
+            var angle = Vector3.Angle(targetDir, doorsTransform.forward);
+            var collinearity = angle < 65;
             
+            var door001JointSpring = hingeJoints[0].spring;
+
             switch (isItemEnters)
             {
                 case true:

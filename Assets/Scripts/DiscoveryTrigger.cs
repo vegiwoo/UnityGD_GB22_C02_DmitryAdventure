@@ -40,16 +40,16 @@ namespace DmitryAdventure
             if (DiscoverableTypes is null || DiscoverableTypes.Length == 0) return;
 
             var discoveryTransform = other.gameObject.transform;
-            const bool isItemEnters = true;
+            const bool isCharacterEnters = true;
             
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isCharacterEnters);
             }
 
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isCharacterEnters);
             }
         }
 
@@ -58,16 +58,16 @@ namespace DmitryAdventure
             if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
 
             var discoveryTransform = other.gameObject.transform;
-            const bool isItemEnters = false;
+            const bool isCharacterEnters = false;
             
             if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
+                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isCharacterEnters);
             }
             
             if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
             {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
+                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isCharacterEnters);
             }
         }
 
