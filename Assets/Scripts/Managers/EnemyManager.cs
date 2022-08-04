@@ -107,9 +107,12 @@ namespace DmitryAdventure.Managers
 
                 _enemies.RemoveAt(i);
             }
-            
-            killedEnemiesEvent.Invoke(killedEnemies);
-            
+
+            if (killedEnemies.Count > 0)
+            {
+                killedEnemiesEvent.Invoke(killedEnemies);
+            }
+
             yield return null;
         }
 

@@ -1,8 +1,6 @@
 // ReSharper disable once CheckNamespace
 
-using System;
 using DmitryAdventure.Characters;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DmitryAdventure.Armament

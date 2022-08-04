@@ -41,11 +41,9 @@ namespace DmitryAdventure
         
         private void OnCollisionEnter(Collision collision)
         {
-            var character = collision.gameObject.GetComponent<Character>();
-            if (character == null) return;
-  
-            if (character.gameObject.CompareTag(_targetTag))
-            {
+            if (collision.gameObject.TryGetComponent<Character>(out var character) & 
+                character.gameObject.CompareTag(_targetTag))
+            { 
                 character.OnHit(Damage);
             }
 
