@@ -1,26 +1,18 @@
-using System.Linq;
 using DmitryAdventure.Characters;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Props
 {
-
-    
     /// <summary>
     /// Represents the door entity.
     /// </summary>
     [RequireComponent(typeof(AudioIsPlaying))]
-    public class Door : MonoBehaviour
+    public class Door : LockedMechanism
     {
         #region Сonstants, variables & properties
-
-        [SerializeField] 
-        private LockedDoorType lockedDoorType;
         
-        [SerializeField, Tooltip("An array of object types to discover.")]
-        public DiscoveryType[] discoveryTypes;
-
+        [Space]
         [SerializeField] 
         private HingeJoint[] hingeJoints;
         private bool _isThereSecondDoor;
@@ -28,10 +20,8 @@ namespace DmitryAdventure.Props
         [SerializeField] private float doorSpring;
         [SerializeField] private float doorDamper;
         [SerializeField] private float doorTargetPosition;
-        [SerializeField] private float doorBreakForce;
         private float openDoorTargetPosition;
         
-        private DiscoveryTrigger _discoveryTrigger;
         private AudioIsPlaying _audioIsPlaying;
 
         /// <summary>
@@ -47,34 +37,23 @@ namespace DmitryAdventure.Props
 
         private void Awake()
         {
-            _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _audioIsPlaying = GetComponent<AudioIsPlaying>();
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            
             doorSpring = 180.0f;
             doorDamper = 90.0f;
             doorTargetPosition = 0.0f;
             openDoorTargetPosition = 90.0f;
-            doorBreakForce = 0.0f;
 
             _isThereSecondDoor = hingeJoints.Length > 1;
 
             BasicDoorSetting();
-
-            _discoveryTrigger.DiscoverableTypes = discoveryTypes;
-            _isOpen = lockedDoorType == LockedDoorType.None; 
-        }
-
-        private void OnEnable()
-        {
-            _discoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerNotify;
-        }
-
-        private void OnDisable()
-        {
-            _discoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerNotify;
+            
+            _isOpen = lockedMechanismType == LockedMechanismType.None; 
         }
 
         #endregion
@@ -93,19 +72,18 @@ namespace DmitryAdventure.Props
                 j.spring = jointSpring;
             }
         }
-        
-        private void OnDiscoveryTriggerNotify(DiscoveryType discoveryType, Transform discoveryTransform, bool isCharacterEnters)
-        {
-            if (!discoveryTypes.Contains(discoveryType)) return;
 
+        protected override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
+        {
+            base.OnDiscoveryTriggerHandler(discoveryType, discoveryTransform, isObjectEnters);
             var character = discoveryTransform.gameObject.GetComponent<Character>();
 
-            if (lockedDoorType == LockedDoorType.Key && !_isOpen)
+            if (lockedMechanismType == LockedMechanismType.Key && !_isOpen)
             {
                 var key = character.FindItemInInventory(GameData.KeysKey);
                 if (key != null)
                 {
-                    OpenCloseDoor(discoveryTransform, isCharacterEnters);
+                    OpenCloseDoor(discoveryTransform, isObjectEnters);
                 }
                 else
                 {
@@ -114,9 +92,10 @@ namespace DmitryAdventure.Props
             }
             else
             {
-                OpenCloseDoor(discoveryTransform, isCharacterEnters);
+                OpenCloseDoor(discoveryTransform, isObjectEnters);
             }
         }
+        
 
         #endregion
 
@@ -126,7 +105,7 @@ namespace DmitryAdventure.Props
         {
             if(hingeJoints.Length == 0) return;
 
-            var doorsTransform = _discoveryTrigger.transform;
+            var doorsTransform = discoveryTrigger.transform;
             var characterPosition = discoveryTransform.position;
 
             var targetDir = doorsTransform.position - characterPosition;

@@ -6,6 +6,6 @@ namespace DmitryAdventure
     /// </summary>
     public enum DiscoveryType
     {
-        Player, Enemy
+        Player, Enemy, Movable
     }
 }

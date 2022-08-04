@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using DmitryAdventure.Armament;
 using UnityEngine.InputSystem;

@@ -1,7 +1,7 @@
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Props
 {
-    public enum LockedDoorType
+    public enum LockedMechanismType
     {
         None, Key, Secret
     }
