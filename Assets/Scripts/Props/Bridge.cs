@@ -8,42 +8,27 @@ namespace DmitryAdventure
     /// </summary>
     public class Bridge : LockedMechanism
     {
-        #region Сonstants, variables & properties
-
-        // ...
-
-        #endregion
-
-        #region Monobehavior methods
-
-        // ...
-
-        #endregion
-
         #region Functionality
-
-        #region Coroutines
-
-        // ...
-
-        #endregion
-
-        #region Event handlers
 
         protected override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
         {
-            Debug.Log("Handle!");
             base.OnDiscoveryTriggerHandler(discoveryType, discoveryTransform, isObjectEnters);
-            Debug.Log($"{isObjectEnters}");
+            OpenCloseMechanism(discoveryTransform, isObjectEnters);
         }
+        
+        protected override void OpenCloseMechanism(Transform discoveryTransform, bool isItemEnters)
+        {
+            base.OpenCloseMechanism(discoveryTransform, isItemEnters);
 
-        #endregion
-
-        #region Other methods
-
-        // ...
-
-        #endregion
+            var spring = hingeJoints[0].spring;
+            
+            spring.targetPosition = isItemEnters ? 
+                openMechanismTargetPosition : 
+                closeMechanismTargetPosition;
+            MechanismIsOpen = isItemEnters;
+            
+            hingeJoints[0].spring = spring;
+        }
 
         #endregion
     }

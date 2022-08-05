@@ -12,15 +12,7 @@ namespace DmitryAdventure.Props
     {
         #region Сonstants, variables & properties
         
-        [Space]
-        [SerializeField] 
-        private HingeJoint[] hingeJoints;
         private bool _isThereSecondDoor;
-
-        [SerializeField] private float doorSpring;
-        [SerializeField] private float doorDamper;
-        [SerializeField] private float doorTargetPosition;
-        private float openDoorTargetPosition;
         
         private AudioIsPlaying _audioIsPlaying;
 
@@ -28,8 +20,6 @@ namespace DmitryAdventure.Props
         /// Tolerance angle for opening door.
         /// </summary>
         private const int ToleranceAngle = 65;
-        
-        private bool _isOpen;
         
         #endregion
 
@@ -43,47 +33,25 @@ namespace DmitryAdventure.Props
         protected override void Start()
         {
             base.Start();
-            
-            doorSpring = 180.0f;
-            doorDamper = 90.0f;
-            doorTargetPosition = 0.0f;
-            openDoorTargetPosition = 90.0f;
-
             _isThereSecondDoor = hingeJoints.Length > 1;
-
-            BasicDoorSetting();
-            
-            _isOpen = lockedMechanismType == LockedMechanismType.None; 
         }
 
         #endregion
 
         #region Functionality
 
-        private void BasicDoorSetting()
-        {
-            foreach (var j in hingeJoints)
-            {
-                j.useSpring = true;
-                var jointSpring = j.spring;
-                jointSpring.spring = doorSpring;
-                jointSpring.damper = doorDamper;
-                jointSpring.targetPosition = doorTargetPosition;
-                j.spring = jointSpring;
-            }
-        }
-
         protected override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
         {
             base.OnDiscoveryTriggerHandler(discoveryType, discoveryTransform, isObjectEnters);
+            
             var character = discoveryTransform.gameObject.GetComponent<Character>();
 
-            if (lockedMechanismType == LockedMechanismType.Key && !_isOpen)
+            if (lockedMechanismType == LockedMechanismType.Key && !MechanismIsOpen)
             {
                 var key = character.FindItemInInventory(GameData.KeysKey);
                 if (key != null)
                 {
-                    OpenCloseDoor(discoveryTransform, isObjectEnters);
+                    OpenCloseMechanism(discoveryTransform, isObjectEnters);
                 }
                 else
                 {
@@ -92,7 +60,7 @@ namespace DmitryAdventure.Props
             }
             else
             {
-                OpenCloseDoor(discoveryTransform, isObjectEnters);
+                OpenCloseMechanism(discoveryTransform, isObjectEnters);
             }
         }
         
@@ -101,9 +69,9 @@ namespace DmitryAdventure.Props
 
         #region Other methods
 
-        private void OpenCloseDoor(Transform discoveryTransform, bool isItemEnters)
+        protected override void OpenCloseMechanism(Transform discoveryTransform, bool isItemEnters)
         {
-            if(hingeJoints.Length == 0) return;
+            base.OpenCloseMechanism(discoveryTransform, isItemEnters);
 
             var doorsTransform = discoveryTrigger.transform;
             var characterPosition = discoveryTransform.position;
@@ -117,27 +85,31 @@ namespace DmitryAdventure.Props
             switch (isItemEnters)
             {
                 case true:
-                   
-                    door001JointSpring.targetPosition = collinearity ? -openDoorTargetPosition : openDoorTargetPosition;
+
+                    var delta = openMechanismTargetPosition;
+                    
+                    door001JointSpring.targetPosition = collinearity ? -delta : delta;
                     hingeJoints[0].spring = door001JointSpring;
 
                     if (_isThereSecondDoor)
                     {
                         var door002JointSpring = hingeJoints[1].spring;
-                        door002JointSpring.targetPosition = collinearity ? openDoorTargetPosition : -openDoorTargetPosition;
+                        door002JointSpring.targetPosition = collinearity ? delta : -delta;
                         hingeJoints[1].spring = door002JointSpring;
                     }
                     
                     _audioIsPlaying.PlaySound(SoundType.Positive);
+                    MechanismIsOpen = true;
                     
                     break;
                 case false:
                     foreach (var j in hingeJoints)
                     {
                         var jointSpring = j.spring;
-                        jointSpring.targetPosition = doorTargetPosition;
+                        jointSpring.targetPosition = closeMechanismTargetPosition;
                         j.spring = jointSpring;
                     }
+                    MechanismIsOpen = false;
                     break;
             }
         }

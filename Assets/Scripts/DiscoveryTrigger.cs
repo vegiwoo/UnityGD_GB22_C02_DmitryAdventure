@@ -13,13 +13,8 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        public DiscoveryTrigger(DiscoveryType[] discoverableTypes)
-        {
-            DiscoverableTypes = discoverableTypes;
-        }
-
-        [field:SerializeField, Tooltip("Discoverable types for trigger")]
-        public DiscoveryType[] DiscoverableTypes { get; set;}
+        [field:SerializeField, ReadonlyField, Tooltip("Discoverable types for trigger")]
+        public DiscoveryType[] DiscoverableTypes { get; private set;}
 
         private Vector3 originalSize;
         
@@ -63,6 +58,11 @@ namespace DmitryAdventure
         #endregion
 
         #region Other methods
+
+        public void Init(DiscoveryType[] discoverableTypes)
+        {
+            DiscoverableTypes = discoverableTypes;
+        }
         
         /// <summary>
         /// Handles an event when an object enters and exits a trigger.
@@ -86,20 +86,23 @@ namespace DmitryAdventure
         /// <param name="obj">Game object that hit trigger.</param>
         /// <returns>Match one of discovery types, or null.</returns>
         [CanBeNull]
-        private DiscoveryType? GetDiscoveryTypeFrom(in GameObject obj)
+        private static DiscoveryType? GetDiscoveryTypeFrom(in GameObject obj)
         {
             if (obj.CompareTag(GameData.PlayerTag))
             {
                 return DiscoveryType.Player;
             } 
+            
             if (obj.CompareTag(GameData.EnemyTag))
             {
                 return DiscoveryType.Enemy;
             } 
+            
             if(obj.TryGetComponent<MoveableObject>(out var movable))
             {
                 return DiscoveryType.Movable;
             }
+            
             return null;
         }
         

@@ -78,7 +78,7 @@ namespace DmitryAdventure.Characters
             _isMovingForward = true;
             _currentWaypointIndex = 0;
      
-            _discoveryTrigger.DiscoverableTypes = enemyStats.DiscoverableTypes;
+            _discoveryTrigger.Init(enemyStats.DiscoverableTypes);
             _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
 
             gameObject.tag = GameData.EnemyTag;

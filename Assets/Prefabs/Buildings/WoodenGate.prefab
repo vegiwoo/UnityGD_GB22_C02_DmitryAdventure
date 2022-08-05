@@ -291,8 +291,8 @@ Transform:
   m_GameObject: {fileID: 4312357845635082803}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 27.632494, y: 1.6671112, z: 9.552399}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.05, y: 1.05, z: 1.05}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4312357845474632343}
   - {fileID: 4312357844289673343}
@@ -313,15 +313,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5181473f934074acfb346c7911e99f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockedDoorType: 0
+  lockedMechanismType: 0
   discoveryTypes: 0000000001000000
+  discoveryTrigger: {fileID: 277725066732102906}
   hingeJoints:
   - {fileID: 6040630563224540086}
   - {fileID: 5517291245121129024}
-  doorSpring: 0
-  doorDamper: 0
-  doorTargetPosition: 0
-  doorBreakForce: 0
+  hingeJointsSpring: 180
+  hingeJointsDamper: 90
+  closeMechanismTargetPosition: 0
+  openMechanismTargetPosition: 90
 --- !u!114 &189170334070680347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,6 +551,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+--- !u!114 &277725066732102906 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 27825488745646880, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+  m_PrefabInstance: {fileID: 268094300299669466}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc2729e2f6c74c749fe662e9202ce7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6613843481980587571 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
