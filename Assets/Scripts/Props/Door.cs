@@ -73,7 +73,7 @@ namespace DmitryAdventure.Props
         {
             base.OpenCloseMechanism(discoveryTransform, isItemEnters);
 
-            var doorsTransform = discoveryTrigger.transform;
+            var doorsTransform = DiscoveryTrigger.transform;
             var characterPosition = discoveryTransform.position;
 
             var targetDir = doorsTransform.position - characterPosition;
@@ -86,7 +86,7 @@ namespace DmitryAdventure.Props
             {
                 case true:
 
-                    var delta = openMechanismTargetPosition;
+                    var delta = openPosition;
                     
                     door001JointSpring.targetPosition = collinearity ? -delta : delta;
                     hingeJoints[0].spring = door001JointSpring;
@@ -106,7 +106,7 @@ namespace DmitryAdventure.Props
                     foreach (var j in hingeJoints)
                     {
                         var jointSpring = j.spring;
-                        jointSpring.targetPosition = closeMechanismTargetPosition;
+                        jointSpring.targetPosition = closePosition;
                         j.spring = jointSpring;
                     }
                     MechanismIsOpen = false;

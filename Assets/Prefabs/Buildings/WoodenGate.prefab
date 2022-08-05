@@ -314,15 +314,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockedMechanismType: 0
-  discoveryTypes: 0000000001000000
-  discoveryTrigger: {fileID: 277725066732102906}
+  <DiscoveryTypes>k__BackingField: 0000000001000000
+  <DiscoveryTrigger>k__BackingField: {fileID: 277725066732102906}
   hingeJoints:
   - {fileID: 6040630563224540086}
   - {fileID: 5517291245121129024}
   hingeJointsSpring: 180
   hingeJointsDamper: 90
-  closeMechanismTargetPosition: 0
-  openMechanismTargetPosition: 90
+  closePosition: 0
+  openPosition: 90
 --- !u!114 &189170334070680347
 MonoBehaviour:
   m_ObjectHideFlags: 0

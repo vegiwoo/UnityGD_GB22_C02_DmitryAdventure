@@ -8,20 +8,23 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents a closed (closing) mechanism mechanism.
     /// </summary>
-    public abstract class LockedMechanism : MonoBehaviour
+    public abstract class LockedMechanism : MonoBehaviour, IDiscovering
     {
         #region Сonstants, variables & properties
 
-        [Header("Base variables and references")] [SerializeField]
+        [Header("Base variables and references")] 
+        [SerializeField]
         protected LockedMechanismType lockedMechanismType;
 
-        [SerializeField, Tooltip("An array of object types to discover.")]
-        protected DiscoveryType[] discoveryTypes;
+        [field: SerializeField, Tooltip("Collection of types tracked by DiscoveryTrigger")]
+        public DiscoveryType[] DiscoveryTypes { get; set; }
 
-        [SerializeField, Tooltip("Discovery trigger listening for state change")]
-        protected DiscoveryTrigger discoveryTrigger;
+        [field:SerializeField, Tooltip("Tracking/discovery trigger")]
+        public DiscoveryTrigger DiscoveryTrigger { get; set; }
 
-        [Space] [Header("Hinge joints physics settings")] [SerializeField]
+        [Space] 
+        [Header("Hinge joints physics settings")] 
+        [SerializeField]
         protected HingeJoint[] hingeJoints;
 
         [SerializeField] protected float hingeJointsSpring;
@@ -29,10 +32,10 @@ namespace DmitryAdventure
         [SerializeField] protected float hingeJointsDamper;
 
         [SerializeField, Tooltip("Position of mechanism in degrees at full closing.")]
-        protected float closeMechanismTargetPosition;
+        protected float closePosition;
 
         [SerializeField, Tooltip("Position of mechanism in degrees at full opening.")]
-        protected float openMechanismTargetPosition;
+        protected float openPosition;
         
         protected bool MechanismIsOpen;
 
@@ -47,12 +50,12 @@ namespace DmitryAdventure
 
         protected void OnEnable()
         {
-            discoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerHandler;
+            DiscoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerHandler;
         }
 
         protected void OnDisable()
         {
-            discoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerHandler;
+            DiscoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerHandler;
         }
 
         #endregion
@@ -64,7 +67,7 @@ namespace DmitryAdventure
         /// </summary>
         private void BasicMechanismSetting()
         {
-            discoveryTrigger.Init(discoveryTypes);
+            DiscoveryTrigger.Init(DiscoveryTypes);
 
             foreach (var j in hingeJoints)
             {
@@ -72,7 +75,7 @@ namespace DmitryAdventure
                 var jointSpring = j.spring;
                 jointSpring.spring = hingeJointsSpring;
                 jointSpring.damper = hingeJointsDamper;
-                jointSpring.targetPosition = closeMechanismTargetPosition;
+                jointSpring.targetPosition = closePosition;
                 j.spring = jointSpring;
             }
 
@@ -88,7 +91,7 @@ namespace DmitryAdventure
         protected virtual void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
             bool isObjectEnters)
         {
-            if (!discoveryTypes.Contains(discoveryType)) return;
+            if (!DiscoveryTypes.Contains(discoveryType)) return;
         }
 
         /// <summary>

@@ -23,8 +23,8 @@ namespace DmitryAdventure
             var spring = hingeJoints[0].spring;
             
             spring.targetPosition = isItemEnters ? 
-                openMechanismTargetPosition : 
-                closeMechanismTargetPosition;
+                openPosition : 
+                closePosition;
             MechanismIsOpen = isItemEnters;
             
             hingeJoints[0].spring = spring;
