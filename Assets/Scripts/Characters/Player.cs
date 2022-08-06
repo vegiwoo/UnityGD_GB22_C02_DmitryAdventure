@@ -79,14 +79,7 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Functionality
-
-        #region Coroutines
-
-        // ...
-
-        #endregion
-
-        #region Event handlers
+        
         /// <summary>
         /// Handler for selecting a mine from inventory.
         /// </summary>
@@ -110,11 +103,7 @@ namespace DmitryAdventure.Characters
                 OnCharacterNotify(args);
             }
         }
-        #endregion
-
-        #region Other methods
-
-        // Movement
+        
         protected override void OnMovement()
         {
             _groundedPlayer = _controller.isGrounded;
@@ -160,14 +149,9 @@ namespace DmitryAdventure.Characters
             _blinkEffect.StartBlink();
             
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
-            
-            Debug.Log(CurrentHp);
-            
-            
             OnCharacterNotify(args);
         }
         
-        #endregion
         #endregion
     }
 }

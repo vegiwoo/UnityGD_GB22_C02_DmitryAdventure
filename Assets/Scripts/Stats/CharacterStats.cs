@@ -23,5 +23,7 @@ namespace DmitryAdventure.Stats
         public float AttentionRadius { get; set; }
 
         public float RotationAngleDelta => BaseRotationSpeed * 2;
+
+        public float MovingDistanceDelta => 0.02f;
     }
 }

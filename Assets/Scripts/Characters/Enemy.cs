@@ -16,7 +16,7 @@ namespace DmitryAdventure.Characters
     {
         #region Сonstants, variables & properties
 
-        //private Rigidbody _enemyRigidbody;
+        private Rigidbody _rb;
         private NavMeshAgent _navMeshAgent;
         private DiscoveryTrigger _discoveryTrigger;
         private Blinked _blinkEffect;
@@ -53,7 +53,7 @@ namespace DmitryAdventure.Characters
         /// <summary>
         /// Character wait timer at checkpoint.
         /// </summary>
-        private float waitTimer;
+        private float currentCountdownValue;
 
         #endregion
 
@@ -61,6 +61,7 @@ namespace DmitryAdventure.Characters
 
         private void Awake()
         {
+            _rb = GetComponent<Rigidbody>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _blinkEffect = GetComponent<Blinked>();
@@ -72,6 +73,8 @@ namespace DmitryAdventure.Characters
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMoveSpeed;
 
+            _rb.isKinematic = true;
+            
             _navMeshAgent.speed = enemyStats.BaseMoveSpeed;
             _navMeshAgent.stoppingDistance = enemyStats.StopDistanceForWaypoints;
             
@@ -79,11 +82,10 @@ namespace DmitryAdventure.Characters
             _currentWaypointIndex = 0;
      
             _discoveryTrigger.Init(enemyStats.DiscoverableTypes);
-            _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
-
+            
             gameObject.tag = GameData.EnemyTag;
 
-            waitTimer = 0;
+            currentCountdownValue = 0;
             
             ToggleEnemyState(EnemyState.Patrol);
         }
@@ -91,10 +93,17 @@ namespace DmitryAdventure.Characters
         protected override void Update()
         {
             base.Update();
-            if (waitTimer > 0)
-            {
-                waitTimer -= Time.deltaTime;
-            }
+            
+            // HACK: Coroutine is called here because we need to dynamically set path for _navMeshAgent to attack it
+            // if (CurrentEnemyState == EnemyState.Attack && currentCountdownValue == 0)
+            // {
+            //     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
+            // }
+        }
+
+        private void OnEnable()
+        {
+            _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
         }
 
         private void OnDestroy()
@@ -108,7 +117,7 @@ namespace DmitryAdventure.Characters
         #region Coroutines
         
         /// <summary>
-        /// Coroutine for patrolling the enemy.
+        /// Coroutine for patrolling enemy.
         /// </summary>
         private IEnumerator EnemyPatrolCoroutine()
         {
@@ -116,7 +125,7 @@ namespace DmitryAdventure.Characters
             {
                 var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
 
-                if (gameObject != null && _navMeshAgent.isActiveAndEnabled)
+                if (CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
                 {
                     _navMeshAgent.SetDestination(currentWaypoint);
                 }
@@ -132,8 +141,7 @@ namespace DmitryAdventure.Characters
                    // Waiting if point is checkpoint
                    if (result.isControlPoint)
                    {
-                       waitTimer = Route.WaitTime;
-                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased));
+                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.WaitTime));
                    }
                    
                    _isMovingForward = result.isMoveForward;
@@ -171,9 +179,11 @@ namespace DmitryAdventure.Characters
                     yield return null;
                 }
                 else
-                { ;
-                    ToggleEnemyState(EnemyState.Patrol);
+                {
+                    _navMeshAgent.ResetPath();
+                    yield return new WaitForSeconds(Route.WaitTime);
                     
+                    ToggleEnemyState(EnemyState.Patrol);
                     _enemyAttackCoroutine = null;
                     yield break;
                 }
@@ -184,25 +194,32 @@ namespace DmitryAdventure.Characters
         /// Coroutine waiting for enemy at point.
         /// </summary>
         /// <param name="changeSizeOfDiscoveryTrigger">Need to change size of discovery trigger.</param>
+        /// <param name="countdownValue">Wait timer value.</param>
         /// <returns></returns>
-        private IEnumerator WaitingCoroutine(bool changeSizeOfDiscoveryTrigger)
+        private IEnumerator WaitingCoroutine(bool changeSizeOfDiscoveryTrigger, float countdownValue = 5)
         {
+            currentCountdownValue = countdownValue;
+            
             if (changeSizeOfDiscoveryTrigger)
             {
                 _discoveryTrigger.ChangeSizeOfDiscoveryTrigger(true, Route.attentionIncreaseFactor);
             }
 
-            yield return new WaitWhile(() => waitTimer > 0);
+            while (currentCountdownValue > 0)
+            {
+                yield return new WaitForSeconds(1.0f);
+                currentCountdownValue--;
+                Debug.Log(currentCountdownValue);
+            }
             
             if (changeSizeOfDiscoveryTrigger)
             {
                 _discoveryTrigger.ChangeSizeOfDiscoveryTrigger(false);
             }
             
-            waitTimer = 0;
+            currentCountdownValue = 0;
         }
-
-  
+        
         #endregion
 
         #region Event handlers
@@ -245,7 +262,7 @@ namespace DmitryAdventure.Characters
                     _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
                     break;
                 case EnemyState.Attack:
-                    _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
+                     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
                     _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
                     break;
                 default:

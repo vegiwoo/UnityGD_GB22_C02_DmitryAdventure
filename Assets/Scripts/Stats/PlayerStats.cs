@@ -18,33 +18,5 @@ namespace DmitryAdventure.Stats
         public float JumpHeight { get; set; }
 
         #endregion
-
-        #region Monobehavior methods
-
-        // ...
-
-        #endregion
-
-        #region Functionality
-
-        #region Coroutines
-
-        // ...
-
-        #endregion
-
-        #region Event handlers
-
-        // ...
-
-        #endregion
-
-        #region Other methods
-
-        // ...
-
-        #endregion
-
-        #endregion
     }
 }
