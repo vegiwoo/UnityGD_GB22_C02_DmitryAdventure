@@ -51,6 +51,7 @@ namespace DmitryAdventure.Props
                 var key = character.FindItemInInventory(GameData.KeysKey);
                 if (key != null)
                 {
+                    MechanismIsOpen = true;
                     OpenCloseMechanism(discoveryTransform, isObjectEnters);
                 }
                 else
@@ -99,8 +100,7 @@ namespace DmitryAdventure.Props
                     }
                     
                     _audioIsPlaying.PlaySound(SoundType.Positive);
-                    MechanismIsOpen = true;
-                    
+
                     break;
                 case false:
                     foreach (var j in hingeJoints)
@@ -109,7 +109,6 @@ namespace DmitryAdventure.Props
                         jointSpring.targetPosition = closePosition;
                         j.spring = jointSpring;
                     }
-                    MechanismIsOpen = false;
                     break;
             }
         }

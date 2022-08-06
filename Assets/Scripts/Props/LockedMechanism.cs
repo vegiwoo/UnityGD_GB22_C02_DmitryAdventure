@@ -69,6 +69,8 @@ namespace DmitryAdventure
         {
             DiscoveryTrigger.Init(DiscoveryTypes);
 
+            MechanismIsOpen = lockedMechanismType == LockedMechanismType.None;
+            
             foreach (var j in hingeJoints)
             {
                 j.useSpring = true;
@@ -77,9 +79,9 @@ namespace DmitryAdventure
                 jointSpring.damper = hingeJointsDamper;
                 jointSpring.targetPosition = closePosition;
                 j.spring = jointSpring;
-            }
 
-            MechanismIsOpen = lockedMechanismType == LockedMechanismType.None;
+                ChangingKinematicsRigidBody();
+            }
         }
         
         public virtual void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
@@ -96,6 +98,18 @@ namespace DmitryAdventure
         protected virtual void OpenCloseMechanism(Transform discoveryTransform, bool isItemEnters)
         {
             if(hingeJoints.Length == 0) return;
+            ChangingKinematicsRigidBody();
+        }
+
+        private void ChangingKinematicsRigidBody()
+        {
+            foreach (var j in hingeJoints)
+            {
+                if (j.gameObject.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    rb.isKinematic = !MechanismIsOpen;
+                }
+            }
         }
 
         #endregion
