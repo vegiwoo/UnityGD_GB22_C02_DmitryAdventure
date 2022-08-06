@@ -1,7 +1,7 @@
-using DmitryAdventure.Armament;
 using DmitryAdventure.Characters;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DmitryAdventure.WeaponsAndAmmunition;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure

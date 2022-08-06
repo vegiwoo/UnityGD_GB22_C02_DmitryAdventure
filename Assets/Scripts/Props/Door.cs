@@ -40,7 +40,7 @@ namespace DmitryAdventure.Props
 
         #region Functionality
 
-        protected override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
+        public override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
         {
             base.OnDiscoveryTriggerHandler(discoveryType, discoveryTransform, isObjectEnters);
             

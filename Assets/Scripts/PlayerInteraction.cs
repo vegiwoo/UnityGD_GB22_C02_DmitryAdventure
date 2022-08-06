@@ -17,6 +17,9 @@ namespace DmitryAdventure
         [field:SerializeField, Tooltip("Tracking/discovery trigger")]
         public DiscoveryTrigger DiscoveryTrigger { get; set; }
 
+        [SerializeField, Range(15f,25f), Tooltip("Force of impulse to push an object")] 
+        private float impulsePower;
+        
         #endregion
 
         #region Monobehavior methods
@@ -24,6 +27,7 @@ namespace DmitryAdventure
         private void Start()
         {
             DiscoveryTrigger.Init(DiscoveryTypes);
+            impulsePower = 20f;
         }
 
         private void OnEnable()
@@ -40,7 +44,7 @@ namespace DmitryAdventure
 
         #region Functionality
 
-        private void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
+        public void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
             bool isObjectEnters)
         {
             if (DiscoveryTypes.Length == 0 || !DiscoveryTypes.Contains(discoveryType))
@@ -50,7 +54,7 @@ namespace DmitryAdventure
 
             if (discoveryType == DiscoveryType.Movable && isObjectEnters && discoveryTransform.TryGetComponent<Rigidbody>(out var rb))
             {
-                rb.AddForce(discoveryTransform.forward * 20.0f, ForceMode.Impulse);
+                rb.AddForce(discoveryTransform.forward * impulsePower, ForceMode.Impulse);
             }
         }
 

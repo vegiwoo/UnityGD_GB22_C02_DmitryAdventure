@@ -81,14 +81,8 @@ namespace DmitryAdventure
 
             MechanismIsOpen = lockedMechanismType == LockedMechanismType.None;
         }
-
-        /// <summary>
-        /// Trigger signal event handler.
-        /// </summary>
-        /// <param name="discoveryType">Type of object found on trigger.</param>
-        /// <param name="discoveryTransform">Transform of object found on trigger.</param>
-        /// <param name="isObjectEnters">Object entered trigger (true) or exited it (false).</param>
-        protected virtual void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
+        
+        public virtual void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
             bool isObjectEnters)
         {
             if (!DiscoveryTypes.Contains(discoveryType)) return;

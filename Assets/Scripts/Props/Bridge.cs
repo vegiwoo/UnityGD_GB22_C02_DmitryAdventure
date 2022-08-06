@@ -10,7 +10,7 @@ namespace DmitryAdventure
     {
         #region Functionality
 
-        protected override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
+        public override void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
         {
             base.OnDiscoveryTriggerHandler(discoveryType, discoveryTransform, isObjectEnters);
             OpenCloseMechanism(discoveryTransform, isObjectEnters);
@@ -21,13 +21,10 @@ namespace DmitryAdventure
             base.OpenCloseMechanism(discoveryTransform, isItemEnters);
 
             var spring = hingeJoints[0].spring;
-            
-            spring.targetPosition = isItemEnters ? 
-                openPosition : 
-                closePosition;
-            MechanismIsOpen = isItemEnters;
-            
+            spring.targetPosition = isItemEnters ? openPosition : closePosition;
             hingeJoints[0].spring = spring;
+            
+            MechanismIsOpen = isItemEnters;
         }
 
         #endregion

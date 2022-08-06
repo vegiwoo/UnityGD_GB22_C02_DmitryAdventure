@@ -1,5 +1,5 @@
 using UnityEngine;
-using DmitryAdventure.Armament;
+using DmitryAdventure.WeaponsAndAmmunition;
 using UnityEngine.InputSystem;
 
 // ReSharper disable once CheckNamespace
