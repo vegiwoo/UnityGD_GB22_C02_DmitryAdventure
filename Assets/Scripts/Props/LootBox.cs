@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
+using DmitryAdventure.Args;
 using UnityEngine;
-using UnityEngine.Events;
-using Random = UnityEngine.Random;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Props
@@ -11,107 +9,69 @@ namespace DmitryAdventure.Props
     /// Represents a loot box.
     /// </summary>
     [RequireComponent(typeof(AudioIsPlaying))]
-    public class LootBox : MonoBehaviour
+    public class LootBox : MonoBehaviour, IDiscovering
     {
         #region Сonstants, variables & properties
 
-        private DiscoveryTrigger _discoveryTrigger;
-        private AudioIsPlaying _audioIsPlaying;
-
-        [SerializeField, Tooltip("Possible box capacity"), Range(0,2)]
-        private int possibleCapacity = 2;
-
-        [SerializeField, Tooltip("Rarity level of items in the box")]
-        private RarityLevel[] rarityLevels;
+        public DiscoveryType[] DiscoveryTypes { get; set; } = { DiscoveryType.Player };
+        public DiscoveryTrigger DiscoveryTrigger { get; set; }
         
-        /// <summary>
-        /// Box capacity.
-        /// </summary>
-        /// <remarks>Randomly generated.</remarks>>
-        private int _capacity;
+        private AudioIsPlaying _audioIsPlaying;
         
         /// <summary>
         /// Collection of game objects in a box.
         /// </summary>
-        private List<GameValue> _objectsInBox;
+        [field: SerializeField, ReadonlyField]
+        private GameValue[] ObjectsInBox { get; set; }
 
-        /// <summary>
-        /// Is box empty (hero took loot from box).
-        /// </summary>
-        private bool IsBoxEmpty { get; set; }
-
-        /// <summary>
-        /// An item detection event by main character.
-        /// </summary>
-        public UnityEvent<List<GameValue>> heroFoundValuesHandler;
+        public delegate void HeroFindValuesHandler(IEnumerable<GameValue> values);
+        public event HeroFindValuesHandler HeroFindValuesNotify;
 
         #endregion
 
         #region Monobehavior methods
 
-        private void Start()
+        private void Awake()
         {
-            _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
+            DiscoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
             _audioIsPlaying = GetComponent<AudioIsPlaying>();
-            
-            _capacity = Random.Range(0, possibleCapacity);
-            _objectsInBox = new List<GameValue>(_capacity);
-            
-            FillingBox();
-
-            _discoveryTrigger.DiscoveryTriggerNotify += OnFindingTarget;
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
-            _discoveryTrigger.DiscoveryTriggerNotify -= OnFindingTarget;
+            DiscoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerHandler;
+        }
+
+        private void OnDisable()
+        {
+            DiscoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerHandler;
         }
 
         #endregion
-
-
-
-        #region Event handlers
-        /// <summary>
-        /// Event handler from discovery trigger.
-        /// </summary>
-        private void OnFindingTarget(DiscoveryType type, Transform targetTransform, bool _)
+        
+        #region Functionality
+        public void Init(LootBoxArgs args)
         {
-            if(IsBoxEmpty) return;
-    
-            switch (type)
-            {
-                case DiscoveryType.Player:
-                    _audioIsPlaying.PlaySound(SoundType.Positive);
-                    heroFoundValuesHandler.Invoke(_objectsInBox);
-                    _objectsInBox = null;
-                    IsBoxEmpty = true;
-                    break;
-                default:
-                    break;
-            }
+            ObjectsInBox = args.GameValues;
         }
-        #endregion
-
-        #region Other methods
-
-        /// <summary>
-        /// Filling box with random game values.
-        /// </summary>
-        private void FillingBox()
+        
+        public void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
         {
-            foreach (var rl in rarityLevels)
-            {
-                var sampling = CollectionExtensions
-                    .RandomValues(GameData.Instance.GameValues)
-                    .Where(gv => gv.Rarity == rl);
-                
-                _objectsInBox.Add(sampling.Take(1).First());
-            }
+            if(ObjectsInBox == null || discoveryType != DiscoveryType.Player) return;
             
-            IsBoxEmpty = false;
-        }
+            _audioIsPlaying.PlaySound(SoundType.Positive);
 
+            if (ObjectsInBox.Length > 0)
+            {
+                HeroFindValuesNotify?.Invoke(ObjectsInBox);
+            }
+            else
+            {
+                Debug.Log($"LootBox empty");
+            }
+
+            ObjectsInBox = null;
+        }
         #endregion
     }
 }

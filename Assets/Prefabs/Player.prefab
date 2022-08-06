@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5901563000847378374}
   - component: {fileID: 5901563000847378392}
   - component: {fileID: 5901563000847378393}
-  - component: {fileID: 8469655896314419828}
   m_Layer: 6
   m_Name: Head
   m_TagString: Player
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8469655896314419828
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5901563000847378375}
-  m_Material: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.99999994, z: 0.99999994}
-  m_Center: {x: 0, y: 0.0000076293945, z: 0.00012207031}
 --- !u!1 &5901563000930201701
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +125,6 @@ GameObject:
   - component: {fileID: 5901563001997911699}
   - component: {fileID: 5901563001997911700}
   - component: {fileID: 5901563001997911701}
-  - component: {fileID: 3617386439012196709}
   m_Layer: 6
   m_Name: Body
   m_TagString: Player
@@ -212,19 +197,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3617386439012196709
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5901563001997911696}
-  m_Material: {fileID: 13400000, guid: 6ef3ac3222e7a4236b0083f60a3be5f6, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.98485565, y: 1.9999999, z: 1.0000002}
-  m_Center: {x: 0.0000038146973, y: 0, z: -0.00000011920929}
 --- !u!1 &5901563002306245253
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +213,7 @@ GameObject:
   - component: {fileID: 2344139235474058412}
   - component: {fileID: 3523588330990207111}
   - component: {fileID: 5901563001636148734}
+  - component: {fileID: 1047105645270106858}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -408,6 +381,19 @@ MonoBehaviour:
   <DiscoveryTypes>k__BackingField: 02000000
   <DiscoveryTrigger>k__BackingField: {fileID: 3815697628476834229}
   impulsePower: 0
+--- !u!65 &1047105645270106858
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5901563002306245253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.1372843, z: 1.0203857}
+  m_Center: {x: 0, y: 0.050923824, z: 0.010192871}
 --- !u!1001 &3789444717453462165
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -415,6 +401,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5901563002306245252}
     m_Modifications:
+    - target: {fileID: 1168145882284411674, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+      propertyPath: m_Radius
+      value: 0.6439794
+      objectReference: {fileID: 0}
+    - target: {fileID: 1168145882284411674, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+      propertyPath: m_Center.x
+      value: -0.10002745
+      objectReference: {fileID: 0}
+    - target: {fileID: 1168145882284411674, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+      propertyPath: m_Center.y
+      value: -1.166989
+      objectReference: {fileID: 0}
     - target: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
       propertyPath: m_RootOrder
       value: 4

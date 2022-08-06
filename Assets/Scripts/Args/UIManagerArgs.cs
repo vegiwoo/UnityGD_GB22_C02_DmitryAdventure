@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using DmitryAdventure.Props;
 using JetBrains.Annotations;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Args
 {
     /// <summary>
@@ -22,9 +24,9 @@ namespace DmitryAdventure.Args
         #region Initializers and Deinitializer
 
         [CanBeNull] 
-        public List<(GameValue value, int count)> GameValues { get; }
+        public IEnumerable<(string,int)> GameValues { get; }
 
-        public UIManagerArgs(float maxHp, float currentHp, int goalToKillEnemies, int currentKillEnemiesCount, [CanBeNull] List<(GameValue value, int count)> gameValues)
+        public UIManagerArgs(float maxHp, float currentHp, int goalToKillEnemies, int currentKillEnemiesCount, [CanBeNull] IEnumerable<(string,int)> gameValues)
         {
             MaxHp = maxHp;
             CurrentHp = currentHp;

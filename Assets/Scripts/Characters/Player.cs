@@ -160,6 +160,10 @@ namespace DmitryAdventure.Characters
             _blinkEffect.StartBlink();
             
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+            
+            Debug.Log(CurrentHp);
+            
+            
             OnCharacterNotify(args);
         }
         

@@ -44,6 +44,11 @@ namespace DmitryAdventure.WeaponsAndAmmunition
                 character.gameObject.CompareTag(_targetTag))
             { 
                 character.OnHit(Damage);
+                Debug.Log($"{Damage}");
+            }
+            else
+            {
+                Debug.Log(collision.gameObject.name);
             }
 
             if (effectPrefab != null)

@@ -81,24 +81,22 @@ namespace DmitryAdventure
             const string key = GameData.EnemiesKey;
             
             if (!uiMarkers.ContainsKey(key)) return; 
-            uiMarkers[key].text = $"{key}: {current: 00} / {goal: 00}";
-            
+            uiMarkers[key].text = $"{key.ToUpper()}: {current: 00} / {goal: 00}";
         }
         
         /// <summary>
         /// Updates game value labels from collection.
         /// </summary>
-        /// <param name="values">Collection of game values&</param>
-        private void UpdateValuesLabel([CanBeNull] List<(GameValue value, int count)> values)
+        /// <param name="values">Collection of game values.</param>
+        private void UpdateValuesLabel([CanBeNull] IEnumerable<(string key,int count)> values)
         {
             if (values == null) return;
             
             foreach (var value in values)
             {
-                var key = value.value.ValueKey;
-                if (!uiMarkers.ContainsKey(key)) continue;
+                if (!uiMarkers.ContainsKey(value.key)) continue;
                 
-                uiMarkers[key].text =  $"{key}: {value.count: 00}";
+                uiMarkers[value.key].text =  $"{value.key.ToUpper()}: {value.count: 00}";
             }
         }
         
@@ -110,7 +108,7 @@ namespace DmitryAdventure
         private void UpdateValuesLabel(string key, int value)
         {
             if (!uiMarkers.ContainsKey(key)) return;
-            uiMarkers[key].text =  $"{key}: {value: 00}";
+            uiMarkers[key].text =  $"{key.ToUpper()}: {value: 00}";
         }
 
         #endregion

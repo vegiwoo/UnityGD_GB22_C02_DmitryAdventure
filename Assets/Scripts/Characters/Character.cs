@@ -49,9 +49,6 @@ namespace DmitryAdventure.Characters
         #endregion
 
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
 
         #region Event handlers
         /// <summary>
