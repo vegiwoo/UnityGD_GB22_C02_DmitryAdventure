@@ -209,7 +209,6 @@ namespace DmitryAdventure.Characters
             {
                 yield return new WaitForSeconds(1.0f);
                 currentCountdownValue--;
-                Debug.Log(currentCountdownValue);
             }
             
             if (changeSizeOfDiscoveryTrigger)

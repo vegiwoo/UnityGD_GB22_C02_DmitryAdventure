@@ -26,6 +26,9 @@ namespace DmitryAdventure.WeaponsAndAmmunition
         private GameObject[] models;
 
         [SerializeField, Range(1,10)] private int numberTargetsToHit;
+
+        [field: SerializeField, Tooltip("Used to deal damage over time to a character who stepped on a mine")] 
+        private float DamageRatio { get; set; } 
         
         [SerializeField, Range(5,10)] 
         private float explosionRadius;
@@ -51,8 +54,9 @@ namespace DmitryAdventure.WeaponsAndAmmunition
         private void OnEnable()
         {
             numberTargetsToHit = 10;
+            DamageRatio = Damage / 25.0f;
             explosionRadius = 7;
-            explosionPower = 2;
+            explosionPower = 3;
             DiscoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerHandler;
             _audioIsPlaying.AudioTriggerNotify += AudioTriggerHandler;
         }
@@ -75,10 +79,11 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             }
         }
 
-        public void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform, bool isObjectEnters)
+        public void OnDiscoveryTriggerHandler(DiscoveryType discoveryType, Transform discoveryTransform,
+            bool isObjectEnters)
         {
             if (DiscoveryTypes.Length == 0 || !DiscoveryTypes.Contains(discoveryType)) return;
-            
+
             // Play particle.
             if (effectPrefab != null)
             {
@@ -98,13 +103,18 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             if (discoveryType == DiscoveryType.Enemy &&
                 discoveryTransform.gameObject.TryGetComponent<Enemy>(out var enemy))
             {
-                // TODO: Toss the enemy up and then deal damage
-                //enemy.OnHit(Damage);
+                if (enemy.gameObject.TryGetComponent<NavMeshAgent>(out var nma))
+                {
+                    nma.enabled = false;
+                }
+
                 StartCoroutine(DamageCoroutine(enemy));
             }
 
             // Play sound.
             _audioIsPlaying.PlaySound(SoundType.Positive);
+            
+            DiscoveryTrigger.DiscoveryTriggerNotify -= OnDiscoveryTriggerHandler;
         }
 
         /// <summary>
@@ -120,15 +130,12 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             {
                 if (!hitColliders[i].TryGetComponent<Rigidbody>(out var rb)) continue;
 
-                if (hitColliders[i].TryGetComponent<NavMeshAgent>(out var nma))
-                {
-                    nma.enabled = false;
-                }
-   
                 rb.isKinematic = false;
                 var t = hitColliders[i].gameObject.transform;
-                rb.AddForce(t.up * explosionPower, ForceMode.VelocityChange);
-                rb.AddRelativeTorque(t.right * explosionPower / 2, ForceMode.VelocityChange);
+                
+                var randomDirection = new Vector3(Random.Range(0.1f,1.0f), Random.Range(0.1f,1.0f), Random.Range(0.1f,1.0f));
+                rb.AddForce(randomDirection * explosionPower, ForceMode.Impulse);
+                rb.AddRelativeTorque(-randomDirection * explosionPower / 2, ForceMode.Impulse);
             }
         }
 
@@ -138,9 +145,16 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             var damageStep = Damage / 35;
             while (damageDone < Damage)
             {
-                character.OnHit(damageStep);
-                damageDone += damageStep;
-                yield return null;
+                if (character.CurrentHp > 0)
+                {
+                    character.OnHit(damageStep);
+                    damageDone += damageStep;
+                    yield return null;
+                }
+                else
+                {
+                    yield break;
+                }
             }
         }
         

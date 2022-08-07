@@ -65,7 +65,6 @@ namespace DmitryAdventure.Props
             }
         }
         
-
         #endregion
 
         #region Other methods
@@ -110,6 +109,17 @@ namespace DmitryAdventure.Props
                         j.spring = jointSpring;
                     }
                     break;
+            }
+        }
+        
+        protected override void ChangingKinematicsRigidBody()
+        {
+            foreach (var j in hingeJoints)
+            {
+                if (j.gameObject.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    rb.isKinematic = !MechanismIsOpen;
+                }
             }
         }
 

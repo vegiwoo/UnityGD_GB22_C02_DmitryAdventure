@@ -77,7 +77,7 @@ namespace DmitryAdventure
                 var jointSpring = j.spring;
                 jointSpring.spring = hingeJointsSpring;
                 jointSpring.damper = hingeJointsDamper;
-                jointSpring.targetPosition = closePosition;
+                jointSpring.targetPosition = MechanismIsOpen ? openPosition : closePosition;
                 j.spring = jointSpring;
 
                 ChangingKinematicsRigidBody();
@@ -101,15 +101,9 @@ namespace DmitryAdventure
             ChangingKinematicsRigidBody();
         }
 
-        private void ChangingKinematicsRigidBody()
+        protected virtual void ChangingKinematicsRigidBody()
         {
-            foreach (var j in hingeJoints)
-            {
-                if (j.gameObject.TryGetComponent<Rigidbody>(out var rb))
-                {
-                    rb.isKinematic = !MechanismIsOpen;
-                }
-            }
+             // ... 
         }
 
         #endregion
