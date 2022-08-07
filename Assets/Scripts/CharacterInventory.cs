@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -25,6 +26,11 @@ namespace DmitryAdventure
 
         private void Start()
         {
+            // HACK: Hardcode 
+            var mine = new GameValue(GameData.MineKey, "Enemies on this mine fly up like crazy frogs",
+                GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100.0f, valueKey: GameData.MineKey);
+            var mines = new GameValue[] { mine, mine, mine};
+            PushInInventory(mines);
             inventoryUpdateEvent.Invoke(GetInventoryContent());
         }
         #endregion

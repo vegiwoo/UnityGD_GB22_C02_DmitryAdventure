@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using DmitryAdventure.Characters;
 using UnityEngine;
+using UnityEngine.AI;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.WeaponsAndAmmunition
@@ -29,7 +30,7 @@ namespace DmitryAdventure.WeaponsAndAmmunition
         [SerializeField, Range(5,10)] 
         private float explosionRadius;
         
-        [SerializeField, Range(10,20)] 
+        [SerializeField, Range(1,10)] 
         private float explosionPower;
         
         [SerializeField, Tooltip("Layer mask for no hitting objects")] 
@@ -51,7 +52,7 @@ namespace DmitryAdventure.WeaponsAndAmmunition
         {
             numberTargetsToHit = 10;
             explosionRadius = 7;
-            explosionPower = 10;
+            explosionPower = 2;
             DiscoveryTrigger.DiscoveryTriggerNotify += OnDiscoveryTriggerHandler;
             _audioIsPlaying.AudioTriggerNotify += AudioTriggerHandler;
         }
@@ -87,7 +88,6 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             // Tossing objects
             HitObjectsAroundExplosion(_discoveryTriggerGo.transform.position, explosionRadius);
 
-            // TODO: ?
             // Destroy mine objects.
             foreach (var model in models)
             {
@@ -99,7 +99,8 @@ namespace DmitryAdventure.WeaponsAndAmmunition
                 discoveryTransform.gameObject.TryGetComponent<Enemy>(out var enemy))
             {
                 // TODO: Toss the enemy up and then deal damage
-                enemy.OnHit(Damage);
+                //enemy.OnHit(Damage);
+                StartCoroutine(DamageCoroutine(enemy));
             }
 
             // Play sound.
@@ -119,12 +120,30 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             {
                 if (!hitColliders[i].TryGetComponent<Rigidbody>(out var rb)) continue;
 
+                if (hitColliders[i].TryGetComponent<NavMeshAgent>(out var nma))
+                {
+                    nma.enabled = false;
+                }
+   
                 rb.isKinematic = false;
                 var t = hitColliders[i].gameObject.transform;
                 rb.AddForce(t.up * explosionPower, ForceMode.VelocityChange);
                 rb.AddRelativeTorque(t.right * explosionPower / 2, ForceMode.VelocityChange);
             }
         }
+
+        private IEnumerator DamageCoroutine(Character character)
+        {
+            var damageDone = 0;
+            var damageStep = Damage / 35;
+            while (damageDone < Damage)
+            {
+                character.OnHit(damageStep);
+                damageDone += damageStep;
+                yield return null;
+            }
+        }
+        
         #endregion
     }
 }

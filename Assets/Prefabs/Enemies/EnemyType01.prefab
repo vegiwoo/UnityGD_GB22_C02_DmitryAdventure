@@ -232,8 +232,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0871916, y: 1.513293, z: 1.0632093}
-  m_Center: {x: -0.0060462058, y: 0.09284675, z: -0.0031638145}
+  m_Size: {x: 1.0871916, y: 1.4654965, z: 1.0632093}
+  m_Center: {x: -0.006046176, y: 0.116744995, z: -0.0031638145}
 --- !u!54 &3723302266055705150
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -248,7 +248,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!195 &1735647611055947067
 NavMeshAgent:
