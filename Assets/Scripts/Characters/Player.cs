@@ -22,9 +22,12 @@ namespace DmitryAdventure.Characters
         #region Сonstants, variables & properties
 
         [SerializeField] public PlayerStats playerStats;
+        [SerializeField] private Animator _playerAnimator;
+        
         
         private CharacterController _controller;
         private PlayerInput _playerInput;
+        
         private Vector3 _playerVelocity;
         private bool _groundedPlayer;
 
@@ -40,6 +43,11 @@ namespace DmitryAdventure.Characters
         [field: SerializeField] private AudioClip eatingSound;
         [field: SerializeField] private AudioClip errorSound;
         
+        // Animator variables
+        private readonly int _isRunning = Animator.StringToHash("isRunning");
+        private readonly int isMoving = Animator.StringToHash("isMoving");
+        private readonly int isJumping = Animator.StringToHash("isJumping");
+        
         #endregion
 
         #region Monobehavior methods
@@ -48,6 +56,7 @@ namespace DmitryAdventure.Characters
         {
             _controller = gameObject.GetComponent<CharacterController>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
+
             CharacterInventory = gameObject.GetComponent<CharacterInventory>();
             
             _moveAction = _playerInput.actions["Move"];
@@ -114,35 +123,41 @@ namespace DmitryAdventure.Characters
 
             var moveInput = _moveAction.ReadValue<Vector2>();
             var move = new Vector3(moveInput.x, 0, moveInput.y);
+            var camTransform = _camera.transform;
+            move = move.x * camTransform.right.normalized + move.z * camTransform.forward.normalized;
+            move.y = 0f;
 
-            if (_camera != null)
-            {
-                var camTransform = _camera.transform;
-                move = move.x * camTransform.right.normalized + move.z * camTransform.forward.normalized;
-                move.y = 0f;
-            }
-            
             CurrentSpeed = playerStats.BaseMoveSpeed;
             if (_runAction.inProgress)
             {
                 CurrentSpeed += playerStats.AccelerationFactor;
             }
+
             _controller.Move(move * (Time.deltaTime * CurrentSpeed));
             
             if (_jumpAction.triggered && _groundedPlayer)
             {
                 _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
             }
-
+            
             _playerVelocity.y += GameData.Gravity * Time.deltaTime;
             _controller.Move(_playerVelocity * Time.deltaTime);
             
             // Rotate towards camera direction 
-            if (_camera == null) return;
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
+            
+            ChangeAnimation(move != Vector3.zero, _runAction.inProgress, _jumpAction.triggered);
         }
 
+        private void ChangeAnimation(bool isHeroMoving, bool isHeroRunning, bool isHeroJumping)
+        {
+            _playerAnimator.SetBool(isMoving, isHeroMoving);
+            _playerAnimator.SetBool(_isRunning, isHeroRunning);
+            _playerAnimator.SetBool(isJumping, isHeroJumping);
+        }
+        
+        
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;
