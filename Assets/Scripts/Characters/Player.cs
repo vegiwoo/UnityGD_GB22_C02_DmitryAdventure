@@ -22,7 +22,7 @@ namespace DmitryAdventure.Characters
         #region Сonstants, variables & properties
 
         [SerializeField] public PlayerStats playerStats;
-        [SerializeField] private Animator _playerAnimator;
+        private Animator _playerAnimator;
         
         
         private CharacterController _controller;
@@ -43,17 +43,15 @@ namespace DmitryAdventure.Characters
         [field: SerializeField] private AudioClip eatingSound;
         [field: SerializeField] private AudioClip errorSound;
         
-        // Animator variables
-        private readonly int _isRunning = Animator.StringToHash("isRunning");
-        private readonly int isMoving = Animator.StringToHash("isMoving");
-        private readonly int isJumping = Animator.StringToHash("isJumping");
-        
+        private static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
+
         #endregion
 
         #region Monobehavior methods
 
         private void Awake()
         {
+            _playerAnimator = gameObject.GetComponentInChildren<Animator>();
             _controller = gameObject.GetComponent<CharacterController>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
 
@@ -134,7 +132,7 @@ namespace DmitryAdventure.Characters
             }
 
             _controller.Move(move * (Time.deltaTime * CurrentSpeed));
-            
+
             if (_jumpAction.triggered && _groundedPlayer)
             {
                 _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
@@ -147,17 +145,14 @@ namespace DmitryAdventure.Characters
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
             
-            ChangeAnimation(move != Vector3.zero, _runAction.inProgress, _jumpAction.triggered);
+            // Passing speed value to animator
+            _playerAnimator.SetFloat(
+                AnimatorSpeed, 
+                move == Vector3.zero ? 0 : _runAction.inProgress ? 1.0f : 0.5f, 
+                0.1f, 
+                Time.deltaTime);
         }
 
-        private void ChangeAnimation(bool isHeroMoving, bool isHeroRunning, bool isHeroJumping)
-        {
-            _playerAnimator.SetBool(isMoving, isHeroMoving);
-            _playerAnimator.SetBool(_isRunning, isHeroRunning);
-            _playerAnimator.SetBool(isJumping, isHeroJumping);
-        }
-        
-        
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;
