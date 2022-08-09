@@ -19,8 +19,11 @@ namespace DmitryAdventure.Characters
         [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
         protected float CurrentSpeed { get;  set; }
 
-        protected CharacterInventory CharacterInventory;
+        protected Blinked BlinkEffect;
+        private CharacterInventory _characterInventory;
 
+        protected bool IsCharacterCanMove;
+        
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
         public event CharacterHandler CharacterNotify;
@@ -29,14 +32,23 @@ namespace DmitryAdventure.Characters
 
         #region Monobehavior methods
 
-        private void Start()
+        protected virtual void Awake()
         {
-            CharacterInventory = GetComponent<CharacterInventory>();
+            BlinkEffect = GetComponent<Blinked>();
+            _characterInventory = GetComponent<CharacterInventory>();
+        }
+        
+        protected virtual void Start()
+        {
+            IsCharacterCanMove = true;
         }
 
         protected virtual void Update()
         {
-            OnMovement();
+            if (IsCharacterCanMove)
+            {
+                OnMovement();
+            }
 
             if (CurrentHp <= 0)
             {
@@ -80,7 +92,7 @@ namespace DmitryAdventure.Characters
         /// <returns>Found game value or null.</returns>
         public GameValue FindItemInInventory(string nameKey)
         {
-            return CharacterInventory == null ? null : CharacterInventory.PopFromInventory(nameKey);
+            return _characterInventory == null ? null : _characterInventory.PopFromInventory(nameKey);
         }
         
         #endregion

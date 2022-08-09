@@ -16,11 +16,20 @@ namespace DmitryAdventure
         [SerializeField] private Mine minePrefab;
                 
         private Camera _camera;
-        private CharacterInventory _characterInventory;
         private PlayerInput _playerInput;
-        private InputAction _characterFireAction;
-        private InputAction _characterMineAction;
+        private Animator _playerAnimator;
+        
+        private CharacterInventory _characterInventory;
+        
+        private InputAction _aimAction;
+        private InputAction _fireAction;
+        private InputAction _mineAction;
 
+        private static readonly int AnimatorAim = Animator.StringToHash("Aim");
+        private static readonly int ShootingAim = Animator.StringToHash("Shooting");
+        
+        private const string AttackLayerName = "Attack Layer";
+        
         #endregion
 
         #region Monobehavior methods
@@ -32,22 +41,36 @@ namespace DmitryAdventure
             _camera = Camera.main;
             _characterInventory = gameObject.GetComponent<CharacterInventory>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
+            _playerAnimator = gameObject.GetComponentInChildren<Animator>();
         }
 
         protected override void Start()
         {
             base.Start();
+            
             if (Character.CharacterType != CharacterType.Player) return;
-            _characterFireAction = _playerInput.actions["Fire"];
-            _characterFireAction.performed += ShootWeapon;
-            _characterMineAction = _playerInput.actions["Mine"];
-            _characterMineAction.performed += MineActionOnPerformed;
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
-            _characterFireAction.performed -= ShootWeapon;
-            _characterMineAction.performed -= MineActionOnPerformed;
+            _aimAction = _playerInput.actions["Aim"];
+            _fireAction = _playerInput.actions["Fire"];
+            _mineAction = _playerInput.actions["Mine"];
+            
+            _aimAction.performed += OnTakesAimPerformed; 
+            _aimAction.canceled += OnTakesAimCancelled;
+            
+            _fireAction.performed += ShootWeapon;
+            _mineAction.performed += MineActionOnPerformed;
+        }
+
+        private void OnDisable()
+        {
+            _aimAction.performed -= OnTakesAimPerformed;
+            _aimAction.canceled -= OnTakesAimCancelled; 
+            
+            _fireAction.performed -= ShootWeapon;
+            _mineAction.performed -= MineActionOnPerformed;
         }
 
         #endregion
@@ -71,7 +94,28 @@ namespace DmitryAdventure
             {
                 AimPoint = camTransform.position + camTransform.forward * CurrentWeapon.weaponStats.ShotRange;
             }
- 
+        }
+
+        /// <summary>
+        /// Callback to handle player's aiming.
+        /// </summary>
+        /// <param name="context">CallbackContext as a source of additional info.</param>
+        private void OnTakesAimPerformed(InputAction.CallbackContext context)
+        {
+            _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(AttackLayerName),1);
+            _playerAnimator.SetBool(AnimatorAim, true);
+            _playerAnimator.SetFloat(ShootingAim, 0);
+        }
+        
+        /// <summary>
+        /// Callback to handle player's aiming.
+        /// </summary>
+        /// <param name="context">CallbackContext as a source of additional info.</param>
+        private void OnTakesAimCancelled(InputAction.CallbackContext context)
+        {
+            _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(AttackLayerName),0);
+            _playerAnimator.SetBool(AnimatorAim, false);
+            _playerAnimator.SetFloat(ShootingAim, 0);
         }
         
         /// <summary>

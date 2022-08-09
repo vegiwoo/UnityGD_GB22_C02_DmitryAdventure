@@ -55,7 +55,7 @@ namespace DmitryAdventure.Characters
             if (AimPoint == Vector3.zero) return;
             
             Gizmos.color = AimColor;
-            Gizmos.DrawLine(CurrentWeapon.ShotPoint.position, AimPoint!);
+            Gizmos.DrawLine(CurrentWeapon.ShotPoint.position, AimPoint);
         }
         #endregion
 

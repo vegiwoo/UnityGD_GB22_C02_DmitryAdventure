@@ -19,8 +19,7 @@ namespace DmitryAdventure.Characters
         private Rigidbody _rb;
         private NavMeshAgent _navMeshAgent;
         private DiscoveryTrigger _discoveryTrigger;
-        private Blinked _blinkEffect;
-        
+
         [SerializeField] public EnemyStats enemyStats;
         public EnemyRoute Route { get; set; }
 
@@ -59,16 +58,19 @@ namespace DmitryAdventure.Characters
 
         #region Monobehavior methods
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             _rb = GetComponent<Rigidbody>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
-            _blinkEffect = GetComponent<Blinked>();
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            
             CharacterType = enemyStats.CharacterType;
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMoveSpeed;
@@ -90,26 +92,19 @@ namespace DmitryAdventure.Characters
             ToggleEnemyState(EnemyState.Patrol);
         }
 
-        protected override void Update()
-        {
-            base.Update();
-            
-            // HACK: Coroutine is called here because we need to dynamically set path for _navMeshAgent to attack it
-            // if (CurrentEnemyState == EnemyState.Attack && currentCountdownValue == 0)
-            // {
-            //     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
-            // }
-        }
-
         private void OnEnable()
         {
             _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
         }
 
+        private void OnDisable()
+        {
+            _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
+        }
+
         private void OnDestroy()
         {
             StopAllCoroutines();
-            _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
         }
 
         #endregion
@@ -277,7 +272,7 @@ namespace DmitryAdventure.Characters
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;
-            _blinkEffect.StartBlink();
+            BlinkEffect.StartBlink();
         }
         
         #endregion

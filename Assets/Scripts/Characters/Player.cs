@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DmitryAdventure.Stats;
@@ -22,9 +23,8 @@ namespace DmitryAdventure.Characters
         #region Сonstants, variables & properties
 
         [SerializeField] public PlayerStats playerStats;
+        
         private Animator _playerAnimator;
-        
-        
         private CharacterController _controller;
         private PlayerInput _playerInput;
         
@@ -35,54 +35,57 @@ namespace DmitryAdventure.Characters
         private InputAction _jumpAction;
         private InputAction _runAction;
         private InputAction _therapyAction;
+        private InputAction _aimAction;
         
         private Camera _camera;
-        
-        private Blinked _blinkEffect;
 
         [field: SerializeField] private AudioClip eatingSound;
         [field: SerializeField] private AudioClip errorSound;
         
         private static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
-
         #endregion
 
         #region Monobehavior methods
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             _playerAnimator = gameObject.GetComponentInChildren<Animator>();
             _controller = gameObject.GetComponent<CharacterController>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
-
-            CharacterInventory = gameObject.GetComponent<CharacterInventory>();
+            _camera = Camera.main;
             
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _runAction = _playerInput.actions["Run"];
             _therapyAction = _playerInput.actions["Therapy"];
-
-            _camera = Camera.main;
-
-            _blinkEffect = GetComponent<Blinked>();
+            _aimAction = _playerInput.actions["Aim"];
         }
 
-        private void Start()
+        protected override void Start()
         {
-            CurrentHp = playerStats.MaxHp;
-
-            _therapyAction.performed += TherapyActionOnPerformed;
-
-            CharacterType = playerStats.CharacterType;
+            base.Start();
             
+            CurrentHp = playerStats.MaxHp;
+            CharacterType = playerStats.CharacterType;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
-            _therapyAction.performed -= TherapyActionOnPerformed;
+            _therapyAction.performed += OnTherapyPerformed;
+            _aimAction.performed += OnTakesAimPerformed; 
+            _aimAction.canceled += OnTakesAimCancelled;
         }
 
+        private void OnDisable()
+        {
+            _therapyAction.performed -= OnTherapyPerformed;
+            _aimAction.performed -= OnTakesAimPerformed; 
+            _aimAction.canceled -= OnTakesAimCancelled;
+        }
+        
         #endregion
 
         #region Functionality
@@ -91,7 +94,7 @@ namespace DmitryAdventure.Characters
         /// Handler for selecting a mine from inventory.
         /// </summary>
         /// <param name="context">CallbackContext for more info.</param>
-        private void TherapyActionOnPerformed(InputAction.CallbackContext context)
+        private void OnTherapyPerformed(InputAction.CallbackContext context)
         {
             var medicine = FindItemInInventory(GameData.MedicineKey);
             if (medicine == null)
@@ -153,10 +156,20 @@ namespace DmitryAdventure.Characters
                 Time.deltaTime);
         }
 
+        private void OnTakesAimPerformed(InputAction.CallbackContext context)
+        {
+            IsCharacterCanMove = false;
+        }
+        
+        private void OnTakesAimCancelled(InputAction.CallbackContext context)
+        {
+            IsCharacterCanMove = true;
+        }
+
         public override void OnHit(float damage)
         {
             CurrentHp -= damage;
-            _blinkEffect.StartBlink();
+            BlinkEffect.StartBlink();
             
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
             OnCharacterNotify(args);
