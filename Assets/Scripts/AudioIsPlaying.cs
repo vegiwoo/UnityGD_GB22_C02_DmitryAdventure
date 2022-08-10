@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     public enum SoundType
@@ -16,8 +16,6 @@ namespace DmitryAdventure
         /// </summary>
         Positive
     }
-    
-    
     
     /// <summary>
     /// Represents an entity that plays audio

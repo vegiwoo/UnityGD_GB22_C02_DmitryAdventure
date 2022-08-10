@@ -23,8 +23,6 @@ namespace DmitryAdventure.Characters
         #region Сonstants, variables & properties
 
         [SerializeField] public PlayerStats playerStats;
-        
-        private Animator _playerAnimator;
         private CharacterController _controller;
         private PlayerInput _playerInput;
         
@@ -39,10 +37,10 @@ namespace DmitryAdventure.Characters
         
         private Camera _camera;
 
+        // Audio
         [field: SerializeField] private AudioClip eatingSound;
         [field: SerializeField] private AudioClip errorSound;
         
-        private static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
         #endregion
 
         #region Monobehavior methods
@@ -51,7 +49,6 @@ namespace DmitryAdventure.Characters
         {
             base.Awake();
             
-            _playerAnimator = gameObject.GetComponentInChildren<Animator>();
             _controller = gameObject.GetComponent<CharacterController>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
             _camera = Camera.main;
@@ -90,30 +87,6 @@ namespace DmitryAdventure.Characters
 
         #region Functionality
         
-        /// <summary>
-        /// Handler for selecting a mine from inventory.
-        /// </summary>
-        /// <param name="context">CallbackContext for more info.</param>
-        private void OnTherapyPerformed(InputAction.CallbackContext context)
-        {
-            var medicine = FindItemInInventory(GameData.MedicineKey);
-            if (medicine == null)
-            {
-                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
-            }
-            else
-            {
-                CurrentHp = CurrentHp + medicine.HpBoostRate <= playerStats.MaxHp
-                    ? CurrentHp += medicine.HpBoostRate
-                    : playerStats.MaxHp;
-                
-                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
-
-                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
-                OnCharacterNotify(args);
-            }
-        }
-        
         protected override void OnMovement()
         {
             _groundedPlayer = _controller.isGrounded;
@@ -149,18 +122,42 @@ namespace DmitryAdventure.Characters
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
             
             // Passing speed value to animator
-            _playerAnimator.SetFloat(
+            CharacterAnimator.SetFloat(
                 AnimatorSpeed, 
                 move == Vector3.zero ? 0 : _runAction.inProgress ? 1.0f : 0.5f, 
                 0.1f, 
                 Time.deltaTime);
         }
 
+        /// <summary>
+        /// Handler for selecting a mine from inventory.
+        /// </summary>
+        /// <param name="context">CallbackContext for more info.</param>
+        private void OnTherapyPerformed(InputAction.CallbackContext context)
+        {
+            var medicine = FindItemInInventory(GameData.MedicineKey);
+            if (medicine == null)
+            {
+                AudioSource.PlayClipAtPoint(errorSound, gameObject.transform.position);
+            }
+            else
+            {
+                CurrentHp = CurrentHp + medicine.HpBoostRate <= playerStats.MaxHp
+                    ? CurrentHp += medicine.HpBoostRate
+                    : playerStats.MaxHp;
+                
+                AudioSource.PlayClipAtPoint(eatingSound, gameObject.transform.position);
+
+                var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
+                OnCharacterNotify(args);
+            }
+        }
+        
         private void OnTakesAimPerformed(InputAction.CallbackContext context)
         {
             IsCharacterCanMove = false;
         }
-        
+
         private void OnTakesAimCancelled(InputAction.CallbackContext context)
         {
             IsCharacterCanMove = true;

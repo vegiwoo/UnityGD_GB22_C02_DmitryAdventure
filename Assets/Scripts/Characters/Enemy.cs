@@ -53,6 +53,13 @@ namespace DmitryAdventure.Characters
         /// Character wait timer at checkpoint.
         /// </summary>
         private float currentCountdownValue;
+        
+        // TODO: Description
+        Vector2 smoothDeltaPosition = Vector2.zero, velocity = Vector2.zero;
+
+        private static readonly int EnemyIsWalking = Animator.StringToHash("isWalking");
+        private static readonly int VelocityX = Animator.StringToHash("velX");
+        private static readonly int VelocityY = Animator.StringToHash("velY");
 
         #endregion
 
@@ -72,6 +79,7 @@ namespace DmitryAdventure.Characters
             base.Start();
             
             CharacterType = enemyStats.CharacterType;
+            gameObject.tag = GameData.EnemyTag;
             CurrentHp = enemyStats.MaxHp;
             CurrentSpeed = enemyStats.BaseMoveSpeed;
 
@@ -79,13 +87,12 @@ namespace DmitryAdventure.Characters
             
             _navMeshAgent.speed = enemyStats.BaseMoveSpeed;
             _navMeshAgent.stoppingDistance = enemyStats.StopDistanceForWaypoints;
+            _navMeshAgent.updatePosition = false;
             
             _isMovingForward = true;
             _currentWaypointIndex = 0;
      
             _discoveryTrigger.Init(enemyStats.DiscoverableTypes);
-            
-            gameObject.tag = GameData.EnemyTag;
 
             currentCountdownValue = 0;
             
@@ -107,10 +114,30 @@ namespace DmitryAdventure.Characters
             StopAllCoroutines();
         }
 
+        private void OnAnimatorMove()
+        { 
+            transform.position = _navMeshAgent.nextPosition;
+        }
+
         #endregion
         
         #region Coroutines
-        
+        private void CalculateMoving()
+        {
+     
+            
+            // worldDeltaPosition = _navMeshAgent.nextPosition - transform.position;
+            // groundDeltaPosition.x = Vector3.Dot(transform.right, worldDeltaPosition);
+            // groundDeltaPosition.y = Vector3.Dot(transform.forward, worldDeltaPosition);
+            // velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : velocity = Vector2.zero;
+            // var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
+            // CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
+            // CharacterAnimator.SetFloat(VelocityX, velocity.x);
+            // CharacterAnimator.SetFloat(VelocityY, velocity.y);
+            //
+            // Debug.Log($"{velocity.x}, {velocity.y}");
+        }
+
         /// <summary>
         /// Coroutine for patrolling enemy.
         /// </summary>
@@ -122,9 +149,9 @@ namespace DmitryAdventure.Characters
 
                 if (CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
                 {
-                    _navMeshAgent.SetDestination(currentWaypoint);
+                    _navMeshAgent.destination = currentWaypoint;
                 }
-
+                
                 var stopDistance = _navMeshAgent.stoppingDistance;
                
                 // Change waypoint
@@ -266,7 +293,24 @@ namespace DmitryAdventure.Characters
 
         protected override void OnMovement()
         {
-            // Do something
+            var t = transform;
+            var worldDeltaPosition = _navMeshAgent.nextPosition - t.position;
+            var dx = Vector3.Dot (t.right, worldDeltaPosition);
+            var dy = Vector3.Dot (t.forward, worldDeltaPosition);
+            var deltaPosition = new Vector2 (dx, dy);
+            
+            var smooth = Mathf.Min(1.0f, Time.deltaTime/0.15f);
+            smoothDeltaPosition = Vector2.Lerp (smoothDeltaPosition, deltaPosition, smooth);
+
+            if (Time.deltaTime > 1e-5f)
+            {
+                velocity = smoothDeltaPosition / Time.deltaTime;
+            }
+                
+            var shouldMove = velocity.magnitude > 0.5f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
+            CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
+            CharacterAnimator.SetFloat (VelocityX, velocity.x);
+            CharacterAnimator.SetFloat (VelocityY, velocity.y);
         }
 
         public override void OnHit(float damage)

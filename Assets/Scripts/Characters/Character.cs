@@ -24,6 +24,9 @@ namespace DmitryAdventure.Characters
 
         protected bool IsCharacterCanMove;
         
+        protected Animator CharacterAnimator;
+        protected static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
+        
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
         public event CharacterHandler CharacterNotify;
@@ -34,6 +37,7 @@ namespace DmitryAdventure.Characters
 
         protected virtual void Awake()
         {
+            CharacterAnimator = gameObject.GetComponentInChildren<Animator>();
             BlinkEffect = GetComponent<Blinked>();
             _characterInventory = GetComponent<CharacterInventory>();
         }
