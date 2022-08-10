@@ -11,6 +11,9 @@ namespace DmitryAdventure.Characters
     /// <summary>
     /// Represents item of an enemy.
     /// </summary>
+    /// <remarks>
+    /// https://docs.unity3d.com/540/Documentation/Manual/nav-CouplingAnimationAndNavigation.html
+    /// </remarks>>
     [RequireComponent(typeof(EnemyShooting), typeof(Blinked))]
     public class Enemy : Character
     {
@@ -122,21 +125,6 @@ namespace DmitryAdventure.Characters
         #endregion
         
         #region Coroutines
-        private void CalculateMoving()
-        {
-     
-            
-            // worldDeltaPosition = _navMeshAgent.nextPosition - transform.position;
-            // groundDeltaPosition.x = Vector3.Dot(transform.right, worldDeltaPosition);
-            // groundDeltaPosition.y = Vector3.Dot(transform.forward, worldDeltaPosition);
-            // velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : velocity = Vector2.zero;
-            // var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
-            // CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
-            // CharacterAnimator.SetFloat(VelocityX, velocity.x);
-            // CharacterAnimator.SetFloat(VelocityY, velocity.y);
-            //
-            // Debug.Log($"{velocity.x}, {velocity.y}");
-        }
 
         /// <summary>
         /// Coroutine for patrolling enemy.
@@ -311,6 +299,9 @@ namespace DmitryAdventure.Characters
             CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
             CharacterAnimator.SetFloat (VelocityX, velocity.x);
             CharacterAnimator.SetFloat (VelocityY, velocity.y);
+            
+            // if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
+            //     transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
         }
 
         public override void OnHit(float damage)
