@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -11,14 +13,11 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        public DiscoveryTrigger(DiscoveryType[] discoverableTypes)
-        {
-            DiscoverableTypes = discoverableTypes;
-        }
+        [field:SerializeField, ReadonlyField, Tooltip("Discoverable types for trigger")]
+        public DiscoveryType[] DiscoverableTypes { get; private set;}
 
-        [field:SerializeField, Tooltip("Discoverable types for trigger")]
-        public DiscoveryType[] DiscoverableTypes { get; set;}
-
+        private Vector3 originalSize;
+        
         public delegate void DiscoveryTriggerHandler(DiscoveryType discoveryType,  Transform discoveryTransform, bool entry);  
         public event DiscoveryTriggerHandler? DiscoveryTriggerNotify;
         
@@ -26,48 +25,21 @@ namespace DmitryAdventure
 
         #region Monobehavior methods
 
+        private void Start()
+        {
+            originalSize = transform.localScale;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (DiscoverableTypes is null || DiscoverableTypes.Length == 0) return;
-
-            var discoveryTransform = other.gameObject.transform;
-            const bool isItemEnters = true;
-            
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
-            {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
-            }
-
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
-            {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
-            }
+            HandlingTriggerEvent(other.gameObject, true);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (DiscoverableTypes == null || DiscoverableTypes.Length == 0) return;
-
-            var discoveryTransform = other.gameObject.transform;
-            const bool isItemEnters = false;
-            
-            if (DiscoverableTypes.Contains(DiscoveryType.Player) && other.gameObject.CompareTag(GameData.PlayerTag))
-            {
-                OnDiscoveryTriggerNotify(DiscoveryType.Player, discoveryTransform, isItemEnters);
-            }
-            
-            if (DiscoverableTypes.Contains(DiscoveryType.Enemy) && other.gameObject.CompareTag(GameData.EnemyTag))
-            {
-                OnDiscoveryTriggerNotify(DiscoveryType.Enemy, discoveryTransform, isItemEnters);
-            }
+            HandlingTriggerEvent(other.gameObject, false);
         }
 
-        #endregion
-
-        #region Functionality
-
-        #region Coroutines
-        // ...
         #endregion
 
         #region Event handlers
@@ -86,9 +58,73 @@ namespace DmitryAdventure
         #endregion
 
         #region Other methods
-        // ...
-        #endregion
+
+        public void Init(DiscoveryType[] discoverableTypes)
+        {
+            DiscoverableTypes = discoverableTypes;
+        }
+        
+        /// <summary>
+        /// Handles an event when an object enters and exits a trigger.
+        /// </summary>
+        /// <param name="obj">Game object that hit trigger.</param>
+        /// <param name="isObjectEnters">An object enters or exits a trigger.</param>
+        private void HandlingTriggerEvent(in GameObject obj, in bool isObjectEnters)
+        {
+            if (DiscoverableTypes is null || DiscoverableTypes.Length == 0) return;
+   
+            var type = GetDiscoveryTypeFrom(obj);
+            if (type == null) return;
+            
+            var discoveryTransform = obj.transform;
+            OnDiscoveryTriggerNotify((DiscoveryType)type, discoveryTransform, isObjectEnters);
+        }
+        
+        /// <summary>
+        /// Checks if game object in trigger matches one of discovery types.
+        /// </summary>
+        /// <param name="obj">Game object that hit trigger.</param>
+        /// <returns>Match one of discovery types, or null.</returns>
+        [CanBeNull]
+        private static DiscoveryType? GetDiscoveryTypeFrom(in GameObject obj)
+        {
+            if (obj.CompareTag(GameData.PlayerTag))
+            {
+                return DiscoveryType.Player;
+            } 
+            
+            if (obj.CompareTag(GameData.EnemyTag))
+            {
+                return DiscoveryType.Enemy;
+            } 
+            
+            if(obj.TryGetComponent<MoveableObject>(out var movable))
+            {
+                return DiscoveryType.Movable;
+            }
+            
+            return null;
+        }
+        
+        /// <summary>
+        /// Changes size of the discovery trigger.
+        /// </summary>
+        /// <param name="increase">Trigger increment/decrement flag.</param>
+        /// <param name="factor">Magnification multiplier.</param>
+        public void ChangeSizeOfDiscoveryTrigger(bool increase, float? factor = null)
+        {
+            var currentScale = transform.localScale;
+            if (increase && factor != null)
+            {
+                transform.localScale = (Vector3)(currentScale * factor);
+            }
+            else
+            {
+                transform.localScale = originalSize;
+            }
+        }
 
         #endregion
+
     }
 }

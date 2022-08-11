@@ -1,6 +1,7 @@
 using UnityEngine;
 using DmitryAdventure.Characters;
 
+// ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
@@ -18,17 +19,12 @@ namespace DmitryAdventure
             var eObject = enemy.gameObject;
             var ePosition = eObject.transform.position;
             var eForward = eObject.transform.forward;
-            var layerMask = GameData.PlayerLayerMask;
 
-            if (!Physics.Raycast(
-                    ePosition,
-                    eForward,
-                    out var playerHit,
-                    enemy.enemyStats.AttentionRadius,
-                    layerMask)) return;
-
-            var bounds = playerHit.collider.bounds;
-
+            var hit = AimingRaycast(ePosition, eForward, RaycastLayerType.Interaction,
+                enemy.enemyStats.AttentionRadius);
+            if(hit.collider == null) return;
+            
+            var bounds = hit.collider.bounds;
             AimPoint = new Vector3(
                 Random.Range(bounds.min.x, bounds.max.x),
                 Random.Range(bounds.min.y, bounds.max.y),

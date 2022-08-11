@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using DmitryAdventure.Characters;
 using JetBrains.Annotations;
 using UnityEngine.Events;
+using DmitryAdventure.Characters;
+using DmitryAdventure.Args;
+using DmitryAdventure.Props;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -29,6 +31,7 @@ namespace DmitryAdventure.Managers
         #region Monobehavior methods
         private void Start()
         {
+            _currentKillEnemiesCount = 0;
             player.CharacterNotify += OnCharacterHandler;
             GameValuesUpdateEvent();
         }
@@ -39,12 +42,7 @@ namespace DmitryAdventure.Managers
         }
 
         #endregion
-
-        #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
+        
         #region Event handlers
         /// <summary>
         /// Receives an event from Player.
@@ -63,9 +61,11 @@ namespace DmitryAdventure.Managers
         /// <summary>
         /// Handles an event about killed enemies.
         /// </summary>
-        /// <param name="numberKilled">Number of enemies killed.</param>
-        public void OnKilledEnemiesHandler(int numberKilled)
+        /// <param name="killed">Dictionary of killed enemies (key - route number, value - number of killed).</param>
+        public void OnKilledEnemiesHandler(Dictionary<int, int> killed)
         {
+            var numberKilled = killed.Select(el => el.Value).Sum();
+
             _currentKillEnemiesCount += numberKilled;
             
             GameValuesUpdateEvent();
@@ -80,7 +80,7 @@ namespace DmitryAdventure.Managers
         /// Handles user inventory update event.
         /// </summary>
         /// <param name="items"></param>
-        public void OnInventoryUpdateHandler(List<(GameValue value, int count)> items)
+        public void OnInventoryUpdateHandler(IEnumerable<(string,int)> items)
         {
             GameValuesUpdateEvent(items);
         }
@@ -89,7 +89,7 @@ namespace DmitryAdventure.Managers
         /// Forms UI update arguments and dispatches an event.
         /// </summary>
         /// <param name="items">Collection of game values.</param>
-        private void GameValuesUpdateEvent([CanBeNull] List<(GameValue value, int count)> items = null)
+        private void GameValuesUpdateEvent([CanBeNull] IEnumerable<(string,int)> items = null)
         {
             var args = new UIManagerArgs(
                 player.playerStats.MaxHp, 
@@ -100,10 +100,7 @@ namespace DmitryAdventure.Managers
             uiUpdateEventNotify.Invoke(args);
         }
         #endregion
-
-        #region Other methods
-        // ...
-        #endregion
-        #endregion
     }
 }
+
+

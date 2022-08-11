@@ -6,6 +6,6 @@ namespace DmitryAdventure
     /// </summary>
     public enum RarityLevel
     {
-        Ordinary, Rare, Legendary, Epic
+        Ordinary, Rare, Legendary, Epic, ForQuest
     }
 }

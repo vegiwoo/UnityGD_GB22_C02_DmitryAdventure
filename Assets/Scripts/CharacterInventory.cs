@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -14,38 +15,28 @@ namespace DmitryAdventure
     {
         #region Сonstants, variables & properties
 
-        private static readonly Dictionary<string, (GameValue value, int count)> Inventory = new (100);
+        private static readonly Dictionary<string, GameValueItem> Inventory = new (100);
         /// <summary>
         /// Event to be called after inventory has been updated.
         /// </summary>
-        public UnityEvent<IEnumerable<(GameValue value, int count)>> inventoryUpdateEvent;
+        public UnityEvent<IEnumerable<GameValueItem>> inventoryUpdateEvent;
         #endregion
 
         #region Monobehavior methods
 
         private void Start()
         {
-            // HACK: Hardcode!
+            // HACK: Hardcode 
             var mine = new GameValue(GameData.MineKey, "Enemies on this mine fly up like crazy frogs",
-                GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100f, valueKey: GameData.MineKey);
-            PushInInventory(new []{mine, mine, mine});
-            
-            //updateEvent.Invoke(GetInventoryContent());
+                GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100.0f, valueKey: GameData.MineKey);
+            var mines = new GameValue[] { mine, mine, mine};
+            PushInInventory(mines);
+            inventoryUpdateEvent.Invoke(GetInventoryContent());
         }
         #endregion
 
         #region Functionality
 
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
-        
         /// <summary>
         /// Adds a collection of items to inventory.
         /// </summary>
@@ -53,24 +44,25 @@ namespace DmitryAdventure
         /// <returns>Contents of inventory.</returns>
         public void PushInInventory(IEnumerable<GameValue> values)
         {
-            var ordered = GetValuesInGroupsById(values).ToList();
-            
-            foreach (var group in ordered)
+            var pushingValues = 
+                from value in values
+                group value by value.ValueKey
+                into g
+                select new GameValueItem(g.First(), g.Count());
+
+            foreach (var valueItem in pushingValues.ToList())
             {
-                var addedValue = group.First();
-                var addedCount = group.Count();
-                
-                if (Inventory.ContainsKey(group.Key))
+                var key = valueItem.Value.ValueKey.ToLower();
+                if (Inventory.ContainsKey(key))
                 {
-                    var itemInInventory = Inventory[group.Key];
-                    itemInInventory.count += addedCount;
+                    Inventory[key].Count += valueItem.Count;
                 }
                 else
                 {
-                    Inventory[group.Key] = (addedValue, addedCount);
+                    Inventory[key] = valueItem;
                 }
             }
-            
+
             inventoryUpdateEvent.Invoke(GetInventoryContent());
         }
 
@@ -82,44 +74,28 @@ namespace DmitryAdventure
         [CanBeNull]
         public GameValue PopFromInventory(string nameKey)
         {
-            if (!Inventory.ContainsKey(nameKey)) return null;
+            var key = nameKey.ToLower();
+            if (!Inventory.ContainsKey(key)) return null;
 
-            var inInventory = Inventory[nameKey];
-            if (inInventory.count <= 0) return null;
+            var inInventory = Inventory[key];
+            if (inInventory.Count <= 0) return null;
             
-            inInventory.count -= 1;
-            Inventory[nameKey] = inInventory;
+            inInventory.Count--;
+            Inventory[key] = inInventory;
             
             inventoryUpdateEvent.Invoke(GetInventoryContent());
 
-            return inInventory.value;
-        }
-
-        /// <summary>
-        /// Groups values of source collection by game value name.
-        /// </summary>
-        /// <param name="values">Collection of game values.</param>
-        /// <returns>Grouped collection.</returns>
-        private static IEnumerable<IGrouping<string, GameValue>> GetValuesInGroupsById(IEnumerable<GameValue> values)
-        {
-            return 
-                from item in values 
-                group item by item.Name
-                into g 
-                orderby g.Count() 
-                select g;
+            return inInventory.Value;
         }
 
         /// <summary>
         /// Returns the contents of inventory.
         /// </summary>
         /// <returns>Collection of tuples (name of game value, quantity in inventory).</returns>
-        private static IEnumerable<(GameValue value, int count)> GetInventoryContent()
+        private static IEnumerable<GameValueItem> GetInventoryContent()
         {
-            return Inventory.Values.Select(val => (val.value, val.count));
+            return Inventory.Select(el =>  el.Value);
         }
-        #endregion
-
         #endregion
     }
 }

@@ -41,15 +41,14 @@ namespace DmitryAdventure
         // Tags
         public const string PlayerTag = "Player";
         public const string EnemyTag = "Enemy";
+        
+        // Keys 
+        public const string EnemiesKey = "enemies";
+        public const string MedicineKey = "medicines";
+        public const string KeysKey = "keys";
+        public const string MineKey = "mines";
 
-        // Layer masks
-        public static readonly LayerMask PlayerLayerMask = LayerMask.GetMask($"Player");
-
-        public const string EnemiesKey = "ENEMIES";
-        public const string MedicineKey = "MEDICINES";
-        public const string KeysKey = "KEYS";
-        public const string MineKey = "MINES";
-
+        // Messages 
         public const string WinMessage = "You win :)";
         public const string LoseMessage = "You lose :(";
 

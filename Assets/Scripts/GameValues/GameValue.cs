@@ -1,9 +1,13 @@
 // ReSharper disable once CheckNamespace
+
+using System;
+
 namespace DmitryAdventure
 {
     /// <summary>
     /// Represents play value in game.
     /// </summary>
+    [Serializable]
     public class GameValue
     {
         #region Сonstants, variables & properties

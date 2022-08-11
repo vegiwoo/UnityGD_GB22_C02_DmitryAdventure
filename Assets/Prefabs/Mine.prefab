@@ -7138,10 +7138,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 1822451596522066, guid: fa9a3f9a8006d8b40b1164c2c91ee3bc, type: 3}
   <Damage>k__BackingField: 100
-  <Models>k__BackingField:
+  <DiscoveryTypes>k__BackingField: 01000000
+  <DiscoveryTrigger>k__BackingField: {fileID: 7676437355967347704}
+  models:
   - {fileID: 1380200868116222282}
   - {fileID: 2237132683656654986}
   - {fileID: 157339582844068473}
+  layerForNoHitting:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &8747504508020545950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7238,3 +7243,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6372982435987546601, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
   m_PrefabInstance: {fileID: 7704238638130409688}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7676437355967347704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 27825488745646880, guid: 3e02f5e93e85248b6beef17a63473515, type: 3}
+  m_PrefabInstance: {fileID: 7704238638130409688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc2729e2f6c74c749fe662e9202ce7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

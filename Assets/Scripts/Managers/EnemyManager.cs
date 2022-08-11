@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,12 +22,11 @@ namespace DmitryAdventure.Managers
         /// Inner collection of enemies.
         /// </summary>
         private List<Enemy> _enemies;
-        
-        private Coroutine _walkingEnemiesCoroutine;
 
         // Events 
-        public UnityEvent<int> killedEnemiesEvent;
-        
+        public UnityEvent<(int routeNumber, int createCount)> createEnemiesEvent;
+        public UnityEvent<Dictionary<int, int>> killedEnemiesEvent;
+
         #endregion
 
         #region Monobehavior methods
@@ -34,50 +34,88 @@ namespace DmitryAdventure.Managers
         private void Start()
         {
             _enemies = new List<Enemy>(32);
+            StartCoroutine(CheckingEnemiesOnRoutes());
         }
 
-        private void Update()
+        private void OnEnable()
         {
-            CheckingEnemiesOnRoutes();
+            foreach (var route in routes)
+            {
+                createEnemiesEvent.AddListener(route.OnCreateEnemiesEvent);
+                killedEnemiesEvent.AddListener(route.OnRemoveKilledEnemies);
+            }
+        }
+
+        private void OnDisable()
+        {
+            createEnemiesEvent.RemoveAllListeners();
+            killedEnemiesEvent.RemoveAllListeners();
         }
 
         #endregion
 
         #region Functionality
-        #region Coroutines
-        // ...
-        #endregion
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
 
         /// <summary>
         /// Checks number of active enemies on route.
         /// </summary>
-        private void CheckingEnemiesOnRoutes()
+        private IEnumerator CheckingEnemiesOnRoutes()
         {
-            // Remove killed enemies.
-            var killed = _enemies.RemoveAll(ch => ch.CurrentHp < 0);
-            if (killed > 0)
+            while (routes.Length > 0)
             {
-                killedEnemiesEvent.Invoke(killed);
-            }
-            
-            for (var i = 0; i < routes.Length; i++)
-            {
-                if (_enemies.Count(en => en.Route.RouteNumber == i) == routes[i].MaxNumberEnemies) continue;
+                yield return StartCoroutine(RemoveKilledEnemies());
+                
+                foreach (var route in routes)
+                {
+                    var enemiesOnRouteCount = _enemies.Count(en => en.Route == route);
+                
+                    if (enemiesOnRouteCount == route.MaxNumberEnemies || route.SpawnTimer != 0) continue;
 
-                var spawnPoint = routes[i].FirstWaypoint;
-                var newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-                newEnemy.Route = routes[i];
+                    var spawnPoint = route.FirstWaypoint;
+                    var newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
+                    newEnemy.Route = route;
 
-                _enemies.Add(newEnemy);
+                    _enemies.Add(newEnemy);
+                    createEnemiesEvent.Invoke((route.RouteNumber, 1));
+                }
+
+                yield return null;
             }
         }
-        #endregion
+
+        /// <summary>
+        /// Removes killed enemies from routes.
+        /// </summary>
+        private IEnumerator RemoveKilledEnemies()
+        {
+            // Dictionary of killed enemies (key - route number, value - number of killed)
+            var killedEnemies = new Dictionary<int, int>();
+
+            for (var i = 0; i < _enemies.Count; i++)
+            {
+                if (_enemies[i].CurrentHp > 0) continue;
+                
+                var routeNumber = _enemies[i].Route.RouteNumber;
+                if (killedEnemies.ContainsKey(routeNumber))
+                {
+                    killedEnemies[routeNumber] ++;
+                }
+                else
+                {
+                    killedEnemies[routeNumber] = 1;
+                }
+
+                _enemies.RemoveAt(i);
+            }
+
+            if (killedEnemies.Count > 0)
+            {
+                killedEnemiesEvent.Invoke(killedEnemies);
+            }
+
+            yield return null;
+        }
+
         #endregion
     }
 }
