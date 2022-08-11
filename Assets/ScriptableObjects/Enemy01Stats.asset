@@ -17,6 +17,6 @@ MonoBehaviour:
   <BaseMoveSpeed>k__BackingField: 1.54
   <BaseRotationSpeed>k__BackingField: 3
   <AttentionRadius>k__BackingField: 15
-  <StopDistanceForWaypoints>k__BackingField: 0.1
+  <StopDistanceForWaypoints>k__BackingField: 0.3
   <MinAttackDistance>k__BackingField: 4.5
   <DiscoverableTypes>k__BackingField: 00000000
