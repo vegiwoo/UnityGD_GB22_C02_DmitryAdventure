@@ -58,7 +58,8 @@ namespace DmitryAdventure.Characters
         private float currentCountdownValue;
         
         // TODO: Description
-        Vector2 smoothDeltaPosition = Vector2.zero, velocity = Vector2.zero;
+        private Vector2 smoothDeltaPosition = Vector2.zero;
+        private Vector2 velocity = Vector2.zero;
 
         private static readonly int EnemyIsWalking = Animator.StringToHash("isWalking");
         private static readonly int VelocityX = Animator.StringToHash("velX");
@@ -209,11 +210,15 @@ namespace DmitryAdventure.Characters
         private IEnumerator WaitingCoroutine(bool changeSizeOfDiscoveryTrigger, float countdownValue = 5)
         {
             currentCountdownValue = countdownValue;
+            var savedSpeed = _navMeshAgent.velocity;
             
             if (changeSizeOfDiscoveryTrigger)
             {
                 _discoveryTrigger.ChangeSizeOfDiscoveryTrigger(true, Route.attentionIncreaseFactor);
             }
+            
+            _navMeshAgent.velocity = Vector3.zero;
+            _navMeshAgent.isStopped = true;
 
             while (currentCountdownValue > 0)
             {
@@ -227,6 +232,8 @@ namespace DmitryAdventure.Characters
             }
             
             currentCountdownValue = 0;
+            _navMeshAgent.isStopped = false;
+            _navMeshAgent.velocity = savedSpeed;
         }
         
         #endregion
@@ -281,27 +288,20 @@ namespace DmitryAdventure.Characters
 
         protected override void OnMovement()
         {
-            var t = transform;
-            var worldDeltaPosition = _navMeshAgent.nextPosition - t.position;
-            var dx = Vector3.Dot (t.right, worldDeltaPosition);
-            var dy = Vector3.Dot (t.forward, worldDeltaPosition);
-            var deltaPosition = new Vector2 (dx, dy);
-            
-            var smooth = Mathf.Min(1.0f, Time.deltaTime/0.15f);
-            smoothDeltaPosition = Vector2.Lerp (smoothDeltaPosition, deltaPosition, smooth);
 
-            if (Time.deltaTime > 1e-5f)
-            {
-                velocity = smoothDeltaPosition / Time.deltaTime;
-            }
-                
-            var shouldMove = velocity.magnitude > 0.5f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
+            var worldDeltaPosition = _navMeshAgent.nextPosition - transform.position;
+            var groundDeltaPosition = Vector3.zero;
+            groundDeltaPosition.x = Vector3.Dot(transform.right, worldDeltaPosition);
+            groundDeltaPosition.y = Vector3.Dot(transform.forward, worldDeltaPosition);
+            var velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : Vector3.zero;
+            var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
             CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
             CharacterAnimator.SetFloat (VelocityX, velocity.x);
             CharacterAnimator.SetFloat (VelocityY, velocity.y);
-            
-            // if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
-            //     transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
+
+            if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
+                transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
+
         }
 
         public override void OnHit(float damage)
