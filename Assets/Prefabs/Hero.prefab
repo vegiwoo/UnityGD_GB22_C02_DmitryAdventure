@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2705178620746211867}
   - component: {fileID: 2705178620746211864}
   - component: {fileID: 2705178620746211865}
+  - component: {fileID: 2633537523131911912}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -122,7 +123,6 @@ MonoBehaviour:
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
   playerStats: {fileID: 11400000, guid: 741fac13886274f589c10ca6347bc6df, type: 2}
-  _playerAnimator: {fileID: 6462528700518929051}
   eatingSound: {fileID: 8300000, guid: 1e0ccd528a980486586d265c72ec2e5f, type: 3}
   errorSound: {fileID: 8300000, guid: 6ca2ee956920f4d58bc4bbc8e4574a99, type: 3}
 --- !u!114 &2705178620746211866
@@ -199,6 +199,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderers:
   - {fileID: 6908525244107910220}
+--- !u!81 &2633537523131911912
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705178620746211846}
+  m_Enabled: 1
 --- !u!1 &2705178620878166129
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,11 +350,6 @@ PrefabInstance:
 --- !u!4 &1103293159587137761 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1bed3322b19f74ae182294a36c227e5b, type: 3}
-  m_PrefabInstance: {fileID: 631935739653926666}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &6462528700518929051 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 1bed3322b19f74ae182294a36c227e5b, type: 3}
   m_PrefabInstance: {fileID: 631935739653926666}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &6908525244107910220 stripped
