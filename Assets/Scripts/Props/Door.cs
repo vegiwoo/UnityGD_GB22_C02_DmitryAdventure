@@ -46,22 +46,29 @@ namespace DmitryAdventure.Props
             
             var character = discoveryTransform.gameObject.GetComponent<Character>();
 
-            if (lockedMechanismType == LockedMechanismType.Key && !MechanismIsOpen)
+            switch (lockedMechanismType)
             {
-                var key = character.FindItemInInventory(GameData.KeysKey);
-                if (key != null)
+                case LockedMechanismType.Key when !MechanismIsOpen:
                 {
-                    MechanismIsOpen = true;
-                    OpenCloseMechanism(discoveryTransform, isObjectEnters);
+                    var key = character.FindItemInInventory(GameData.KeysKey);
+                    if (key != null)
+                    {
+                        MechanismIsOpen = true;
+                        OpenCloseMechanism(discoveryTransform, isObjectEnters);
+                    }
+                    else
+                    {
+                        _audioIsPlaying.PlaySound(SoundType.Negative);
+                    }
+
+                    break;
                 }
-                else
-                {
+                case LockedMechanismType.Blocked when isObjectEnters:
                     _audioIsPlaying.PlaySound(SoundType.Negative);
-                }
-            }
-            else
-            {
-                OpenCloseMechanism(discoveryTransform, isObjectEnters);
+                    break;
+                default:
+                    OpenCloseMechanism(discoveryTransform, isObjectEnters);
+                    break;
             }
         }
         
@@ -118,7 +125,7 @@ namespace DmitryAdventure.Props
             {
                 if (j.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
-                    rb.isKinematic = !MechanismIsOpen;
+                    rb.isKinematic = lockedMechanismType == LockedMechanismType.Blocked || !MechanismIsOpen;
                 }
             }
         }

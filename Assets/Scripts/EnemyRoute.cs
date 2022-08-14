@@ -116,7 +116,7 @@ namespace DmitryAdventure
         /// Event handler for killed enemies on route.
         /// </summary>
         /// <param name="killed">Dictionary of killed enemies (key - route number, value - number of killed).</param>
-        public void OnRemoveKilledEnemies(Dictionary<int, int> killed)
+        public void OnRemoveEnemiesEvent(Dictionary<int, int> killed)
         {
             var killedOnCurrentRoute = killed.Select(el => el.Key == RouteNumber).First();
             if (!killedOnCurrentRoute) return;
