@@ -134,7 +134,7 @@ namespace DmitryAdventure.Characters
         {
             while (true)
             {
-                var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
+                var currentWaypoint = Route[EnemyRoutePositionType.Current, _currentWaypointIndex];
 
                 if (CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
                 {
@@ -152,7 +152,7 @@ namespace DmitryAdventure.Characters
                    // Waiting if point is checkpoint
                    if (result.isControlPoint)
                    {
-                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.WaitTime));
+                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.waitTime));
                    }
                    
                    _isMovingForward = result.isMoveForward;
@@ -192,7 +192,7 @@ namespace DmitryAdventure.Characters
                 else
                 {
                     _navMeshAgent.ResetPath();
-                    yield return new WaitForSeconds(Route.WaitTime);
+                    yield return new WaitForSeconds(Route.waitTime);
                     
                     ToggleEnemyState(EnemyState.Patrol);
                     _enemyAttackCoroutine = null;

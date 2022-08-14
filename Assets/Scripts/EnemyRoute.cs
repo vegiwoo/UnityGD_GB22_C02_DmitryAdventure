@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +6,6 @@ using UnityEngine;
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
-    public enum PositionsRouteType
-    {
-        Previous, Current, Next
-    }
-    
     /// <summary>
     /// Represents enemy's route.
     /// </summary>
@@ -24,9 +18,8 @@ namespace DmitryAdventure
 
         [SerializeField, Tooltip("Looped route")]
         private bool isCircularRoute;
-        
-        [field:SerializeField, Tooltip("Character waiting time at checkpoints and time to spawn a new enemy, sec")]
-        public float WaitTime { get; set; }
+
+        public float waitTime;
         
         [field: SerializeField, ReadonlyField, Tooltip("Enemies spawn timer at starting point of route")]
         public float SpawnTimer { get; set; }
@@ -45,25 +38,24 @@ namespace DmitryAdventure
         public float attentionIncreaseFactor;
 
         private Coroutine _countdownToSpawnNewEnemyCoroutine;
-        
-        
+
         /// <summary>
         /// Returns requested route positions.
         /// </summary>
-        /// <param name="type">Requested item type.</param>
+        /// <param name="positionType">Requested item type.</param>
         /// <param name="i">Index of position relative to which result is requested.</param>
         /// <remarks>
         /// When receiving positions of type 'First' or 'Last', index is not specified.
         /// </remarks>>
-        public Vector3 this[PositionsRouteType type, int i]
+        public Vector3 this[EnemyRoutePositionType positionType, int i]
         {
             get
             {
-                return type switch
+                return positionType switch
                 {
-                    PositionsRouteType.Previous => wayPoints[i - 1].point.position,
-                    PositionsRouteType.Current => wayPoints[i].point.position,
-                    PositionsRouteType.Next => wayPoints[i + 1].point.position,
+                    EnemyRoutePositionType.Previous => wayPoints[i - 1].point.position,
+                    EnemyRoutePositionType.Current => wayPoints[i].point.position,
+                    EnemyRoutePositionType.Next => wayPoints[i + 1].point.position,
                     _ => Vector3.zero
                 };
             }
@@ -76,6 +68,7 @@ namespace DmitryAdventure
         private void Start()
         {
             attentionIncreaseFactor = 1.5f;
+            waitTime = Random.Range(5, 10);
             SpawnTimer = 0;
         }
 
@@ -126,13 +119,8 @@ namespace DmitryAdventure
         
         private IEnumerator CountdownToSpawnNewEnemyCoroutine()
         {
-            SpawnTimer = WaitTime;
-            
-            while (SpawnTimer > 0)
-            {
-                SpawnTimer -= Time.deltaTime;
-                yield return null;
-            }
+            SpawnTimer = Random.Range(waitTime, waitTime * 3);
+            yield return new WaitForSeconds(SpawnTimer);
 
             SpawnTimer = 0;
             _countdownToSpawnNewEnemyCoroutine = null;
