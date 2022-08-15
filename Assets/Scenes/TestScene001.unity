@@ -170,7 +170,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 95
   m_IsActive: 1
 --- !u!4 &597130704
 Transform:
@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128a8e35a88d849d78e9395343c02168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: -7393698408962043864, guid: ba7e639863b654d3f82c1d3110a0913f, type: 3}
+  enemyPrefab: {fileID: 8017196681188079318, guid: ba7e639863b654d3f82c1d3110a0913f, type: 3}
   routes:
   - {fileID: 1884134273}
   createEnemiesEvent:
@@ -486,14 +486,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383177629}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.047256295, y: 0.9360465, z: -0.32014576, w: 0.13816857}
+  m_LocalPosition: {x: 7.49, y: 2.83, z: 11.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 37.763, y: 163.207, z: 0}
 --- !u!1 &1583584252
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,7 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RouteNumber>k__BackingField: 0
   isCircularRoute: 1
-  <WaitTime>k__BackingField: 3
+  waitTime: 0
   <SpawnTimer>k__BackingField: 0
   wayPoints:
   - point: {fileID: 1341785220}
