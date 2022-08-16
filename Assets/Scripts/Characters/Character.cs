@@ -103,3 +103,5 @@ namespace DmitryAdventure.Characters
         #endregion
     }
 }
+
+//isJump

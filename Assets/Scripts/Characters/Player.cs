@@ -34,6 +34,7 @@ namespace DmitryAdventure.Characters
         private InputAction _runAction;
         private InputAction _therapyAction;
         private InputAction _aimAction;
+        private InputAction _mouse;
         
         private Camera _camera;
 
@@ -58,6 +59,7 @@ namespace DmitryAdventure.Characters
             _runAction = _playerInput.actions["Run"];
             _therapyAction = _playerInput.actions["Therapy"];
             _aimAction = _playerInput.actions["Aim"];
+            _mouse = _playerInput.actions["Mouse"];
         }
 
         protected override void Start()
@@ -112,21 +114,30 @@ namespace DmitryAdventure.Characters
             if (_jumpAction.triggered && _groundedPlayer)
             {
                 _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
+                // Passing speed value to animator
+                CharacterAnimator.SetTrigger("Jump");
             }
             
             _playerVelocity.y += GameData.Gravity * Time.deltaTime;
             _controller.Move(_playerVelocity * Time.deltaTime);
-            
+
+            var x = Screen.width / 2;
+            var mouseX = _mouse.ReadValue<Vector2>().x;
+
             // Rotate towards camera direction 
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
+            var angle =  Quaternion.Angle(transform.rotation, rotation);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
-            
+
             // Passing speed value to animator
             CharacterAnimator.SetFloat(
                 AnimatorSpeed, 
                 move == Vector3.zero ? 0 : _runAction.inProgress ? 1.0f : 0.5f, 
                 0.1f, 
                 Time.deltaTime);
+         
+           // Debug.Log($"{angleDelta > 0}, {angle}");
+            CharacterAnimator.SetFloat("Rotation",  x > mouseX ? angle : -angle);
         }
 
         /// <summary>
@@ -171,7 +182,7 @@ namespace DmitryAdventure.Characters
             var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
             OnCharacterNotify(args);
         }
-        
+
         #endregion
     }
 }
