@@ -55,12 +55,17 @@ namespace DmitryAdventure.WeaponsAndAmmunition
             }
             
             _shotDelayTimer = 0f;
+            
+            gameObject.SetActive(false);
         }
 
         private void Update()
         {
+            if (!gameObject.activeSelf) return;
+            
             transform.localEulerAngles = new Vector3(-weaponStats.TiltAngleInDeg, 0, 0);
 
+            // TODO: Replace timer with coroutine
             if (_shotDelayTimer > 0)
             {
                 _shotDelayTimer -= Time.deltaTime;
@@ -77,7 +82,7 @@ namespace DmitryAdventure.WeaponsAndAmmunition
         /// <param name="targetPosition">Target position to hit.</param>
         public void Fire(Vector3 targetPosition)
         {
-            if (_shotDelayTimer > 0) return;
+            if (_shotDelayTimer > 0 || !gameObject.activeSelf) return;
             
             // TODO: Implement as object pool
             var newBullet = Instantiate(weaponStats.BulletPrefab, ShotPoint.position, ShotPoint.rotation);

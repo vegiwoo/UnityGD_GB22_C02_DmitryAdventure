@@ -41,7 +41,7 @@ namespace DmitryAdventure.Characters
         // Audio
         [field: SerializeField] private AudioClip eatingSound;
         [field: SerializeField] private AudioClip errorSound;
-        
+
         #endregion
 
         #region Monobehavior methods
@@ -62,10 +62,8 @@ namespace DmitryAdventure.Characters
             _mouse = _playerInput.actions["Mouse"];
         }
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            
             CurrentHp = playerStats.MaxHp;
             CharacterType = playerStats.CharacterType;
             Cursor.lockState = CursorLockMode.Locked;
@@ -74,15 +72,15 @@ namespace DmitryAdventure.Characters
         private void OnEnable()
         {
             _therapyAction.performed += OnTherapyPerformed;
-            _aimAction.performed += OnTakesAimPerformed; 
-            _aimAction.canceled += OnTakesAimCancelled;
+            //_aimAction.performed += OnTakesAimPerformed; 
+            // _aimAction.canceled += OnTakesAimCancelled;
         }
 
         private void OnDisable()
         {
             _therapyAction.performed -= OnTherapyPerformed;
-            _aimAction.performed -= OnTakesAimPerformed; 
-            _aimAction.canceled -= OnTakesAimCancelled;
+            //_aimAction.performed -= OnTakesAimPerformed; 
+            // _aimAction.canceled -= OnTakesAimCancelled;
         }
         
         #endregion
@@ -115,19 +113,19 @@ namespace DmitryAdventure.Characters
             {
                 _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
                 // Passing speed value to animator
-                CharacterAnimator.SetTrigger("Jump");
+                //CharacterAnimator.SetTrigger("Jump");
             }
             
             _playerVelocity.y += GameData.Gravity * Time.deltaTime;
             _controller.Move(_playerVelocity * Time.deltaTime);
-
-            var x = Screen.width / 2;
+            
             var mouseX = _mouse.ReadValue<Vector2>().x;
 
             // Rotate towards camera direction 
+            var r = transform.rotation;
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
-            var angle =  Quaternion.Angle(transform.rotation, rotation);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
+            var angle =  Quaternion.Angle(r, rotation);
+            transform.rotation = Quaternion.Lerp(r, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
 
             // Passing speed value to animator
             CharacterAnimator.SetFloat(
@@ -135,9 +133,9 @@ namespace DmitryAdventure.Characters
                 move == Vector3.zero ? 0 : _runAction.inProgress ? 1.0f : 0.5f, 
                 0.1f, 
                 Time.deltaTime);
-         
-           // Debug.Log($"{angleDelta > 0}, {angle}");
-            CharacterAnimator.SetFloat("Rotation",  x > mouseX ? angle : -angle);
+            
+            // Passing rotate value to animator
+            CharacterAnimator.SetFloat(RotationAngle,  GameData.Instance.ScreenCenterX > mouseX ? angle : -angle);
         }
 
         /// <summary>
@@ -162,16 +160,6 @@ namespace DmitryAdventure.Characters
                 var args = new CharacterEventArgs(CharacterType.Player, CurrentHp);
                 OnCharacterNotify(args);
             }
-        }
-        
-        private void OnTakesAimPerformed(InputAction.CallbackContext context)
-        {
-            IsCharacterCanMove = false;
-        }
-
-        private void OnTakesAimCancelled(InputAction.CallbackContext context)
-        {
-            IsCharacterCanMove = true;
         }
 
         public override void OnHit(float damage)

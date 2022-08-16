@@ -75,10 +75,9 @@ namespace DmitryAdventure.Characters
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
         }
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            
+
             CharacterType = enemyStats.CharacterType;
             gameObject.tag = GameData.EnemyTag;
             CurrentHp = enemyStats.MaxHp;

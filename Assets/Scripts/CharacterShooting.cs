@@ -30,6 +30,9 @@ namespace DmitryAdventure.Characters
         
         protected Character Character;
 
+        // For Animator
+        protected const string ShootingLayerName = "Shooting layer";
+        
         #endregion
         
         #region Monobehavior methods
