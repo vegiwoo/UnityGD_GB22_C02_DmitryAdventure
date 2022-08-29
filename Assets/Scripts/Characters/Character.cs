@@ -22,10 +22,9 @@ namespace DmitryAdventure.Characters
         protected Blinked BlinkEffect;
         private CharacterInventory _characterInventory;
 
-        protected bool IsCharacterCanMove;
-        
         protected Animator CharacterAnimator;
         protected static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
+        protected static readonly int RotationAngle = Animator.StringToHash("Rotation");
         
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);
@@ -41,19 +40,11 @@ namespace DmitryAdventure.Characters
             BlinkEffect = GetComponent<Blinked>();
             _characterInventory = GetComponent<CharacterInventory>();
         }
-        
-        protected virtual void Start()
-        {
-            IsCharacterCanMove = true;
-        }
 
         protected virtual void Update()
         {
-            if (IsCharacterCanMove)
-            {
-                OnMovement();
-            }
-
+            OnMovement();
+            
             if (CurrentHp <= 0)
             {
                 Destroy(gameObject);

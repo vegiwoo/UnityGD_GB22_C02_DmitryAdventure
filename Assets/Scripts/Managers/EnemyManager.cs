@@ -42,7 +42,7 @@ namespace DmitryAdventure.Managers
             foreach (var route in routes)
             {
                 createEnemiesEvent.AddListener(route.OnCreateEnemiesEvent);
-                killedEnemiesEvent.AddListener(route.OnRemoveKilledEnemies);
+                killedEnemiesEvent.AddListener(route.OnRemoveEnemiesEvent);
             }
         }
 
@@ -86,6 +86,9 @@ namespace DmitryAdventure.Managers
         /// <summary>
         /// Removes killed enemies from routes.
         /// </summary>
+        /// <remarks>
+        /// Sends an event to game manager to keep track of killed enemies.
+        /// </remarks>>
         private IEnumerator RemoveKilledEnemies()
         {
             // Dictionary of killed enemies (key - route number, value - number of killed)
@@ -96,14 +99,9 @@ namespace DmitryAdventure.Managers
                 if (_enemies[i].CurrentHp > 0) continue;
                 
                 var routeNumber = _enemies[i].Route.RouteNumber;
-                if (killedEnemies.ContainsKey(routeNumber))
-                {
-                    killedEnemies[routeNumber] ++;
-                }
-                else
-                {
-                    killedEnemies[routeNumber] = 1;
-                }
+                killedEnemies[routeNumber] = killedEnemies.ContainsKey(routeNumber) ? 
+                        killedEnemies[routeNumber] + 1 : 
+                        1;
 
                 _enemies.RemoveAt(i);
             }

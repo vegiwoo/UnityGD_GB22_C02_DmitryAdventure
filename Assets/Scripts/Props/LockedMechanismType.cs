@@ -3,6 +3,6 @@ namespace DmitryAdventure.Props
 {
     public enum LockedMechanismType
     {
-        None, Key, Secret
+        None, Key, Secret, Blocked
     }
 }
