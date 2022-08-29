@@ -1,3 +1,4 @@
+using System.Collections;
 using DmitryAdventure.Characters;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +19,7 @@ namespace DmitryAdventure
         private Camera _camera;
         private PlayerInput _playerInput;
         private Animator _playerAnimator;
+        private GameObject _currentWeapon;
         
         private CharacterInventory _characterInventory;
         
@@ -25,11 +27,6 @@ namespace DmitryAdventure
         private InputAction _fireAction;
         private InputAction _mineAction;
 
-        private static readonly int AnimatorAim = Animator.StringToHash("Aim");
-        private static readonly int ShootingAim = Animator.StringToHash("Shooting");
-        
-        private const string AttackLayerName = "Attack Layer";
-        
         #endregion
 
         #region Monobehavior methods
@@ -42,6 +39,7 @@ namespace DmitryAdventure
             _characterInventory = gameObject.GetComponent<CharacterInventory>();
             _playerInput = gameObject.GetComponent<PlayerInput>();
             _playerAnimator = gameObject.GetComponentInChildren<Animator>();
+            _currentWeapon = gameObject.GetComponentInChildren<Weapon>().gameObject;
         }
 
         protected override void Start()
@@ -102,9 +100,7 @@ namespace DmitryAdventure
         /// <param name="context">CallbackContext as a source of additional info.</param>
         private void OnTakesAimPerformed(InputAction.CallbackContext context)
         {
-            _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(AttackLayerName),1);
-            _playerAnimator.SetBool(AnimatorAim, true);
-            _playerAnimator.SetFloat(ShootingAim, 0);
+            StartCoroutine(ChangeAnimatorLayerWeight(ShootingLayerName, 0, 1));
         }
         
         /// <summary>
@@ -113,10 +109,37 @@ namespace DmitryAdventure
         /// <param name="context">CallbackContext as a source of additional info.</param>
         private void OnTakesAimCancelled(InputAction.CallbackContext context)
         {
-            _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(AttackLayerName),0);
-            _playerAnimator.SetBool(AnimatorAim, false);
-            _playerAnimator.SetFloat(ShootingAim, 0);
+            StartCoroutine(ChangeAnimatorLayerWeight(ShootingLayerName, 1, 0));
         }
+
+        private IEnumerator ChangeAnimatorLayerWeight(string layerName, float currentValue, float sourceValue)
+        {
+            var current = currentValue;
+            const float step = 0.05f;
+            
+            if (current < sourceValue)
+            {
+                while (current < sourceValue)
+                {
+                    current += step;
+                    _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(layerName), current);
+                    yield return null;
+                }
+            }
+            else
+            {
+                while (current > sourceValue)
+                {
+                    current -= step;
+                    _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(layerName),current);
+                    yield return null;
+                }
+            }
+            
+            _playerAnimator.SetLayerWeight(_playerAnimator.GetLayerIndex(layerName),sourceValue);
+            _currentWeapon.SetActive(currentValue < sourceValue);
+        }
+
         
         /// <summary>
         /// Handler for selecting a mine from inventory.

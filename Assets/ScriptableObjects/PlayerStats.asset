@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c3bfff0b9a145419108eb95a4d50ea, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  <CharacterName>k__BackingField: Hero
+  <CharacterType>k__BackingField: 0
   <MaxHp>k__BackingField: 120
-  <BaseMoveSpeed>k__BackingField: 4
-  <BaseRotationSpeed>k__BackingField: 3
+  <BaseMoveSpeed>k__BackingField: 3
+  <BaseRotationSpeed>k__BackingField: 4
   <AttentionRadius>k__BackingField: 12
   <AccelerationFactor>k__BackingField: 2
   <JumpHeight>k__BackingField: 0.45

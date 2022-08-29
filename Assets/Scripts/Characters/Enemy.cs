@@ -57,10 +57,7 @@ namespace DmitryAdventure.Characters
         /// </summary>
         private float currentCountdownValue;
         
-        // TODO: Description
-        private Vector2 smoothDeltaPosition = Vector2.zero;
-        private Vector2 velocity = Vector2.zero;
-
+        // Parameter names for animator
         private static readonly int EnemyIsWalking = Animator.StringToHash("isWalking");
         private static readonly int VelocityX = Animator.StringToHash("velX");
         private static readonly int VelocityY = Animator.StringToHash("velY");
@@ -78,10 +75,9 @@ namespace DmitryAdventure.Characters
             _discoveryTrigger = GetComponentInChildren<DiscoveryTrigger>();
         }
 
-        protected override void Start()
+        private void Start()
         {
-            base.Start();
-            
+
             CharacterType = enemyStats.CharacterType;
             gameObject.tag = GameData.EnemyTag;
             CurrentHp = enemyStats.MaxHp;
@@ -134,7 +130,7 @@ namespace DmitryAdventure.Characters
         {
             while (true)
             {
-                var currentWaypoint = Route[PositionsRouteType.Current, _currentWaypointIndex];
+                var currentWaypoint = Route[EnemyRoutePositionType.Current, _currentWaypointIndex];
 
                 if (CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
                 {
@@ -152,7 +148,7 @@ namespace DmitryAdventure.Characters
                    // Waiting if point is checkpoint
                    if (result.isControlPoint)
                    {
-                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.WaitTime));
+                       yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.waitTime));
                    }
                    
                    _isMovingForward = result.isMoveForward;
@@ -192,7 +188,7 @@ namespace DmitryAdventure.Characters
                 else
                 {
                     _navMeshAgent.ResetPath();
-                    yield return new WaitForSeconds(Route.WaitTime);
+                    yield return new WaitForSeconds(Route.waitTime);
                     
                     ToggleEnemyState(EnemyState.Patrol);
                     _enemyAttackCoroutine = null;
@@ -288,11 +284,11 @@ namespace DmitryAdventure.Characters
 
         protected override void OnMovement()
         {
-
-            var worldDeltaPosition = _navMeshAgent.nextPosition - transform.position;
+            var t = transform;
+            var worldDeltaPosition = _navMeshAgent.nextPosition - t.position;
             var groundDeltaPosition = Vector3.zero;
-            groundDeltaPosition.x = Vector3.Dot(transform.right, worldDeltaPosition);
-            groundDeltaPosition.y = Vector3.Dot(transform.forward, worldDeltaPosition);
+            groundDeltaPosition.x = Vector3.Dot(t.right, worldDeltaPosition);
+            groundDeltaPosition.y = Vector3.Dot(t.forward, worldDeltaPosition);
             var velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : Vector3.zero;
             var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
             CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
@@ -300,8 +296,9 @@ namespace DmitryAdventure.Characters
             CharacterAnimator.SetFloat (VelocityY, velocity.y);
 
             if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
+            {
                 transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
-
+            }
         }
 
         public override void OnHit(float damage)

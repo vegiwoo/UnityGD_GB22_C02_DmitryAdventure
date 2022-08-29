@@ -51,24 +51,15 @@ namespace DmitryAdventure
         // Messages 
         public const string WinMessage = "You win :)";
         public const string LoseMessage = "You lose :(";
+        
+        // Screen
+        public readonly int ScreenCenterX = Screen.width / 2; 
 
         #endregion
 
         #region Initializers and Deinitializer
 
         private GameData() {}
-        #endregion
-
-        #region Functionality
-
-        #region Event handlers
-        // ...
-        #endregion
-
-        #region Other methods
-    //..
-
-        #endregion
         #endregion
     }
 }

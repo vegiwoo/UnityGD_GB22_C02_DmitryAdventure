@@ -28,7 +28,6 @@ namespace DmitryAdventure
         protected HingeJoint[] hingeJoints;
 
         [SerializeField] protected float hingeJointsSpring;
-
         [SerializeField] protected float hingeJointsDamper;
 
         [SerializeField, Tooltip("Position of mechanism in degrees at full closing.")]
@@ -70,7 +69,7 @@ namespace DmitryAdventure
             DiscoveryTrigger.Init(DiscoveryTypes);
 
             MechanismIsOpen = lockedMechanismType == LockedMechanismType.None;
-            
+
             foreach (var j in hingeJoints)
             {
                 j.useSpring = true;
@@ -101,10 +100,7 @@ namespace DmitryAdventure
             ChangingKinematicsRigidBody();
         }
 
-        protected virtual void ChangingKinematicsRigidBody()
-        {
-             // ... 
-        }
+        protected virtual void ChangingKinematicsRigidBody() { }
 
         #endregion
     }
