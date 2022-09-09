@@ -25,6 +25,8 @@ namespace DmitryAdventure.Characters
         protected Animator CharacterAnimator;
         protected static readonly int AnimatorSpeed = Animator.StringToHash("Speed");
         protected static readonly int RotationAngle = Animator.StringToHash("Rotation");
+        protected static readonly int Jump = Animator.StringToHash("Jump");
+        protected static readonly int isRunning = Animator.StringToHash("isRunning");
         
         // Events 
         public delegate void CharacterHandler(CharacterEventArgs e);

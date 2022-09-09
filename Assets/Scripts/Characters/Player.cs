@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DmitryAdventure.Stats;
@@ -72,15 +71,11 @@ namespace DmitryAdventure.Characters
         private void OnEnable()
         {
             _therapyAction.performed += OnTherapyPerformed;
-            //_aimAction.performed += OnTakesAimPerformed; 
-            // _aimAction.canceled += OnTakesAimCancelled;
         }
 
         private void OnDisable()
         {
             _therapyAction.performed -= OnTherapyPerformed;
-            //_aimAction.performed -= OnTakesAimPerformed; 
-            // _aimAction.canceled -= OnTakesAimCancelled;
         }
         
         #endregion
@@ -113,7 +108,7 @@ namespace DmitryAdventure.Characters
             {
                 _playerVelocity.y += Mathf.Sqrt(playerStats.JumpHeight * -3.0f * GameData.Gravity);
                 // Passing speed value to animator
-                //CharacterAnimator.SetTrigger("Jump");
+                CharacterAnimator.SetTrigger(Jump);
             }
             
             _playerVelocity.y += GameData.Gravity * Time.deltaTime;
@@ -124,7 +119,6 @@ namespace DmitryAdventure.Characters
             // Rotate towards camera direction 
             var r = transform.rotation;
             var rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
-            var angle =  Quaternion.Angle(r, rotation);
             transform.rotation = Quaternion.Lerp(r, rotation, playerStats.BaseRotationSpeed * Time.deltaTime);
 
             // Passing speed value to animator
@@ -133,9 +127,6 @@ namespace DmitryAdventure.Characters
                 move == Vector3.zero ? 0 : _runAction.inProgress ? 1.0f : 0.5f, 
                 0.1f, 
                 Time.deltaTime);
-            
-            // Passing rotate value to animator
-            CharacterAnimator.SetFloat(RotationAngle,  GameData.Instance.ScreenCenterX > mouseX ? angle : -angle);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using DmitryAdventure.Stats;
+using Unity.VisualScripting;
 using UnityEngine.AI;
 
 // ReSharper disable once CheckNamespace
@@ -99,6 +100,21 @@ namespace DmitryAdventure.Characters
             ToggleEnemyState(EnemyState.Patrol);
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            if (CurrentEnemyState != EnemyState.Attack || _aimPoint == null) return;
+            
+            var distanceToTarget = Vector3.Distance(transform.position, _aimPoint.position);
+            if (distanceToTarget < enemyStats.AttentionRadius && gameObject != null &&
+                _navMeshAgent.isActiveAndEnabled && distanceToTarget > enemyStats.MinAttackDistance)
+            { 
+                _navMeshAgent.ResetPath(); 
+                _navMeshAgent.destination = _aimPoint.position;
+            }
+        }
+
         private void OnEnable()
         {
             _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
@@ -180,9 +196,9 @@ namespace DmitryAdventure.Characters
                 {
                     if (distanceToTarget > enemyStats.MinAttackDistance)
                     {
-                        _navMeshAgent.SetDestination(_aimPoint.position);
+                        _navMeshAgent.ResetPath();
+                        _navMeshAgent.destination = _aimPoint.position;
                     }
-                    
                     yield return null;
                 }
                 else
@@ -249,8 +265,6 @@ namespace DmitryAdventure.Characters
                     _aimPoint = targetTransform;
                     ToggleEnemyState(EnemyState.Attack);
                     break;
-                default:
-                    break;
             }
         }
         
@@ -274,11 +288,9 @@ namespace DmitryAdventure.Characters
                     _discoveryTrigger.DiscoveryTriggerNotify += DiscoveryTriggerHandler;
                     break;
                 case EnemyState.Attack:
-                     _enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
+                     //_enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
                     _discoveryTrigger.DiscoveryTriggerNotify -= DiscoveryTriggerHandler;
-                    break;
-                default:
-                    break;
+                     break;
             }
         }
 
@@ -291,6 +303,7 @@ namespace DmitryAdventure.Characters
             groundDeltaPosition.y = Vector3.Dot(t.forward, worldDeltaPosition);
             var velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : Vector3.zero;
             var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
+            
             CharacterAnimator.SetBool(EnemyIsWalking, shouldMove);
             CharacterAnimator.SetFloat (VelocityX, velocity.x);
             CharacterAnimator.SetFloat (VelocityY, velocity.y);
