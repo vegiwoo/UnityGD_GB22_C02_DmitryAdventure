@@ -136,7 +136,21 @@ ModelImporter:
           preInfinity: 3
           postInfinity: 3
           rotationOrder: 4
-      events: []
+      events:
+      - time: 0.33667302
+        functionName: OnFootstep
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: c08e3c24f7768402fa197c4fe3e373a0, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.83655125
+        functionName: OnFootstep
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: c08e3c24f7768402fa197c4fe3e373a0, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

@@ -127,7 +127,14 @@ ModelImporter:
           preInfinity: 3
           postInfinity: 3
           rotationOrder: 4
-      events: []
+      events:
+      - time: 0.91667247
+        functionName: OnLand
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 95a0ae1e3684a4a95b2a1043a75b3300, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

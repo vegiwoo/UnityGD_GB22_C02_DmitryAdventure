@@ -41,13 +41,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1872690831437874159}
+  - component: {fileID: 6695780102359472539}
   - component: {fileID: 492085047933526594}
   - component: {fileID: 91541149577244876}
   - component: {fileID: 7059134452904014572}
   - component: {fileID: 7438969694885932093}
   - component: {fileID: 8617409775855627076}
   - component: {fileID: 4528874985981717420}
-  - component: {fileID: 6695780102359472539}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Player
@@ -73,6 +73,14 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &6695780102359472539
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6597510183722432144}
+  m_Enabled: 1
 --- !u!95 &492085047933526594
 Animator:
   serializedVersion: 4
@@ -208,14 +216,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: eebb26ef4d1584ddaa2a073719661319, type: 3}
   - {fileID: 8300000, guid: edae761b909b34d2898f7e2949e9e6bb, type: 3}
   <AudioVolume>k__BackingField: 0.5
---- !u!81 &6695780102359472539
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6597510183722432144}
-  m_Enabled: 1
 --- !u!1 &8149085190987525253
 GameObject:
   m_ObjectHideFlags: 0
