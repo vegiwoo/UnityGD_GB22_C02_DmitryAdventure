@@ -3,9 +3,7 @@ using System.Linq;
 using UnityEngine;
 using JetBrains.Annotations;
 using UnityEngine.Events;
-using DmitryAdventure.Characters;
 using DmitryAdventure.Args;
-using DmitryAdventure.Props;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -22,7 +20,7 @@ namespace DmitryAdventure.Managers
         private int _currentKillEnemiesCount;
         
         [Header("Links")] 
-        [SerializeField] private Player player;
+        //[SerializeField] private Player player;
 
         public UnityEvent<UIManagerArgs> uiUpdateEventNotify;
         
@@ -32,13 +30,13 @@ namespace DmitryAdventure.Managers
         private void Start()
         {
             _currentKillEnemiesCount = 0;
-            player.CharacterNotify += OnCharacterHandler;
+            //player.CharacterNotify += OnCharacterHandler;
             GameValuesUpdateEvent();
         }
 
         private void OnDestroy()
         {
-            player.CharacterNotify -= OnCharacterHandler;
+            //player.CharacterNotify -= OnCharacterHandler;
         }
 
         #endregion
@@ -91,13 +89,13 @@ namespace DmitryAdventure.Managers
         /// <param name="items">Collection of game values.</param>
         private void GameValuesUpdateEvent([CanBeNull] IEnumerable<(string,int)> items = null)
         {
-            var args = new UIManagerArgs(
-                player.playerStats.MaxHp, 
-                player.CurrentHp, 
-                goalToKillEnemiesCount,
-                _currentKillEnemiesCount, 
-                items);
-            uiUpdateEventNotify.Invoke(args);
+            // var args = new UIManagerArgs(
+            //     player.playerStats.MaxHp, 
+            //     player.CurrentHp, 
+            //     goalToKillEnemiesCount,
+            //     _currentKillEnemiesCount, 
+            //     items);
+            // uiUpdateEventNotify.Invoke(args);
         }
         #endregion
     }

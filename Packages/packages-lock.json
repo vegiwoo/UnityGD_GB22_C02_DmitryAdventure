@@ -85,9 +85,19 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.animation.rigging": {
+      "version": "1.1.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.4.1",
+        "com.unity.test-framework": "1.1.24"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
       "version": "1.6.6",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1"
@@ -337,9 +347,10 @@
       "dependencies": {
         "com.unity.inputsystem": "1.3.0",
         "com.unity.cinemachine": "2.8.6",
-        "com.unity.probuilder": "5.0.6"
+        "com.unity.probuilder": "5.0.6",
+        "com.unity.animation.rigging": "1.1.1"
       },
-      "hash": "f8d78e15357f07a01be9014e1f82d4eeb15d1e8e"
+      "hash": "7778a11d465a1de2311f911738917ad8a2f801f9"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
