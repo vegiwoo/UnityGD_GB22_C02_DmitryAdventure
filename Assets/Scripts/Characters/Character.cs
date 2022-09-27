@@ -89,7 +89,10 @@ namespace DmitryAdventure.Characters
         /// <returns>Found game value or null.</returns>
         public GameValue FindItemInInventory(string nameKey)
         {
-            return _characterInventory == null ? null : _characterInventory.PopFromInventory(nameKey);
+            if (_characterInventory == null) return null;
+            
+            _characterInventory.PopFromInventory(nameKey, out var value);
+            return value;
         }
         
         #endregion

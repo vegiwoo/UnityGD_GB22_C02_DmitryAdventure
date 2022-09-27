@@ -6,19 +6,23 @@ namespace DmitryAdventure
     /// </summary>
     public class GameValueItem
     {
-        /// <summary>
-        /// Game value 
-        /// </summary>
+        public string Key { get; }
         public GameValue Value { get; }
         /// <summary>
         /// Number of game values in collection.
         /// </summary>
         public int Count { get; set; }
 
-        public GameValueItem(GameValue value, int count)
+        public GameValueItem(string key, GameValue value, int count)
         {
+            Key = key;
             Value = value;
             Count = count;
+        }
+
+        public override string ToString()
+        {
+            return $"{Key} {Value.ValueKey}, {Value.Name}, {Value.Rarity}, {Value.HpBoostRate}:  {Count}";
         }
     }
 }

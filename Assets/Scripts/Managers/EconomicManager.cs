@@ -45,12 +45,12 @@ namespace DmitryAdventure.Managers
 
         private void OnEnable()
         {
-            characterInventory.inventoryUpdateEvent.AddListener(InventoryUpdateEvent);
+            //characterInventory.inventoryUpdateEvent.AddListener(InventoryUpdateEvent);
         }
 
         private void OnDisable()
         {
-            characterInventory.inventoryUpdateEvent.RemoveAllListeners();
+            //characterInventory.inventoryUpdateEvent.RemoveAllListeners();
         }
 
         #endregion

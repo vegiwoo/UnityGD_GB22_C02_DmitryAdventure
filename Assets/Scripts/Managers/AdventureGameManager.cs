@@ -2,6 +2,8 @@ using UnityEngine;
 using GameDevLib.Args;
 using GameDevLib.Interfaces;
 using GameDevLib.Managers;
+using UnityEditor;
+using static UnityEngine.Debug;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -27,7 +29,12 @@ namespace DmitryAdventure.Managers
         #region Functionality
         public override void OnEventRaised(ISubject<UnitArgs> subject, UnitArgs args)
         {
-            // TODO: Определить условавия победы, поражения и конца игры
+            var lose = args.Hp.current == 0;
+            if (lose)
+            {
+                Log($"You lost because you died :(");
+                EditorApplication.isPaused = true;
+            }
         }
         
         #endregion

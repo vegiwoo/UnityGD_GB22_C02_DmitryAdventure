@@ -1,116 +1,109 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using DmitryAdventure.Args;
+using Events;
+using GameDevLib.Args;
+using GameDevLib.Interfaces;
+using GameDevLib.Managers;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure
 {
     /// <summary>
-    /// Represents the manager to work with UI
+    /// Represents manager to work with UI.
     /// </summary>
-    public class UIManager : MonoBehaviour
+    public class UIManager : GameManager, GameDevLib.Interfaces.IObserver<InventoryArgs>
     {
-        #region Сonstants, variables & properties
-
+        #region Links
+        [field: SerializeField] private InventoryEvent InventoryEvent { get; set; }
+        
+        [Header("UI Elements")]
         [SerializeField] private Slider hpBar;
         [SerializeField] private Text enemiesLabel;
         [SerializeField] private Text keyLabel;
         [SerializeField] private Text mineLabel;
         [SerializeField] private Text medicineLabel;
-
-        private readonly Dictionary<string, Text> uiMarkers = new();
-
+        
         #endregion
+        
+        #region Fileds
+        
+        private readonly Dictionary<string, Text> _gameValueMarkers = new();
 
+        private bool _isMarkersAreAvailableForUpdating;
+        
+        #endregion
+        
         #region Monobehavior methods
-
-        private void Start()
+        
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             InitialUI();
+            InventoryEvent.Attach(this);
         }
 
-        #endregion
-        
-        #region Event handlers
-        
-        /// <summary>
-        /// UI update event handler.
-        /// </summary>
-        /// <param name="e">Arguments for updating.</param>
-        public void UIUpdateEventHandler(UIManagerArgs e)
+        protected override void OnDisable()
         {
-            hpBar.minValue = 0;
-            hpBar.maxValue = e.MaxHp;
-            hpBar.value = e.IsHeroDie ? 0 : e.CurrentHp ;
-
-            UpdateEnemiesLabel(e.GoalToKillEnemies, e.CurrentKillEnemiesCount);
-            UpdateValuesLabel(e.GameValues);
+            base.OnDisable();
+            InventoryEvent.Detach(this);
         }
-        
-        #endregion
 
-        #region Other methods
+        #endregion
+        
+        #region Functionality
         
         /// <summary>
         /// Fills UI with initial data.
         /// </summary>
         private void InitialUI()
         {
-            uiMarkers[GameData.EnemiesKey] = enemiesLabel;
-            uiMarkers[GameData.KeysKey] = keyLabel;
-            uiMarkers[GameData.MineKey] = mineLabel;
-            uiMarkers[GameData.MedicineKey] = medicineLabel;
+            //_isMarkersAreAvailableForUpdating = false;
+            
+            _gameValueMarkers[GameData.KeysKey] = keyLabel;
+            _gameValueMarkers[GameData.MineKey] = mineLabel;
+            _gameValueMarkers[GameData.MedicineKey] = medicineLabel;
 
-            foreach (var marker in uiMarkers)
+            foreach (var (key, value) in _gameValueMarkers)
             {
-                if (marker.Key == GameData.EnemiesKey)
-                {
-                    UpdateEnemiesLabel(0, 0);
-                }
-                else
-                {
-                    UpdateValuesLabel(marker.Key, 0);
-                }
+                value.text = $"{key}: {0: 00}".ToUpper();
             }
         }
         
-        private void UpdateEnemiesLabel(int goal, int current)
-        {
-            const string key = GameData.EnemiesKey;
-            
-            if (!uiMarkers.ContainsKey(key)) return; 
-            uiMarkers[key].text = $"{key.ToUpper()}: {current: 00} / {goal: 00}";
-        }
-        
-        /// <summary>
-        /// Updates game value labels from collection.
-        /// </summary>
-        /// <param name="values">Collection of game values.</param>
-        private void UpdateValuesLabel([CanBeNull] IEnumerable<(string key,int count)> values)
-        {
-            if (values == null) return;
-            
-            foreach (var value in values)
-            {
-                if (!uiMarkers.ContainsKey(value.key)) continue;
-                
-                uiMarkers[value.key].text =  $"{value.key.ToUpper()}: {value.count: 00}";
-            }
-        }
-        
-        /// <summary>
-        /// Updates game value label.
-        /// </summary>
-        /// <param name="key">Key for update.</param>
-        /// <param name="value">Value for update.</param>
-        private void UpdateValuesLabel(string key, int value)
-        {
-            if (!uiMarkers.ContainsKey(key)) return;
-            uiMarkers[key].text =  $"{key.ToUpper()}: {value: 00}";
-        }
-
         #endregion
+
+        public override void OnEventRaised(ISubject<UnitArgs> subject, UnitArgs args)
+        {
+            // Hp bar update
+            hpBar.minValue = 0;
+            hpBar.maxValue = args.Hp.max;
+            hpBar.value = args.Hp.current <= 0 ? 0 : args.Hp.current ;
+        }
+        
+        public void OnEventRaised(ISubject<InventoryArgs> subject, InventoryArgs args)
+        {
+            // Game item labels update 
+            StartCoroutine(UpdateGameValueMarkers(args.GameValues));
+        }
+
+        private IEnumerator UpdateGameValueMarkers(IReadOnlyCollection<GameValueItem> items)
+        {
+            foreach (var (key, value) in _gameValueMarkers)
+            {
+                var item = items
+                    .FirstOrDefault(el => string.Equals(el.Key, key, StringComparison.CurrentCultureIgnoreCase));
+
+                if (item != null)
+                {
+                    value.text = $"{key}: {item.Count: 00}".ToUpper();
+                }
+            }
+
+            yield return null;
+        }
     }
 }

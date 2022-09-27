@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using Events;
+using GameDevLib.Args;
 using UnityEngine;
-using UnityEngine.Events;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure
@@ -13,14 +12,18 @@ namespace DmitryAdventure
     /// </summary>
     public class CharacterInventory : MonoBehaviour
     {
-        #region Сonstants, variables & properties
+        #region Links
+        [field: SerializeField] private InventoryEvent InventoryEvent { get; set; }
 
-        private static readonly Dictionary<string, GameValueItem> Inventory = new (100);
-        /// <summary>
-        /// Event to be called after inventory has been updated.
-        /// </summary>
-        public UnityEvent<IEnumerable<GameValueItem>> inventoryUpdateEvent;
         #endregion
+        
+        
+        #region Fields
+        
+        private static readonly Dictionary<string, GameValueItem> Inventory = new (100);
+        
+        #endregion
+
 
         #region Monobehavior methods
 
@@ -29,9 +32,10 @@ namespace DmitryAdventure
             // HACK: Hardcode 
             var mine = new GameValue(GameData.MineKey, "Enemies on this mine fly up like crazy frogs",
                 GameValueType.Item, RarityLevel.Rare, 50, 1.50f, hpBoostRate: -100.0f, valueKey: GameData.MineKey);
-            var mines = new GameValue[] { mine, mine, mine};
+            var mines = new [] { mine, mine, mine};
             PushInInventory(mines);
-            inventoryUpdateEvent.Invoke(GetInventoryContent());
+            
+            Notify();
         }
         #endregion
 
@@ -48,7 +52,7 @@ namespace DmitryAdventure
                 from value in values
                 group value by value.ValueKey
                 into g
-                select new GameValueItem(g.First(), g.Count());
+                select new GameValueItem(g.First().ValueKey,g.First(), g.Count());
 
             foreach (var valueItem in pushingValues.ToList())
             {
@@ -63,29 +67,34 @@ namespace DmitryAdventure
                 }
             }
 
-            inventoryUpdateEvent.Invoke(GetInventoryContent());
+            Notify();
         }
 
         /// <summary>
         /// Returns one instance of found item from inventory.
         /// </summary>
         /// <param name="nameKey">Item name as key.</param>
-        /// <returns>One instance of the found item, or null.</returns>
-        [CanBeNull]
-        public GameValue PopFromInventory(string nameKey)
+        /// <param name="gameValue"></param>
+        public void PopFromInventory(string nameKey, out GameValue? gameValue)
         {
             var key = nameKey.ToLower();
-            if (!Inventory.ContainsKey(key)) return null;
+            if (!Inventory.ContainsKey(key))
+            {
+                gameValue = null;
+            };
 
             var inInventory = Inventory[key];
-            if (inInventory.Count <= 0) return null;
+            if (inInventory.Count <= 0)
+            {
+                gameValue = null;
+            }
             
             inInventory.Count--;
             Inventory[key] = inInventory;
             
-            inventoryUpdateEvent.Invoke(GetInventoryContent());
-
-            return inInventory.Value;
+            gameValue = inInventory.Value;
+            
+            Notify();
         }
 
         /// <summary>
@@ -96,6 +105,13 @@ namespace DmitryAdventure
         {
             return Inventory.Select(el =>  el.Value);
         }
+
+        private void Notify()
+        {
+            var args = new InventoryArgs(GetInventoryContent().ToList());
+            InventoryEvent.Notify(args);
+        }
+        
         #endregion
     }
 }

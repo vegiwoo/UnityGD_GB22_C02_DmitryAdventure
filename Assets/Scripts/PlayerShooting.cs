@@ -148,9 +148,9 @@ namespace DmitryAdventure
         private void MineActionOnPerformed(InputAction.CallbackContext context)
         {
             if(_characterInventory == null) return;
-            
-            var popMine = _characterInventory.PopFromInventory(GameData.MineKey);
-            if (popMine == null) return;
+            _characterInventory.PopFromInventory(GameData.MineKey, out var value);
+      
+            if (value == null) return;
 
             Instantiate(minePrefab, new Vector3(AimPoint.x,AimPoint.y + 0.2f,AimPoint.z), Quaternion.identity);
         }
