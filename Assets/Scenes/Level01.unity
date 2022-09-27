@@ -9225,7 +9225,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2064292016}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &358943516
 MonoBehaviour:
@@ -15308,7 +15308,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3698525373828672728, guid: 7b4daa9a36a45492298370e546f44bdd, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3698525373828672728, guid: 7b4daa9a36a45492298370e546f44bdd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20466,7 +20466,7 @@ Transform:
   m_Children:
   - {fileID: 1952913729}
   m_Father: {fileID: 2064292016}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &878808017
 MonoBehaviour:
@@ -35595,6 +35595,10 @@ PrefabInstance:
       value: -0.057715032
       objectReference: {fileID: 0}
     - target: {fileID: 7421522709948432602, guid: d8d150904c90042d38929bd0b53c9f92, type: 3}
+      propertyPath: inputEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
+    - target: {fileID: 7421522709948432602, guid: d8d150904c90042d38929bd0b53c9f92, type: 3}
       propertyPath: cameraFollowing
       value: 
       objectReference: {fileID: 407869664}
@@ -37701,66 +37705,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1976330058388372926, guid: aa2a0af856607438687474915689a5bd, type: 3}
   m_PrefabInstance: {fileID: 1697724958}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1698507104
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1698507105}
-  - component: {fileID: 1698507106}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1698507105
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698507104}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2064292016}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1698507106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698507104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1044c70e51c64eaea712263e266696d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goalToKillEnemiesCount: 5
-  uiUpdateEventNotify:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 878808017}
-        m_TargetAssemblyTypeName: DmitryAdventure.UIManager, Assembly-CSharp
-        m_MethodName: UIUpdateEventHandler
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1001 &1700278161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39286,7 +39230,7 @@ Transform:
   - {fileID: 844853172}
   - {fileID: 1616985788}
   m_Father: {fileID: 2064292016}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1766220975
 MonoBehaviour:
@@ -39313,7 +39257,7 @@ MonoBehaviour:
   killedEnemiesEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1698507106}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DmitryAdventure.Managers.GameManager, Assembly-CSharp
         m_MethodName: OnKilledEnemiesHandler
         m_Mode: 0
@@ -45661,6 +45605,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2064292016}
+  - component: {fileID: 2064292017}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -45680,7 +45625,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1698507105}
   - {fileID: 358943515}
   - {fileID: 878808016}
   - {fileID: 1766220974}
@@ -45688,6 +45632,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2064292017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064292015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1044c70e51c64eaea712263e266696d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <GameStats>k__BackingField: {fileID: 11400000, guid: 63faabde250a841c1af3b4e2e2ee494f, type: 2}
+  <PlayerEvent>k__BackingField: {fileID: 11400000, guid: ba92dbd25c0044806bd5adf4c71daa6f, type: 2}
+  goalToKillEnemiesCount: 5
 --- !u!1001 &2065545921
 PrefabInstance:
   m_ObjectHideFlags: 0
