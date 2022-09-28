@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DmitryAdventure;
 
 // ReSharper disable once CheckNamespace
-namespace GameDevLib.Args
+namespace DmitryAdventure.Args
 {
     public class InventoryArgs : EventArgs
     {

@@ -13756,6 +13756,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8105424599977934885, guid: 44ff2cca7c83348509857bc9b5bd60ce, type: 3}
   m_PrefabInstance: {fileID: 1649841387}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &521948767 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6597510183722432144, guid: 85524c4ed44d94fc1a96bda72c8c6e0d, type: 3}
+  m_PrefabInstance: {fileID: 1157238666}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &521948776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521948767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c416ae09da77347ceac3adda4dd608eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <InventoryEvent>k__BackingField: {fileID: 11400000, guid: d865cafd7f63c4f37847fc3793dce250, type: 2}
 --- !u!1001 &528024094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15294,6 +15312,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2064292016}
     m_Modifications:
+    - target: {fileID: 270117993429364513, guid: 7b4daa9a36a45492298370e546f44bdd, type: 3}
+      propertyPath: inputEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
     - target: {fileID: 3334424406077774873, guid: 7b4daa9a36a45492298370e546f44bdd, type: 3}
       propertyPath: m_Camera
       value: 
@@ -20480,6 +20502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591deb6e85863444b9de59727e8b4416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <GameStats>k__BackingField: {fileID: 11400000, guid: 63faabde250a841c1af3b4e2e2ee494f, type: 2}
+  <PlayerEvent>k__BackingField: {fileID: 11400000, guid: ba92dbd25c0044806bd5adf4c71daa6f, type: 2}
+  <InventoryEvent>k__BackingField: {fileID: 11400000, guid: d865cafd7f63c4f37847fc3793dce250, type: 2}
+  <EnemyEvent>k__BackingField: {fileID: 0}
   hpBar: {fileID: 1267329466}
   enemiesLabel: {fileID: 1405460311}
   keyLabel: {fileID: 744154164}
@@ -20672,7 +20698,7 @@ GameObject:
   - component: {fileID: 892391957}
   - component: {fileID: 892391959}
   - component: {fileID: 892391958}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Terrain02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26916,6 +26942,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hero
       objectReference: {fileID: 0}
+    - target: {fileID: 7059134452904014572, guid: 85524c4ed44d94fc1a96bda72c8c6e0d, type: 3}
+      propertyPath: <UnitEvent>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: ba92dbd25c0044806bd5adf4c71daa6f, type: 2}
+    - target: {fileID: 7059134452904014572, guid: 85524c4ed44d94fc1a96bda72c8c6e0d, type: 3}
+      propertyPath: <CharacterStats>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: 279232b2dba444869b31c9afe7a7e1df, type: 2}
+    - target: {fileID: 7438969694885932093, guid: 85524c4ed44d94fc1a96bda72c8c6e0d, type: 3}
+      propertyPath: inputEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85524c4ed44d94fc1a96bda72c8c6e0d, type: 3}
 --- !u!1001 &1160008357
@@ -34643,7 +34681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1556252627}
   - component: {fileID: 1556252626}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: TerrainGroup_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39211,7 +39249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1766220974
 Transform:
   m_ObjectHideFlags: 0
@@ -39244,31 +39282,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128a8e35a88d849d78e9395343c02168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 8017196681188079318, guid: ba7e639863b654d3f82c1d3110a0913f, type: 3}
+  <EnemyEvent>k__BackingField: {fileID: 11400000, guid: a84584ae1023c458aa53beb4c91d393a, type: 2}
+  enemyPrefab: {fileID: 0}
   routes:
   - {fileID: 1652916083}
   - {fileID: 823804057}
   - {fileID: 1435978548}
   - {fileID: 844853173}
   - {fileID: 1616985789}
-  createEnemiesEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  killedEnemiesEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DmitryAdventure.Managers.GameManager, Assembly-CSharp
-        m_MethodName: OnKilledEnemiesHandler
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1001 &1767314493
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45646,7 +45667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameStats>k__BackingField: {fileID: 11400000, guid: 63faabde250a841c1af3b4e2e2ee494f, type: 2}
   <PlayerEvent>k__BackingField: {fileID: 11400000, guid: ba92dbd25c0044806bd5adf4c71daa6f, type: 2}
-  goalToKillEnemiesCount: 5
+  <EnemyEvent>k__BackingField: {fileID: 0}
 --- !u!1001 &2065545921
 PrefabInstance:
   m_ObjectHideFlags: 0

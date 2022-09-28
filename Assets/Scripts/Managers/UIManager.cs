@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DmitryAdventure.Args;
 using UnityEngine;
 using UnityEngine.UI;
 using Events;
@@ -15,10 +16,11 @@ namespace DmitryAdventure
     /// <summary>
     /// Represents manager to work with UI.
     /// </summary>
-    public class UIManager : GameManager, GameDevLib.Interfaces.IObserver<InventoryArgs>
+    public class UIManager : GameManager, GameDevLib.Interfaces.IObserver<InventoryArgs>, GameDevLib.Interfaces.IObserver<EnemyArgs>
     {
         #region Links
         [field: SerializeField] private InventoryEvent InventoryEvent { get; set; }
+        [field: SerializeField] private EnemyEvent EnemyEvent { get; set; }
         
         [Header("UI Elements")]
         [SerializeField] private Slider hpBar;
@@ -45,6 +47,7 @@ namespace DmitryAdventure
             
             InitialUI();
             InventoryEvent.Attach(this);
+            EnemyEvent.Attach(this);
         }
 
         protected override void OnDisable()
@@ -62,8 +65,8 @@ namespace DmitryAdventure
         /// </summary>
         private void InitialUI()
         {
-            //_isMarkersAreAvailableForUpdating = false;
-            
+            enemiesLabel.text =  $"{GameData.EnemiesKey}: {0: 00} / {GameStats.GameHighScore: 00}".ToUpper();
+
             _gameValueMarkers[GameData.KeysKey] = keyLabel;
             _gameValueMarkers[GameData.MineKey] = mineLabel;
             _gameValueMarkers[GameData.MedicineKey] = medicineLabel;
@@ -83,12 +86,6 @@ namespace DmitryAdventure
             hpBar.maxValue = args.Hp.max;
             hpBar.value = args.Hp.current <= 0 ? 0 : args.Hp.current ;
         }
-        
-        public void OnEventRaised(ISubject<InventoryArgs> subject, InventoryArgs args)
-        {
-            // Game item labels update 
-            StartCoroutine(UpdateGameValueMarkers(args.GameValues));
-        }
 
         private IEnumerator UpdateGameValueMarkers(IReadOnlyCollection<GameValueItem> items)
         {
@@ -104,6 +101,21 @@ namespace DmitryAdventure
             }
 
             yield return null;
+        }
+        
+                
+        // Event handler for InventoryEvent
+        public void OnEventRaised(ISubject<InventoryArgs> subject, InventoryArgs args)
+        {
+            // Game item labels update 
+            StartCoroutine(UpdateGameValueMarkers(args.GameValues));
+        }
+
+
+        // Event handler for EnemyEvent
+        public void OnEventRaised(ISubject<EnemyArgs> subject, EnemyArgs args)
+        {
+            enemiesLabel.text =  $"{GameData.EnemiesKey}: {args.UnitsRemovedSum: 00} / {GameStats.GameHighScore: 00}".ToUpper();
         }
     }
 }

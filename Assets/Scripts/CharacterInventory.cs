@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using DmitryAdventure.Args;
 using Events;
-using GameDevLib.Args;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -14,17 +14,14 @@ namespace DmitryAdventure
     {
         #region Links
         [field: SerializeField] private InventoryEvent InventoryEvent { get; set; }
-
         #endregion
-        
         
         #region Fields
         
         private static readonly Dictionary<string, GameValueItem> Inventory = new (100);
         
         #endregion
-
-
+        
         #region Monobehavior methods
 
         private void Start()

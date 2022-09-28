@@ -141,6 +141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834f69f56ae2f48c4bc6a16e9f9720ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <GroundLayers>k__BackingField:
+  - serializedVersion: 2
+    m_Bits: 512
   rigidBodiesForRagdoll:
   - {fileID: 4001237968772901863}
   - {fileID: 9141110196678229989}
@@ -153,15 +156,13 @@ MonoBehaviour:
   - {fileID: 2836226044190139167}
   - {fileID: 5892830571937331670}
   - {fileID: 4451753426124960136}
-  <Stats>k__BackingField: {fileID: 11400000, guid: 3121de40a250f43038a4e97160915192, type: 2}
-  <CurrentHp>k__BackingField: 0
-  <CurrentSpeed>k__BackingField: 0
-  <GroundLayers>k__BackingField:
-  - serializedVersion: 2
-    m_Bits: 512
   <IsDeathByTimer>k__BackingField: 0
   <DeathTimerValue>k__BackingField: 3
   <DelayDeathByTimer>k__BackingField: 5
+  <CharacterStats>k__BackingField: {fileID: 11400000, guid: 3121de40a250f43038a4e97160915192, type: 2}
+  <UnitEvent>k__BackingField: {fileID: 0}
+  <CurrentHp>k__BackingField: 0
+  <CurrentSpeed>k__BackingField: 0
 --- !u!114 &2696806019242889436
 MonoBehaviour:
   m_ObjectHideFlags: 0

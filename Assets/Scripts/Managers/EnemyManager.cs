@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DmitryAdventure.Args;
 using UnityEngine;
 using UnityEngine.Events;
 using DmitryAdventure.Characters;
+using Events;
 
 // ReSharper disable once CheckNamespace
 namespace DmitryAdventure.Managers
@@ -13,7 +15,8 @@ namespace DmitryAdventure.Managers
     /// </summary>
     public class EnemyManager : MonoBehaviour
     {
-        #region Сonstants, variables & properties
+        #region Links
+        [field: SerializeField] private EnemyEvent EnemyEvent { get; set; }
 
         [SerializeField] private Enemy enemyPrefab;
         [SerializeField] private EnemyRoute[] routes;
@@ -23,9 +26,7 @@ namespace DmitryAdventure.Managers
         /// </summary>
         private List<Enemy> _enemies;
 
-        // Events 
-        public UnityEvent<(int routeNumber, int createCount)> createEnemiesEvent;
-        public UnityEvent<Dictionary<int, int>> killedEnemiesEvent;
+        private int _unitsRemovedSum;
 
         #endregion
 
@@ -34,22 +35,9 @@ namespace DmitryAdventure.Managers
         private void Start()
         {
             _enemies = new List<Enemy>(32);
+            _unitsRemovedSum = 0;
+            
             StartCoroutine(CheckingEnemiesOnRoutes());
-        }
-
-        private void OnEnable()
-        {
-            foreach (var route in routes)
-            {
-                createEnemiesEvent.AddListener(route.OnCreateEnemiesEvent);
-                killedEnemiesEvent.AddListener(route.OnRemoveEnemiesEvent);
-            }
-        }
-
-        private void OnDisable()
-        {
-            createEnemiesEvent.RemoveAllListeners();
-            killedEnemiesEvent.RemoveAllListeners();
         }
 
         #endregion
@@ -76,7 +64,10 @@ namespace DmitryAdventure.Managers
                     newEnemy.Route = route;
 
                     _enemies.Add(newEnemy);
-                    createEnemiesEvent.Invoke((route.RouteNumber, 1));
+
+                    // Notify
+                    var args = new EnemyArgs(route.RouteNumber, 1, 0, _unitsRemovedSum);
+                    EnemyEvent.Notify(args);
                 }
 
                 yield return null;
@@ -106,9 +97,12 @@ namespace DmitryAdventure.Managers
                 _enemies.RemoveAt(i);
             }
 
-            if (killedEnemies.Count > 0)
+            // Notify
+            foreach (var killedOnRoute in killedEnemies)
             {
-                killedEnemiesEvent.Invoke(killedEnemies);
+                _unitsRemovedSum += killedOnRoute.Value;
+                var args = new EnemyArgs(killedOnRoute.Key, 0, killedOnRoute.Value, _unitsRemovedSum);
+                EnemyEvent.Notify(args);
             }
 
             yield return null;

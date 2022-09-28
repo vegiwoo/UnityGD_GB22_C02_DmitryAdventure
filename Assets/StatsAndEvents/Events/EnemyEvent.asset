@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 465d17886b864ea5bae6d5a9e3cd55c0, type: 3}
-  m_Name: GameStats
+  m_Script: {fileID: 11500000, guid: 7c587123f4244744bbeea47d8d48a42e, type: 3}
+  m_Name: EnemyEvent
   m_EditorClassIdentifier: 
-  <GameHighScore>k__BackingField: 10
-  <CriticalThreshold>k__BackingField: 15
-  <EffectDuration>k__BackingField: 10
